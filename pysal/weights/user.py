@@ -1145,6 +1145,7 @@ def build_lattice_shapefile(nrows, ncols, outFileName):
     d.close()
     o.close()
 
+<<<<<<< HEAD
 def queen_from_geojsonf(uri):
     """
     Construction of a Queen Contiguity W from a geojson file
@@ -1271,6 +1272,46 @@ def rook_from_geojsons(s):
 
 
 
+=======
+
+def _queen_geojson(gjobj):
+    """
+    Constructs a PySAL queen contiguity W from a GeoJSON feature collection consisting of Polygons and/or Multipolygons
+
+    """
+    first = gjobj['features'][0]['geometry']['type']
+    if first == 'Polygon' or first =='MultiPolygon':
+        polys = []
+        ids = []
+        i = 0
+        for feature in gjobj['features']:
+            if feature['geometry']['type'] == 'Polygon':
+                polys.append(pysal.cg.asShape(geojson.Polygon(feature['geometry']['coordinates'])))
+            else:               
+                polys.append(pysal.cg.asShape(geojson.MultiPolygon(feature['geometry']['coordinates'])))
+            ids.append(i)
+            i += 1
+        polygons = pysal.cg.shapes.PolygonCollection(dict(zip(ids,polys)))
+        neighbors = pysal.weights.Contiguity.ContiguityWeightsPolygons(polygons).w
+        return pysal.W(neighbors)
+    else:
+        print "GeoJSON feature type must be 'Polygon' or 'MultiPolygon'"
+        return None
+
+
+def queen_from_geojson(uri):
+    gjobj = geojson.load(urllib.urlopen(uri))
+    return _queen_geojson(gjobj)
+
+def queen_from_geojsons(s):
+    return _queen_geojson(info)
+
+def queen_from_geojsonf(fileName):
+    fp = open(fileName)
+    obj = geojson.load(fp)
+    fp.close()
+    return _queen_geojson(obj)
+>>>>>>> - integration of geojson for wmd testing
 
 
 def _test():

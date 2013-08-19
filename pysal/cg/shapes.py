@@ -11,6 +11,7 @@ import math
 import numpy as np
 from warnings import warn
 from sphere import arcdist
+import numpy as np
 
 __all__ = ['Point', 'LineSegment', 'Line', 'Ray', 'Chain', 'Polygon',
            'Rectangle', 'asShape']
@@ -1973,21 +1974,16 @@ class PolygonCollection:
             
     @property
     def bbox(self):
-        if self._bbox is None:
-            print 'setting bounding box for FeatureCollection'
-            bboxes = np.array([self.polygons[p].bbox for p in self.polygons])
-            mins = bboxes.min(axis=0)
-            maxs = bboxes.max(axis=0)
-            self._bbox = [ mins[0], mins[1], maxs[2], maxs[3] ]
+        bboxes = np.array([self.polygons[p].bbox for p in self.polygons])
+        mins = bboxes.min(axis=0)
+        maxs = bboxes.max(axis=0)
+        self._bbox = [ mins[0], mins[1], maxs[2], maxs[3] ]
         return self._bbox
         
     
     def __getitem__(self, index):
         return self.polygons[index]
             
-
-
-
 _geoJSON_type_to_Pysal_type = {'point': Point, 'linestring': Chain,
                                'polygon': Polygon, 'multipolygon': Polygon}
 import standalone  # moving this to top breaks unit tests !

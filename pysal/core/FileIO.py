@@ -236,7 +236,7 @@ class FileIO(object):  # should be a type?
                 for f, v in zip(self._spec, row):
                     try:
                         if not v and f != str:
-                            raise ValueError
+                            raise ValueError()
                         r.append(f(v))
                     except ValueError:
                         warn("Value '%r' could not be cast to %s, value set to pysal.MISSINGVALUE" % (v, str(f)), RuntimeWarning)
@@ -251,7 +251,7 @@ class FileIO(object):  # should be a type?
         self._complain_ifclosed(self.closed)
         r = self.__read()
         if r is None:
-            raise StopIteration
+            raise StopIteration()
         return r
 
     def close(self):
@@ -312,7 +312,7 @@ class FileIO(object):  # should be a type?
         """ Gets one row from the file handler, and if necessary casts it's objects """
         row = self._read()
         if row is None:
-            raise StopIteration
+            raise StopIteration()
         row = self._cast(row)
         return row
 

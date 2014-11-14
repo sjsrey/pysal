@@ -4,11 +4,13 @@ import struct
 import itertools
 from warnings import warn
 import pysal
+import sys
+
 
 __author__ = "Charles R Schmidt <schmidtc@gmail.com>"
 __all__ = ['DBF']
 
-
+PY3 = sys.version > "3"
 class DBF(pysal.core.Tables.DataTable):
     """
     PySAL DBF Reader/Writer
@@ -66,7 +68,11 @@ class DBF(pysal.core.Tables.DataTable):
             for fieldno in xrange(numfields):
                 name, typ, size, deci = struct.unpack(
                     '<11sc4xBB14x', f.read(32))
-                name = name.replace('\0', '')
+                if PY3:
+                    name = str(name, 'utf-8')
+                    name = name.strip('\x00')
+                else:
+                    name = name.replace('\0', '')
                     # eliminate NULs from string
                 self._col_index[name] = (idx, record_size)
                 idx += 1
@@ -74,7 +80,7 @@ class DBF(pysal.core.Tables.DataTable):
                 record_size += size
                 self.field_info.append((name, typ, size, deci))
             terminator = f.read(1)
-            assert terminator == '\r'
+            assert terminator == b'\r'
             self.header_size = self.f.tell()
             self.record_size = record_size
             self.record_fmt = fmt
@@ -155,7 +161,7 @@ class DBF(pysal.core.Tables.DataTable):
         self.seek(i)
         rec = list(struct.unpack(
             self.record_fmt, self.f.read(self.record_size)))
-        if rec[0] != ' ':
+        if rec[0] != b' ':
             return self.read_record(i + 1)
         result = []
         for (name, typ, size, deci), value in itertools.izip(self.field_info, rec):
@@ -215,7 +221,7 @@ class DBF(pysal.core.Tables.DataTable):
         if len(obj) != len(self.header):
             raise TypeError("Rows must contains %d fields" % len(self.header))
         self.numrec += 1
-        self.f.write(' ')                        # deletion flag
+        self.f.write(' '.encode('utf8'))                        # deletion flag
         for (typ, size, deci), value in itertools.izip(self.field_spec, obj):
             if value is None:
                 if typ == 'C':
@@ -239,7 +245,7 @@ class DBF(pysal.core.Tables.DataTable):
             except:
                 print value, len(value), size
                 raise
-            self.f.write(value)
+            self.f.write(value.encode('utf8'))
             self.pos += 1
 
     def flush(self):
@@ -251,7 +257,7 @@ class DBF(pysal.core.Tables.DataTable):
         if self.mode == 'w':
             self.flush()
             # End of file
-            self.f.write('\x1A')
+            self.f.write('\x1A'.encode('utf8'))
         self.f.close()
         pysal.core.Tables.DataTable.close(self)
 
@@ -280,10 +286,14 @@ class DBF(pysal.core.Tables.DataTable):
         # field specs
         for name, (typ, size, deci) in itertools.izip(self.header, self.field_spec):
             name = name.ljust(11, '\x00')
+            if PY3:
+                name = bytes(name, 'utf8')
+            else:
+                name = bytes(name)
             fld = struct.pack('<11sc4xBB14x', name, typ, size, deci)
             self.f.write(fld)
         # terminator
-        self.f.write('\r')
+        self.f.write(b'\r')
         if self.f.tell() != POS and not self.FIRST_WRITE:
             self.f.seek(POS)
 

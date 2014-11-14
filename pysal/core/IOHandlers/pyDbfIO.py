@@ -120,7 +120,7 @@ class DBF(pysal.core.Tables.DataTable):
         f.seek(self.header_size + offset)
         col = [0] * self.n_records
         for i in xrange(self.n_records):
-            value = f.read(size)
+            value = f.read(size).decode('utf8')
             f.seek(gap, 1)
             if typ == 'N':
                 value = value.replace('\0', '').lstrip()
@@ -223,6 +223,7 @@ class DBF(pysal.core.Tables.DataTable):
         self.numrec += 1
         self.f.write(' '.encode('utf8'))                        # deletion flag
         for (typ, size, deci), value in itertools.izip(self.field_spec, obj):
+            value = value.decode('utf8')
             if value is None:
                 if typ == 'C':
                     value = ' ' * size
@@ -287,9 +288,9 @@ class DBF(pysal.core.Tables.DataTable):
         for name, (typ, size, deci) in itertools.izip(self.header, self.field_spec):
             name = name.ljust(11, '\x00')
             if PY3:
-                name = bytes(name, 'utf8')
+                name = name.encode('utf8')
             else:
-                name = bytes(name)
+                pass
             fld = struct.pack('<11sc4xBB14x', name, typ, size, deci)
             self.f.write(fld)
         # terminator

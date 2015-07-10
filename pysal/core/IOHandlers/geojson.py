@@ -2,13 +2,10 @@
 import pysal.core.Tables as Tables
 import pysal
 import os.path
-from . import gwt
 from pysal.weights import W
 from pysal.weights.util import remap_ids
 from warnings import warn
 import json
-
-
 
 
 __author__ = "Serge Rey <sjsrey@gmail.com>"
@@ -126,8 +123,12 @@ class GeoJsonHandler:
         return self.content['features'][i]['geometry']["coordinates"]
 
     def get_geometries(self, ids = []):
+        
         if not ids:
             ids = range(self.n)
+        else:
+            if not hasattr(s, 'iter'):
+                ids = [ids]
         return [ self.get_geometry(i) for i in ids ]
 
 

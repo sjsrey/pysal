@@ -1,12 +1,14 @@
 Python Spatial Analysis Library
-==============================
+===============================
 
 [![Join the chat at https://gitter.im/pysal/pysal](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/pysal/pysal?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 What is PySAL
 --------------
+
 [![Build Status](https://travis-ci.org/pysal/pysal.svg?branch=master)](https://travis-ci.org/pysal/pysal)
 [![Coverage Status](https://coveralls.io/repos/pysal/pysal/badge.svg?branch=master)](https://coveralls.io/r/pysal/pysal?branch=master)
+[![Documentation Status](https://readthedocs.org/projects/pysal/badge/?version=latest)](https://readthedocs.org/projects/pysal/?badge=latest)
 
 PySAL is an open source cross-platform library of spatial analysis functions
 written in Python. It is intended to support the development of high level
@@ -26,7 +28,7 @@ analysis should not turn to PySAL directly. Instead, we would direct them to
 projects like STARS and the GeoDaX suite of software products which wrap PySAL
 functionality in GUIs. At the same time, we expect that with developments such
 as the Python based plug-in architectures for QGIS, GRASS, and the toolbox
-extensions for ArcGIS, that end user access to PySAL functionality will be
+extensions for ArcGIS, end user access to PySAL functionality will be
 widening in the near future.
 
 PySAL package structure
@@ -41,7 +43,7 @@ Currently PySAL consists of the following files and directories:
     PySAL prerequisites, installation, testing, and troubleshooting.
 
   THANKS.txt
-    PySAL developers and contributors. 
+    PySAL developers and contributors.
 
   README.txt
     PySAL structure (this document).
@@ -53,7 +55,7 @@ Currently PySAL consists of the following files and directories:
     Additions to distutils-generated PySAL tar-balls.
 
   CHANGELOG.txt
-    Changes since the last release
+    Changes since the last release.
 
   pysal/
     Contains PySAL __init__.py and the directories of PySAL modules.
@@ -78,26 +80,27 @@ PySAL modules
 
 Website
 -------
-All things PySAL can be found here
-    http://pysal.org/
+
+All things PySAL can be found here <http://pysal.org/>
 
 Mailing Lists
 -------------
+
 Please see the developer list here
-    http://groups.google.com/group/pysal-dev
+    <http://groups.google.com/group/pysal-dev>
 
 Help for users is here
-    http://groups.google.com/group/openspace-list
+    <http://groups.google.com/group/openspace-list>
 
 Bug reports
 -----------
+
 To search for or report bugs, please see
-    http://github.com/pysal/pysal/issues
+    <http://github.com/pysal/pysal/issues>
 
 License information
 -------------------
+
 See the file "LICENSE.txt" for information on the history of this
 software, terms & conditions for usage, and a DISCLAIMER OF ALL
 WARRANTIES.
-
-

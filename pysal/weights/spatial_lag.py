@@ -3,7 +3,9 @@ Spatial lag operations.
 """
 __author__ = "Sergio J. Rey <srey@asu.edu>, David C. Folch <david.folch@asu.edu>"
 __all__ = ['lag_spatial']
-
+import numpy as np
+from collections import Counter
+from six import iteritems as diter
 
 def lag_spatial(w, y):
     """
@@ -16,7 +18,7 @@ def lag_spatial(w, y):
     ----------
 
     w                   : W
-                          PySAL spatial weightsobject
+                          PySAL spatial weights object
     y                   : array
                           numpy array with dimensionality conforming to w (see examples)
 
@@ -82,3 +84,61 @@ def lag_spatial(w, y):
 
     """
     return w.sparse * y
+
+def lag_categorical(w, y, ties='tryself'):
+    """
+    Constructs the most common categories of neighboring observations, weighted
+    by their weight strength. 
+    
+    Parameters
+    ----------
+
+    w                   : W
+                          PySAL spatial weightsobject
+    y                   : iterable
+                          iterable collection of categories (either int or
+                          string) with dimensionality conforming to w (see examples)
+    ties                : str
+                          string describing the method to use when resolving
+                          ties. By default, the option is "tryself",
+                          and the category of the focal observation 
+                          is included with its neighbors to try
+                          and break a tie. If this does not resolve the tie,
+                          a winner is chosen randomly. To just use random choice to
+                          break ties, pass "random" instead.
+    Returns
+    -------
+    an (n x 1) column vector containing the most common neighboring observation
+    """
+    if isinstance(y, list):
+        y = np.array(y)
+    y = y.flatten()
+    output = np.zeros_like(y)
+    keys = np.unique(y)
+    #ints = np.arange(len(keys))
+    inty = np.zeros(y.shape, dtype=np.int)
+    for i,key in enumerate(keys):
+       inty[y == key] = i 
+    for idx,neighbors in w:
+        vals = np.zeros(keys.shape)
+        #not sure how to vectorize when some neighbors are in the same class.
+        #I was trying
+        #vals[inty[neighbors.keys()]] += neighbors.values()
+        for neighb, weight in diter(neighbors):
+            vals[inty[neighb]] += weight
+        outidx = _resolve_ties(idx,inty,vals,neighbors,ties)
+        output[w.id2i[idx]] = keys[outidx]
+    return output.reshape(len(y),1)
+
+def _resolve_ties(i,inty,vals,neighbors,method):
+    if len(vals[vals==vals.max()]) <= 1:
+        return np.argmax(vals)
+    elif method.lower() == 'random':
+        ties = np.where(vals == vals.max())
+        return np.random.choice(vals[ties])
+    elif method.lower() == 'tryself':
+        print(vals,i)
+        vals[inty[i]] += np.mean(neighbors.values())
+        print(vals,i)
+        return _resolve_ties(i,inty,vals,neighbors,'random')
+

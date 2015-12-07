@@ -8,7 +8,7 @@ __author__ = "Sergio J. Rey <srey@asu.edu> "
 
 import pysal
 from Contiguity import buildContiguity
-from Distance import knnW, Kernel, DistanceBand, _KDTree_from_iterable
+from Distance import knnW, Kernel, DistanceBand
 from util import get_ids, get_points_array_from_shapefile, min_threshold_distance
 import numpy as np
 import json
@@ -331,6 +331,8 @@ def knnW_from_shapefile(shapefile, k=2, p=2, idVariable=None, radius=None):
 
     if idVariable:
         ids = get_ids(shapefile, idVariable)
+    else:
+        ids = None
     return knnW_from_array(data, k=k, p=p, ids=ids)
 
 

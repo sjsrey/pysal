@@ -14,7 +14,8 @@ import scipy.stats
 import numpy as np
 
 __all__ = ["knnW", "Kernel", "DistanceBand"]
-
+KDTypes = [scipy.spatial.KDTree, scipy.spatial.cKDTree,
+        pysal.cg.kdtree.Arc_KDTree]
 
 def knnW(kdtree, k=2, p=2, ids=None):
     """
@@ -83,7 +84,11 @@ def knnW(kdtree, k=2, p=2, ids=None):
     pysal.weights.W
 
     """
-    data = kdtree.data
+    if type(kdtree) in KDTypes:
+        data = kdtree.data
+    else:
+        data = kdtree
+        kdtree = KDTree(data)
     nnq = kdtree.query(data, k=k+1, p=p)
     info = nnq[1]
 
@@ -265,7 +270,7 @@ class Kernel(W):
     def __init__(self, data, bandwidth=None, fixed=True, k=2,
                  function='triangular', eps=1.0000001, ids=None,
                  diagonal=False):
-        if issubclass(type(data), scipy.spatial.KDTree):
+        if type(data) in KDTypes:
             self.kdt = data
             self.data = self.kdt.data
             data = self.data
@@ -448,7 +453,7 @@ class DistanceBand(W):
         See detail in pysal issue #126.
 
         """
-        if issubclass(type(data), scipy.spatial.KDTree):
+        if type(data) in KDTypes:
             self.kd = data
             self.data = self.kd.data
         else:

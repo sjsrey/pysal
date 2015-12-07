@@ -298,7 +298,7 @@ class ContiguityWeightsPolygons:
             for polyId in xrange(numPoly):
                 if polyId not in edgeCache:
                     iEdges = {}
-                    iVerts = shpFileObject.get(polyId).vertices
+                    iVerts = self.collection[polyId].vertices
                     nv = len(iVerts)
                     ne = nv - 1
                     for i in xrange(ne):
@@ -326,7 +326,7 @@ class ContiguityWeightsPolygons:
                     if polyId < j:
                         if bbcommon(bbcache[polyId], bbcache[j]):
                             if j not in edgeCache:
-                                jVerts = shpFileObject.get(j).vertices
+                                jVerts = self.collection[j].vertices
                                 jEdges = {}
                                 nv = len(jVerts)
                                 ne = nv - 1

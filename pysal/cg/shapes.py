@@ -21,6 +21,8 @@ def asShape(obj):
     Returns a pysal shape object from obj.
     obj must support the __geo_interface__.
     """
+    if type(obj) in _geoJSON_type_to_Pysal_type.values():
+        return obj
     if hasattr(obj, '__geo_interface__'):
         geo = obj.__geo_interface__
     else:
@@ -1966,27 +1968,21 @@ class PolygonCollection:
         self.type = Polygon
         self.n = len(polygons)
         self.polygons = polygons
-        if bbox is None:
-            self._bbox = None
-        else:
-            self._bbox = bbox
+        self._bbox = bbox
             
     @property
     def bbox(self):
-        bboxes = np.array([self.polygons[p].bbox for p in self.polygons])
-        mins = bboxes.min(axis=0)
-        maxs = bboxes.max(axis=0)
-        self._bbox = [ mins[0], mins[1], maxs[2], maxs[3] ]
+        if self._bbox is None:
+            bboxes = np.array([self.polygons[p].bbox for p in self.polygons])
+            mins = bboxes.min(axis=0)
+            maxs = bboxes.max(axis=0)
+            self._bbox = [ mins[0], mins[1], maxs[2], maxs[3] ]
         return self._bbox
         
     
     def __getitem__(self, index):
         return self.polygons[index]
             
-
-
-
-
 
 _geoJSON_type_to_Pysal_type = {'point': Point, 'linestring': Chain,
                                'polygon': Polygon, 'multipolygon': Polygon}

@@ -9,6 +9,7 @@ import pysal
 import scipy.spatial
 from pysal.common import KDTree
 from pysal.weights import W
+from util import get_points_array
 import scipy.stats
 import numpy as np
 
@@ -503,7 +504,6 @@ class DistanceBand(W):
                     neighbors[j].append(i)
 
         return neighbors, weights
-
 
 def _test():
     import doctest

@@ -1014,6 +1014,17 @@ def get_ids(shapefile, idVariable):
             idVariable, ','.join(db.header))
         raise KeyError(msg)
 
+def get_points_array(obj):
+    """
+    get points from a potentially heterogeneous collection of shapes. 
+    """
+    data = []
+    for x in obj:
+        try:
+            data.append(x.centroid)
+        except AttributeError:
+            data.append(x)
+    return np.array(data)
 
 def get_points_array_from_shapefile(shapefile):
     """

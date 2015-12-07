@@ -235,7 +235,6 @@ class Arc_KDTree(scipy.spatial.KDTree):
         #print map(a2l,D.data)
         return scipy.sparse.coo_matrix((map(a2l, D.data), (D.row, D.col))).todok()
 
-
 def KDTree(data, leafsize=10, distance_metric='Euclidean', radius=1.0):
     if distance_metric.lower() == 'euclidean':
         if int(scipy.version.version.split(".")[1]) < 12:

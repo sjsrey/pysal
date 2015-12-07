@@ -8,7 +8,7 @@ __author__ = "Sergio J. Rey <srey@asu.edu> "
 
 import pysal
 from Contiguity import buildContiguity
-from Distance import knnW, Kernel, DistanceBand
+from Distance import knnW, Kernel, DistanceBand, _KDTree_from_iterable
 from util import get_ids, get_points_array_from_shapefile, min_threshold_distance
 import numpy as np
 import json
@@ -247,7 +247,6 @@ def knnW_from_array(array, k=2, p=2, ids=None, radius=None):
         kdtree = pysal.cg.KDTree(array)
     return knnW(kdtree, k=k, p=p, ids=ids)
 
-
 def knnW_from_shapefile(shapefile, k=2, p=2, idVariable=None, radius=None):
     """
     Nearest neighbor weights from a shapefile.
@@ -328,17 +327,11 @@ def knnW_from_shapefile(shapefile, k=2, p=2, idVariable=None, radius=None):
     :class:`pysal.weights.W`
 
     """
-
     data = get_points_array_from_shapefile(shapefile)
 
-    if radius is not None:
-        kdtree = pysal.cg.KDTree(data, distance_metric='Arc', radius=radius)
-    else:
-        kdtree = pysal.cg.KDTree(data)
     if idVariable:
         ids = get_ids(shapefile, idVariable)
-        return knnW(kdtree, k=k, p=p, ids=ids)
-    return knnW(kdtree, k=k, p=p)
+    return knnW_from_array(data, k=k, p=p, ids=ids)
 
 
 def threshold_binaryW_from_array(array, threshold, p=2, radius=None):
@@ -1269,9 +1262,17 @@ def rook_from_geojsons(s):
     """
     return contiguity_from_geojson(s, wtype="ROOK")
 
+def contiguity_from_iterable(collection, wtype='rook'):
+    WTYPE = wtype.upper()
+    if WTYPE not in ['QUEEN', 'ROOK']:
+        raise ValueError("wtype must be 'QUEEN' or 'ROOK'")
+    WTYPE =['QUEEN', 'ROOK'].index(WTYPE)+1
+    
+    shpdict = {idx:pysal.cg.asShape(poly) for idx, poly in enumerate(collection)}
+    pc = pysal.cg.shapes.PolygonCollection(shpdict)
+    neighs = pysal.weights.Contiguity.ContiguityWeightsPolygons(pc)
 
-
-
+    return pysal.W(neighs.w)
 
 def _test():
     import doctest

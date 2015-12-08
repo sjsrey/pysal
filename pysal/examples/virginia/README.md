@@ -8,3 +8,4 @@ Virginia counties shapefile
   * virginia.shx: shapefile index
   * virginia.dbf: attributes
   * virginia.prj: shapefile projection
+  * virginia.json: geojson file

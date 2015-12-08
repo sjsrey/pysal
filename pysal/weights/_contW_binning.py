@@ -200,7 +200,7 @@ class ContiguityWeightsPolygons:
         Parameters
         ==========
 
-        collection: PySAL PolygonCollection 
+        collection: PySAL PolygonCollection
 
         wttype: int
                 1: Queen
@@ -344,7 +344,7 @@ class ContiguityWeightsPolygons:
 
         self.w = w
 
-import json
+import json # Move this to file io
 class GeoJsonHandler:
     """ """
     def __init__(self, datasource):
@@ -395,7 +395,7 @@ class GeoJsonHandler:
         bboxes = np.array(feature_bboxes)
         self.content['bbox'] =  [ bboxes[:,0].min(), bboxes[:,1].min(),
                 bboxes[:,2].max(), bboxes[:,3].max() ]
-            
+
 
     def get_feature(self, i):
         return self.content['features'][i]
@@ -407,13 +407,13 @@ class GeoJsonHandler:
         return [ min(xs), min(ys), max(xs), max(ys) ]
 
 
-        
+
 
 
 
 def contiguity_from_json(source, binning=True, wtype='QUEEN'):
 
-    js = GeoJsonHandler(source)
+    js = GeoJsonHandler(source) # this moves to FileIO
 
     if wtype.upper() == 'QUEEN':
         wttype = 1
@@ -436,6 +436,7 @@ def contiguity_from_json(source, binning=True, wtype='QUEEN'):
             return set(vertices)
 
 
+        # make bbox a property of js object
         if not js.content.has_key('bbox'):
             js.set_feature_collection_bbox()
 
@@ -560,7 +561,7 @@ def contiguity_from_json(source, binning=True, wtype='QUEEN'):
         else:
             print "Unsupported weight type."
 
-    return w 
+    return w
 
 
 
@@ -615,7 +616,7 @@ if __name__ == "__main__":
 
     import pysal as ps
     w = contiguity_from_json(ps.examples.get_path("virginia.json"))
-    
+
     pth = ps.examples.get_path("virginia.json")
     with open(pth) as source:
         d = json.load(source)

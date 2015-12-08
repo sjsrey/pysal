@@ -2,6 +2,7 @@
 import pysal.core.Tables as Tables
 import pysal
 import os.path
+import numpy as np
 from pysal.weights import W
 from pysal.weights.util import remap_ids
 from warnings import warn
@@ -123,13 +124,34 @@ class GeoJsonHandler:
         return self.content['features'][i]['geometry']["coordinates"]
 
     def get_geometries(self, ids = []):
-        
+
         if not ids:
             ids = range(self.n)
         else:
             if not hasattr(s, 'iter'):
                 ids = [ids]
         return [ self.get_geometry(i) for i in ids ]
+
+    def get_properites_as_array(self, property_names):
+        ptype = self.property_types[property_names[0]]
+        for name in property_names:
+            if ptype != self.property_types[name]:
+                print('Properties must be of same type')
+                return None
+
+        return np.array([self.by_property(name) for name in property_names]).T
+
+    def subset(self, ids):
+        new_features = []
+        for i,f in enumerate(self.content['features']):
+            if i in ids:
+                new_features.append(f)
+        content = {}
+        content[u'crs'] = self.content['crs']
+        content['type'] = self.content['type']
+        content['features'] = new_features
+        return content
+
 
 
 

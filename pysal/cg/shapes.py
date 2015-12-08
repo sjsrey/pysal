@@ -625,7 +625,7 @@ class LineSegment(object):
         -1 if the points are collinear and self.p1 is in the middle
         1 if the points are collinear and self.p2 is in the middle
         0 if the points are collinear and pt is in the middle
-        
+
         """
 
         p0 = self.p1
@@ -1945,8 +1945,27 @@ class Rectangle:
         """
         return self.upper - self.lower
 
-class PolygonCollection:
-    def __init__(self, polygons, bbox=None):
+class GeometryCollection:
+    def __init__(self, geometries, bbox=None):
+        self.type = "Abstract"
+        self.n = len(geometries)
+        self.geometries = geometries
+        if bbox is None:
+            self._bbox = None
+        else:
+            self._bbox = bbox
+
+    @property
+    def bbox(self):
+        NotImplementedError
+
+    def __get__item(self, index):
+        return self.geometries[index]
+
+
+class PolygonCollection(GeometryCollection):
+    def __init__(self, geometries, bbox=None):
+        super(PolygonCollection, self).__init__(geometries, bbox)
         """
 
         Parameters
@@ -1958,33 +1977,20 @@ class PolygonCollection:
 
         Notes
         =====
-        bbox is supported in geojson specification at both the feature and feature collection level. However, not all GeoJSON writers generate the bbox at the feature collection level. 
+        bbox is supported in geojson specification at both the feature and feature collection level. However, not all GeoJSON writers generate the bbox at the feature collection level.
         In those cases, the bbox property will be set on initial access.
 
         """
-              
+
         self.type = Polygon
-        self.n = len(polygons)
-        self.polygons = polygons
-        if bbox is None:
-            self._bbox = None
-        else:
-            self._bbox = bbox
-            
+
     @property
     def bbox(self):
-        bboxes = np.array([self.polygons[p].bbox for p in self.polygons])
+        bboxes = np.array([self.geometries[p].bbox for p in self.geometries])
         mins = bboxes.min(axis=0)
         maxs = bboxes.max(axis=0)
         self._bbox = [ mins[0], mins[1], maxs[2], maxs[3] ]
         return self._bbox
-        
-    
-    def __getitem__(self, index):
-        return self.polygons[index]
-            
-
-
 
 
 

@@ -231,8 +231,82 @@ class FeatureCollection(object):
             msg = "{0} Cannot be used as idVariable".format(msg)
             warnings.warn(msg)
 
+    def getIdVariableOrder(self):
+        return self.getPropertiesAsArray([self.__idVariable])
+
+    def getFeatureIds(self, args):
+        """
+        Find the feature ids for features with idVariables matching args
+
+        Arguments
+        ---------
+        args: list
+              values that idVariable matches on
+
+        Returns
+        -------
+        _  :  list
+              feature ids
+        """
+        idOrder = self.getIdVariableOrder().flatten().tolist()
+        ids = [idOrder.index(v) for v in args]
+        return ids
+
+    def getFeatures(self, args=None):
+        """
+        Return features matching on idVariable for arg
+
+        Arguments
+        ---------
+        args: list
+              values that idVariable is to be matched on. If args is None, all
+              features are returned
+
+        Returns
+
+        _  : generator
+             features matching query
+
+        """
+
+        if args:
+            ids = self.getFeatureIds(args)
+        else:
+            ids = xrange(self.n_features)
+        return (self.features[i] for i in ids)
+
+    def getGeometries(self, args=None):
+        if args:
+            ids = self.getFeatureIds(args)
+        else:
+            ids = xrange(self.n_features)
+        return (self.features[i]['geometry'] for i in ids)
+
     def is_unique(self, values):
+        """
+        Check if the values in the array are all unique
+
+        Arguments
+        --------
+        values: array (1d)
+        """
         if np.unique(values).shape[0] == values.shape[0]:
             return True
         else:
             return False
+
+    def saveAsGeoJson(self, fileName="Untiled.geojson"):
+        d = {}
+        d["type"] = "FeatureCollection"
+        d['features'] = []
+        for fi in self.features:
+            feature = self.features[fi]
+            f = {}
+            f["type"] = "Feature"
+            f["geometry"] = {}
+            f["geometry"]["type"] = feature["geometry"].type
+            f["geometry"]["coordinates"] = feature["geometry"].coordinates
+            f["properties"] = feature['properties']
+            d['features'].append(f)
+        with open(fileName, 'w') as out:
+            json.dump(d, out)

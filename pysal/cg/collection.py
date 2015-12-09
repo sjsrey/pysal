@@ -1,5 +1,6 @@
 import numpy as np
 import json
+import warnings
 
 
 def ring_bbox(ring):
@@ -70,8 +71,6 @@ class Polygon(Geometry):
             x1 = max(r, x1)
             y1 = max(t, y1)
         return [x0, y0, x1, y1]
-
-
 
 
 class MultiPolygon(Geometry):
@@ -166,7 +165,21 @@ geometryDispatcher[u'MultiLineString'] = MultiLineString
 
 
 class FeatureCollection(object):
-    def __init__(self, file_path):
+    def __init__(self, file_path, idVariable=None):
+        """
+        FeatureCollection extension of geojson FC for handling internal data in
+        PySAL
+
+        Arguments
+        --------
+        source: file path or json string
+                input data
+
+        idVariable: int
+                Name of feature property that is used for spatial joins,
+                sub-setting, and sorting of features
+
+        """
         with open(file_path) as source:
             data = json.load(source)
         features = {}
@@ -180,6 +193,8 @@ class FeatureCollection(object):
             features[i] = f
             self.n_features += 1
         self.features = features
+
+        self.idVariable = idVariable
 
     def getPropertyTypes(self):
         propertyTypes = {}
@@ -201,3 +216,23 @@ class FeatureCollection(object):
         sf = self.features
         return (sf[f]['geometry'].coordinates for f in sf)
 
+    @property
+    def idVariable(self):
+        return self.__idVariable
+
+    @idVariable.setter
+    def idVariable(self, property):
+        if property is None:
+            self.__idVariable = property
+        elif self.is_unique(self.getPropertiesAsArray([property])):
+            self.__idVariable = property
+        else:
+            msg = "{0} is not uniquely valued. ".format(property)
+            msg = "{0} Cannot be used as idVariable".format(msg)
+            warnings.warn(msg)
+
+    def is_unique(self, values):
+        if np.unique(values).shape[0] == values.shape[0]:
+            return True
+        else:
+            return False

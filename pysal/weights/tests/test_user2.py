@@ -148,8 +148,8 @@ class Testuser(unittest.TestCase):
         os.remove('lattice.shx')
 
 
-suite = unittest.TestLoader().loadTestsFromTestCase(Testuser)
+#suite = unittest.TestLoader().loadTestsFromTestCase(Testuser)
 
 if __name__ == '__main__':
-    runner = unittest.TextTestRunner()
-    runner.run(suite)
+#    runner = unittest.TextTestRunner()
+#    runner.run(suite)

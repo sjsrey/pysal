@@ -1,13 +1,9 @@
 #!/usr/bin/python
 #import math
-import json
-import types as ty
 import pysal
 import numpy as np
-import scipy.stats as st
 from pysal.cg.standalone import get_shared_segments
 from collections import defaultdict
-from warnings import warn as Warn
 
 __author__ = "Sergio J. Rey <srey@asu.edu> "
 __all__ = ["QUEEN", "ROOK", "ContiguityWeights_binning",
@@ -204,7 +200,7 @@ class ContiguityWeightsPolygons:
         Parameters
         ==========
 
-        collection: PySAL PolygonCollection 
+        collection: PySAL PolygonCollection
 
         wttype: int
                 1: Queen
@@ -298,7 +294,7 @@ class ContiguityWeightsPolygons:
             for polyId in xrange(numPoly):
                 if polyId not in edgeCache:
                     iEdges = {}
-                    iVerts = self.collection[polyId].vertices
+                    iVerts = shpFileObject.get(polyId).vertices
                     nv = len(iVerts)
                     ne = nv - 1
                     for i in xrange(ne):
@@ -326,7 +322,7 @@ class ContiguityWeightsPolygons:
                     if polyId < j:
                         if bbcommon(bbcache[polyId], bbcache[j]):
                             if j not in edgeCache:
-                                jVerts = self.collection[j].vertices
+                                jVerts = shpFileObject.get(j).vertices
                                 jEdges = {}
                                 nv = len(jVerts)
                                 ne = nv - 1
@@ -348,12 +344,13 @@ class ContiguityWeightsPolygons:
 
         self.w = w
 
+import json # Move this to file io
 class GeoJsonHandler:
     """ """
     def __init__(self, datasource):
-        if isinstance(datasource, ty.StringType):
+        if datasource[0] == "{":
             self.content = json.loads(datasource)
-        elif isinstance(datasource, ty.FileType):
+        else:
             with open(datasource) as f:
                  self.content = json.load(f)
 
@@ -361,45 +358,7 @@ class GeoJsonHandler:
         properties = self.content['features'][0]["properties"]
         self.n_properties = len(properties)
         self.property_types = dict([ (prop, type(properties[prop])) for prop in properties])
-    
-    @property
-    def min_properties(self):
-        try:
-            return self._min_properties
-        except AttributeError:
-            self._min_properties = _grok_properties(min)
-            return self._min_properties
 
-    @property
-    def max_properties(self):
-        try:
-            return self._max_properties
-        except AttributeError:
-            self._max_properties = _grok_properties(max)
-            return self._max_properties
-
-    @property
-    def mode_properties(self):
-        try:
-            return self._mode_properties
-        except AttributeError:
-            self._mode_properties = self._grok_properties(st.mode).mode
-            return self._mode_properties
-
-    @property
-    def n_properties(self):
-        try:
-            if (isinstance(self._n_properties, np.array) 
-                & len(self._n_properties) > 1):
-                Warn('Properties of features have heterogeneous lengths!')
-            return self._n_properties
-        except AttributeError:
-            if self.min_properties == self.max_properties:
-                self._n_properties = self.min_properties
-                return self._n_properties
-            else:
-                self._n_properties = self._grok_properties(np.unique)
-                return self.n_properties #recursive to warn JIC
 
     def by_property(self, property_name):
         return [ feature["properties"][property_name] for feature in self.content['features']]
@@ -435,26 +394,26 @@ class GeoJsonHandler:
             feature_bboxes.append(bbox)
         bboxes = np.array(feature_bboxes)
         self.content['bbox'] =  [ bboxes[:,0].min(), bboxes[:,1].min(),
-                bboxes[:,2].max(), bboxes[:,3].max() ] 
+                bboxes[:,2].max(), bboxes[:,3].max() ]
+
 
     def get_feature(self, i):
         return self.content['features'][i]
 
-    #########
-    #PRIVATE#
-    #########
 
     def _list_bb(self, lst):
         xs = [ v[0] for v in lst]
         ys = [ v[1] for v in lst]
         return [ min(xs), min(ys), max(xs), max(ys) ]
-    
-    def _grok_properties(self, func):
-        return func(len(x['properties']) for x in self.content['features'])
+
+
+
+
+
 
 def contiguity_from_json(source, binning=True, wtype='QUEEN'):
 
-    js = GeoJsonHandler(source)
+    js = GeoJsonHandler(source) # this moves to FileIO
 
     if wtype.upper() == 'QUEEN':
         wttype = 1
@@ -477,6 +436,7 @@ def contiguity_from_json(source, binning=True, wtype='QUEEN'):
             return set(vertices)
 
 
+        # make bbox a property of js object
         if not js.content.has_key('bbox'):
             js.set_feature_collection_bbox()
 
@@ -601,7 +561,7 @@ def contiguity_from_json(source, binning=True, wtype='QUEEN'):
         else:
             print "Unsupported weight type."
 
-    return w 
+    return w
 
 
 
@@ -656,7 +616,7 @@ if __name__ == "__main__":
 
     import pysal as ps
     w = contiguity_from_json(ps.examples.get_path("virginia.json"))
-    
+
     pth = ps.examples.get_path("virginia.json")
     with open(pth) as source:
         d = json.load(source)

@@ -3,13 +3,12 @@ Computational geometry code for PySAL: Python Spatial Analysis Library.
 
 """
 
-__author__ = "Sergio J. Rey, Xinyue Ye, Charles Schmidt, Andrew Winslow, Levi John Wolf"
+__author__ = "Sergio J. Rey, Xinyue Ye, Charles Schmidt, Andrew Winslow"
 __credits__ = "Copyright (c) 2005-2009 Sergio J. Rey"
 
 import doctest
 import math
 import numpy as np
-from six import iteritems as diter
 from warnings import warn
 from sphere import arcdist
 
@@ -22,8 +21,6 @@ def asShape(obj):
     Returns a pysal shape object from obj.
     obj must support the __geo_interface__.
     """
-    if type(obj) in _geoJSON_type_to_Pysal_type.values():
-        return obj #already pysal object
     if hasattr(obj, '__geo_interface__'):
         geo = obj.__geo_interface__
     else:
@@ -628,7 +625,7 @@ class LineSegment(object):
         -1 if the points are collinear and self.p1 is in the middle
         1 if the points are collinear and self.p2 is in the middle
         0 if the points are collinear and pt is in the middle
-        
+
         """
 
         p0 = self.p1
@@ -1948,8 +1945,27 @@ class Rectangle:
         """
         return self.upper - self.lower
 
-class PolygonCollection:
-    def __init__(self, polygons, bbox=None):
+class GeometryCollection:
+    def __init__(self, geometries, bbox=None):
+        self.type = "Abstract"
+        self.n = len(geometries)
+        self.geometries = geometries
+        if bbox is None:
+            self._bbox = None
+        else:
+            self._bbox = bbox
+
+    @property
+    def bbox(self):
+        NotImplementedError
+
+    def __get__item(self, index):
+        return self.geometries[index]
+
+
+class PolygonCollection(GeometryCollection):
+    def __init__(self, geometries, bbox=None):
+        super(PolygonCollection, self).__init__(geometries, bbox)
         """
 
         Parameters
@@ -1961,52 +1977,23 @@ class PolygonCollection:
 
         Notes
         =====
-        bbox is supported in geojson specification at both the feature and feature collection level. However, not all GeoJSON writers generate the bbox at the feature collection level. 
+        bbox is supported in geojson specification at both the feature and feature collection level. However, not all GeoJSON writers generate the bbox at the feature collection level.
         In those cases, the bbox property will be set on initial access.
 
         """
-              
+
         self.type = Polygon
-        self.n = len(polygons)
-        self.polygons = polygons
-        self._bbox = bbox
-            
+
     @property
     def bbox(self):
-        if self._bbox is None:
-            bboxes = np.array([self.polygons[p].bbox for p in self.polygons])
-            mins = bboxes.min(axis=0)
-            maxs = bboxes.max(axis=0)
-            self._bbox = [ mins[0], mins[1], maxs[2], maxs[3] ]
+        bboxes = np.array([self.geometries[p].bbox for p in self.geometries])
+        mins = bboxes.min(axis=0)
+        maxs = bboxes.max(axis=0)
+        self._bbox = [ mins[0], mins[1], maxs[2], maxs[3] ]
         return self._bbox
-        
-    
-    def __getitem__(self, index):
-        return self.polygons[index]
-            
 
-def asPolygonCollection(collection, **kwargs):
-    """
-    Construct a PolygonCollection from an arbitrary iterable of shapes.
-    """
-    ids = kwargs.pop('ids', None)
-    if ids is None:
-        ids = ()
-    if isinstance(collection, PolygonCollection):
-        out = collection
-    elif isinstance(collection, dict):
-        #if we have a standardized geojson handler, then we could check if this
-        #is geojson FeatureCollection or GeometryCollection and pass the handler
-        collection = {k:asShape(v) for k,v in diter(collection)}
-        out = PolygonCollection(collection, **kwargs)
-    else:
-        try:
-            collection = {i:asShape(v) for i,v in enumerate(collection)}
-        except TypeError:
-            raise TypeError("collection is not iterable")
-        out = PolygonCollection(collection, **kwargs)
-    return out
-    
+
+
 _geoJSON_type_to_Pysal_type = {'point': Point, 'linestring': Chain,
                                'polygon': Polygon, 'multipolygon': Polygon}
 import standalone  # moving this to top breaks unit tests !

@@ -3,6 +3,7 @@ import math
 import os
 import cPickle
 import copy
+import networkMetricAdditions
 
 import numpy as np
 import pysal as ps

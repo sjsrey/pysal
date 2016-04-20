@@ -71,6 +71,7 @@ class PointPattern(object):
 
         self.df = pd.DataFrame(points)
         n, p = self.df.shape
+        print(n, p)
         self._n_marks = p - 2
         if coord_names is None:
             if names is not None:
@@ -90,6 +91,7 @@ class PointPattern(object):
         self._x, self._y = coord_names
         self.df.columns = col_names
         self.points = self.df.loc[:, [self._x, self._y]]
+        print(self.points)
         self._n, self._p = self.points.shape
         if window is None:
             self.set_window(as_window(poly_from_bbox(self.mbb)))

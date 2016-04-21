@@ -2,13 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="15c9c05a-3dd5-428e-b169-1b4a2111b173" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pysal/contrib/points/tests/test_contain_point_performance.py" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/pysal/contrib/points/Shao - Project Description.ipynb" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/pysal.iml" afterPath="$PROJECT_DIR$/.idea/pysal.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pysal/contrib/points/distance_statistics.ipynb" afterPath="$PROJECT_DIR$/pysal/contrib/points/distance_statistics.ipynb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pysal/contrib/points/pointpattern.ipynb" afterPath="$PROJECT_DIR$/pysal/contrib/points/pointpattern.ipynb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pysal/contrib/points/tests/Shao_Project Description.ipynb" afterPath="$PROJECT_DIR$/pysal/contrib/points/tests/Shao_Project Description.ipynb" />
     </list>
     <ignored path="pysal.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -32,10 +28,10 @@
       <file leaf-file-name="pointpattern.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pysal/contrib/points/pointpattern.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="412">
+            <state relative-caret-position="1780">
               <caret line="98" column="32" selection-start-line="98" selection-start-column="32" selection-end-line="98" selection-end-column="32" />
               <folding>
-                <marker date="1461191431911" expanded="true" signature="1382:1623" placeholder="..." />
+                <marker date="1461211344238" expanded="true" signature="1382:1623" placeholder="..." />
               </folding>
             </state>
           </provider>
@@ -44,7 +40,7 @@
       <file leaf-file-name="window.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pysal/contrib/points/window.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="813">
+            <state relative-caret-position="1100">
               <caret line="56" column="69" selection-start-line="56" selection-start-column="69" selection-end-line="56" selection-end-column="69" />
               <folding />
             </state>
@@ -54,7 +50,7 @@
       <file leaf-file-name="shapes.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pysal/cg/shapes.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
+            <state relative-caret-position="33900">
               <caret line="1698" column="8" selection-start-line="1698" selection-start-column="8" selection-end-line="1698" selection-end-column="8" />
               <folding />
             </state>
@@ -64,14 +60,14 @@
       <file leaf-file-name="distance_statistics.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pysal/contrib/points/distance_statistics.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="993">
+            <state relative-caret-position="10820">
               <caret line="543" column="43" selection-start-line="543" selection-start-column="43" selection-end-line="543" selection-end-column="43" />
               <folding>
-                <marker date="1461191431909" expanded="true" signature="21465:21719" placeholder="import ..." />
-                <marker date="1461191431909" expanded="true" signature="24523:24777" placeholder="import ..." />
-                <marker date="1461191431909" expanded="true" signature="27632:27886" placeholder="import ..." />
-                <marker date="1461191431909" expanded="true" signature="30652:30906" placeholder="import ..." />
-                <marker date="1461191431909" expanded="true" signature="33619:33873" placeholder="import ..." />
+                <marker date="1461211344237" expanded="true" signature="21465:21719" placeholder="import ..." />
+                <marker date="1461211344237" expanded="true" signature="24523:24777" placeholder="import ..." />
+                <marker date="1461211344237" expanded="true" signature="27632:27886" placeholder="import ..." />
+                <marker date="1461211344237" expanded="true" signature="30652:30906" placeholder="import ..." />
+                <marker date="1461211344237" expanded="true" signature="33619:33873" placeholder="import ..." />
               </folding>
             </state>
           </provider>
@@ -80,8 +76,8 @@
       <file leaf-file-name="test_contain_point_performance.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/pysal/contrib/points/tests/test_contain_point_performance.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-159">
-              <caret line="7" column="37" selection-start-line="7" selection-start-column="37" selection-end-line="7" selection-end-column="37" />
+            <state relative-caret-position="322">
+              <caret line="19" column="20" selection-start-line="19" selection-start-column="20" selection-end-line="19" selection-end-column="20" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -345,7 +341,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3295711" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32919955" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1421776" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -379,10 +375,60 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/pysal/contrib/points/pointpattern.py">
       <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1780">
+          <caret line="98" column="32" selection-start-line="98" selection-start-column="32" selection-end-line="98" selection-end-column="32" />
+          <folding>
+            <marker date="1461211344238" expanded="true" signature="1382:1623" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pysal/contrib/points/window.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1100">
+          <caret line="56" column="69" selection-start-line="56" selection-start-column="69" selection-end-line="56" selection-end-column="69" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pysal/cg/shapes.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="33900">
+          <caret line="1698" column="8" selection-start-line="1698" selection-start-column="8" selection-end-line="1698" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pysal/contrib/points/distance_statistics.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="10820">
+          <caret line="543" column="43" selection-start-line="543" selection-start-column="43" selection-end-line="543" selection-end-column="43" />
+          <folding>
+            <marker date="1461211344237" expanded="true" signature="21465:21719" placeholder="import ..." />
+            <marker date="1461211344237" expanded="true" signature="24523:24777" placeholder="import ..." />
+            <marker date="1461211344237" expanded="true" signature="27632:27886" placeholder="import ..." />
+            <marker date="1461211344237" expanded="true" signature="30652:30906" placeholder="import ..." />
+            <marker date="1461211344237" expanded="true" signature="33619:33873" placeholder="import ..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pysal/contrib/points/tests/test_contain_point_performance.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pysal/contrib/points/pointpattern.py">
+      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1740">
           <caret line="96" column="32" selection-start-line="96" selection-start-column="32" selection-end-line="96" selection-end-column="32" />
           <folding>
-            <marker date="1461191431911" expanded="true" signature="1382:1623" placeholder="..." />
+            <marker date="1461211344238" expanded="true" signature="1382:1623" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -408,11 +454,11 @@
         <state relative-caret-position="10820">
           <caret line="543" column="43" selection-start-line="543" selection-start-column="43" selection-end-line="543" selection-end-column="43" />
           <folding>
-            <marker date="1461191431909" expanded="true" signature="21465:21719" placeholder="import ..." />
-            <marker date="1461191431909" expanded="true" signature="24523:24777" placeholder="import ..." />
-            <marker date="1461191431909" expanded="true" signature="27632:27886" placeholder="import ..." />
-            <marker date="1461191431909" expanded="true" signature="30652:30906" placeholder="import ..." />
-            <marker date="1461191431909" expanded="true" signature="33619:33873" placeholder="import ..." />
+            <marker date="1461211344237" expanded="true" signature="21465:21719" placeholder="import ..." />
+            <marker date="1461211344237" expanded="true" signature="24523:24777" placeholder="import ..." />
+            <marker date="1461211344237" expanded="true" signature="27632:27886" placeholder="import ..." />
+            <marker date="1461211344237" expanded="true" signature="30652:30906" placeholder="import ..." />
+            <marker date="1461211344237" expanded="true" signature="33619:33873" placeholder="import ..." />
           </folding>
         </state>
       </provider>
@@ -422,7 +468,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1461191431911" expanded="true" signature="1382:1623" placeholder="..." />
+            <marker date="1461211344238" expanded="true" signature="1382:1623" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -432,7 +478,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1461191431911" expanded="true" signature="1382:1623" placeholder="..." />
+            <marker date="1461211344238" expanded="true" signature="1382:1623" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -442,7 +488,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1461191431911" expanded="true" signature="1382:1623" placeholder="..." />
+            <marker date="1461211344238" expanded="true" signature="1382:1623" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -452,7 +498,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1461191431911" expanded="true" signature="1382:1623" placeholder="..." />
+            <marker date="1461211344238" expanded="true" signature="1382:1623" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -462,7 +508,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1461191431911" expanded="true" signature="1382:1623" placeholder="..." />
+            <marker date="1461211344238" expanded="true" signature="1382:1623" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -472,7 +518,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1461191431911" expanded="true" signature="1382:1623" placeholder="..." />
+            <marker date="1461211344238" expanded="true" signature="1382:1623" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -482,7 +528,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1461191431911" expanded="true" signature="1382:1623" placeholder="..." />
+            <marker date="1461211344238" expanded="true" signature="1382:1623" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -492,7 +538,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1461191431911" expanded="true" signature="1382:1623" placeholder="..." />
+            <marker date="1461211344238" expanded="true" signature="1382:1623" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -502,7 +548,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1461191431911" expanded="true" signature="1382:1623" placeholder="..." />
+            <marker date="1461211344238" expanded="true" signature="1382:1623" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -512,7 +558,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1461191431911" expanded="true" signature="1382:1623" placeholder="..." />
+            <marker date="1461211344238" expanded="true" signature="1382:1623" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -522,7 +568,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1461191431911" expanded="true" signature="1382:1623" placeholder="..." />
+            <marker date="1461211344238" expanded="true" signature="1382:1623" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -532,7 +578,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1461191431911" expanded="true" signature="1382:1623" placeholder="..." />
+            <marker date="1461211344238" expanded="true" signature="1382:1623" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -542,7 +588,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1461191431911" expanded="true" signature="1382:1623" placeholder="..." />
+            <marker date="1461211344238" expanded="true" signature="1382:1623" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -552,7 +598,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1461191431911" expanded="true" signature="1382:1623" placeholder="..." />
+            <marker date="1461211344238" expanded="true" signature="1382:1623" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -566,17 +612,17 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/pysal/contrib/points/pointpattern.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="412">
+        <state relative-caret-position="1780">
           <caret line="98" column="32" selection-start-line="98" selection-start-column="32" selection-end-line="98" selection-end-column="32" />
           <folding>
-            <marker date="1461191431911" expanded="true" signature="1382:1623" placeholder="..." />
+            <marker date="1461211344238" expanded="true" signature="1382:1623" placeholder="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pysal/contrib/points/window.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="813">
+        <state relative-caret-position="1100">
           <caret line="56" column="69" selection-start-line="56" selection-start-column="69" selection-end-line="56" selection-end-column="69" />
           <folding />
         </state>
@@ -584,21 +630,21 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/pysal/contrib/points/distance_statistics.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="993">
+        <state relative-caret-position="10820">
           <caret line="543" column="43" selection-start-line="543" selection-start-column="43" selection-end-line="543" selection-end-column="43" />
           <folding>
-            <marker date="1461191431909" expanded="true" signature="21465:21719" placeholder="import ..." />
-            <marker date="1461191431909" expanded="true" signature="24523:24777" placeholder="import ..." />
-            <marker date="1461191431909" expanded="true" signature="27632:27886" placeholder="import ..." />
-            <marker date="1461191431909" expanded="true" signature="30652:30906" placeholder="import ..." />
-            <marker date="1461191431909" expanded="true" signature="33619:33873" placeholder="import ..." />
+            <marker date="1461211344237" expanded="true" signature="21465:21719" placeholder="import ..." />
+            <marker date="1461211344237" expanded="true" signature="24523:24777" placeholder="import ..." />
+            <marker date="1461211344237" expanded="true" signature="27632:27886" placeholder="import ..." />
+            <marker date="1461211344237" expanded="true" signature="30652:30906" placeholder="import ..." />
+            <marker date="1461211344237" expanded="true" signature="33619:33873" placeholder="import ..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pysal/cg/shapes.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
+        <state relative-caret-position="33900">
           <caret line="1698" column="8" selection-start-line="1698" selection-start-column="8" selection-end-line="1698" selection-end-column="8" />
           <folding />
         </state>
@@ -606,8 +652,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/pysal/contrib/points/tests/test_contain_point_performance.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-159">
-          <caret line="7" column="37" selection-start-line="7" selection-start-column="37" selection-end-line="7" selection-end-column="37" />
+        <state relative-caret-position="322">
+          <caret line="19" column="20" selection-start-line="19" selection-start-column="20" selection-end-line="19" selection-end-column="20" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>

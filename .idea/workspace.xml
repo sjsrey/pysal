@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="15c9c05a-3dd5-428e-b169-1b4a2111b173" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pysal/contrib/points/tests/img/extract_connecting_boders_between_points.png" afterPath="$PROJECT_DIR$/pysal/contrib/points/tests/img/extract_connecting_boders_between_points.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pysal/contrib/points/tests/img_making.pptx" afterPath="$PROJECT_DIR$/pysal/contrib/points/tests/img_making.pptx" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/pysal.iml" afterPath="$PROJECT_DIR$/.idea/pysal.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
@@ -30,7 +32,7 @@
       <file leaf-file-name="pointpattern.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pysal/contrib/points/pointpattern.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1780">
+            <state relative-caret-position="1335">
               <caret line="98" column="32" selection-start-line="98" selection-start-column="32" selection-end-line="98" selection-end-column="32" />
               <folding />
             </state>
@@ -40,7 +42,7 @@
       <file leaf-file-name="window.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pysal/contrib/points/window.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1100">
+            <state relative-caret-position="825">
               <caret line="56" column="69" selection-start-line="56" selection-start-column="69" selection-end-line="56" selection-end-column="69" />
               <folding />
             </state>
@@ -50,7 +52,7 @@
       <file leaf-file-name="distance_statistics.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pysal/contrib/points/distance_statistics.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="10820">
+            <state relative-caret-position="8115">
               <caret line="543" column="43" selection-start-line="543" selection-start-column="43" selection-end-line="543" selection-end-column="43" />
               <folding />
             </state>
@@ -60,7 +62,7 @@
       <file leaf-file-name="shapes.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pysal/cg/shapes.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="33820">
+            <state relative-caret-position="4539">
               <caret line="1694" column="73" selection-start-line="1694" selection-start-column="73" selection-end-line="1694" selection-end-column="73" />
               <folding>
                 <element signature="e#210#224#0" expanded="true" />
@@ -72,8 +74,8 @@
       <file leaf-file-name="test_contain_point_performance.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/pysal/contrib/points/tests/test_contain_point_performance.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="814">
-              <caret line="462" column="28" selection-start-line="462" selection-start-column="28" selection-end-line="462" selection-end-column="28" />
+            <state relative-caret-position="939">
+              <caret line="650" column="27" selection-start-line="650" selection-start-column="27" selection-end-line="650" selection-end-column="27" />
               <folding />
             </state>
           </provider>
@@ -104,10 +106,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-9" />
-    <option name="y" value="-9" />
-    <option name="width" value="1938" />
-    <option name="height" value="1048" />
+    <option name="width" value="1920" />
+    <option name="height" value="1200" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -139,6 +139,7 @@
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="FullScreen" value="true" />
   </component>
   <component name="RunManager" selected="Python.test_contain_point_performance">
     <configuration default="false" name="test_contain_point_performance" type="PythonConfigurationType" factoryName="Python" temporary="true">
@@ -321,15 +322,15 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-9" y="-9" width="1938" height="1048" extended-state="6" />
-    <editor active="false" />
+    <frame x="0" y="0" width="1920" height="1200" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.19852553" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.11680761" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.11637704" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -737,25 +738,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/pysal/contrib/points/pointpattern.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1780">
+        <state relative-caret-position="1335">
           <caret line="98" column="32" selection-start-line="98" selection-start-column="32" selection-end-line="98" selection-end-column="32" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pysal/cg/shapes.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="33820">
-          <caret line="1694" column="73" selection-start-line="1694" selection-start-column="73" selection-end-line="1694" selection-end-column="73" />
-          <folding>
-            <element signature="e#210#224#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pysal/contrib/points/window.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1100">
+        <state relative-caret-position="825">
           <caret line="56" column="69" selection-start-line="56" selection-start-column="69" selection-end-line="56" selection-end-column="69" />
           <folding />
         </state>
@@ -763,16 +754,26 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/pysal/contrib/points/distance_statistics.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="10820">
+        <state relative-caret-position="8115">
           <caret line="543" column="43" selection-start-line="543" selection-start-column="43" selection-end-line="543" selection-end-column="43" />
           <folding />
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/pysal/cg/shapes.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4539">
+          <caret line="1694" column="73" selection-start-line="1694" selection-start-column="73" selection-end-line="1694" selection-end-column="73" />
+          <folding>
+            <element signature="e#210#224#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/pysal/contrib/points/tests/test_contain_point_performance.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="814">
-          <caret line="462" column="28" selection-start-line="462" selection-start-column="28" selection-end-line="462" selection-end-column="28" />
+        <state relative-caret-position="939">
+          <caret line="650" column="27" selection-start-line="650" selection-start-column="27" selection-end-line="650" selection-end-column="27" />
           <folding />
         </state>
       </provider>

@@ -270,7 +270,7 @@ class Cell(object):
                                     else:  # y1==y0, just by chance on the split_line_h
                                         continue
                         if temp_arc_belonging is None:
-                            print("Error on cell split!!!")
+                            raise Exception("Error on cell split!!!")
 
                         # At this point, the belonging sub-cell of current segment is already known.
                         # Let's begin the splitting!
@@ -429,35 +429,227 @@ class Cell(object):
 
         return  sub_cells
 
-    def extract_connecting_boders_between_points(self, cell_min_point, cell_length_x, cell_length_y, point_begin, point_end, result_type = "segments"):
-        """
-        There is an rectangle and two points on the border, this function is used to extract the borders connecting
-        these two points. The segments must be clockwise
-        Parameters
-        ----------
-        cell_min_point      : array
-                              the bottom-left point of the cell, like [x0, y0]
-        cell_length_x       : float
-                              width of the cell
-        cell_length_y       : float
-                              height of the cell
-        point_begin         : array
-                              the first point on the cell's border. like [xa, ya]
-        point_end           : array
-                              the second point on the cell's border. like [xb, yb]
-        result_type         : str
-                              MUST be one of ["segments", "border_ids"]. Indicts which kind of result will return.
-                              "segments": return the segments list which connecting these two points
-                              "border_ids" return a list of ids of the orders of the cell connceting these two points
 
-        Returns
-        -------
-        segments            : array
-                              list of points
-        ids                 : array
-                              list of integers
-        """
-        # Determine which borders do the point_begin and point_end belong
-        border_id_p_begin = -1
-        border_id_p_end = -1
-        if point_begin[0] ==
+
+
+def extract_connecting_boders_between_points( cell_min_point, cell_length_x, cell_length_y, point_begin, point_end, result_type = "segments"):
+    """
+    There is an rectangle and two points on the border, this function is used to extract the borders connecting
+    these two points. The segments must be clockwise
+    Parameters
+    ----------
+    cell_min_point      : list
+                          the bottom-left point of the cell, like [x0, y0]
+    cell_length_x       : float
+                          width of the cell
+    cell_length_y       : float
+                          height of the cell
+    point_begin         : list
+                          the first point on the cell's border. like [xa, ya]
+    point_end           : list
+                          the second point on the cell's border. like [xb, yb]
+    result_type         : str
+                          MUST be one of ["segments", "border_ids"]. Indicts which kind of result will return.
+                          "segments": return the segments list which connecting these two points
+                          "border_ids" return a list of ids of the orders of the cell connceting these two points
+
+    Returns
+    -------
+    segments            : array
+                          list of points
+    ids                 : array
+                          list of integers
+    """
+    if point_begin==point_end:
+        return []
+    # Determine which borders do the point_begin and point_end belong
+    border_id_p_begin = -1
+    border_id_p_end = -1
+    if point_begin[0] == cell_min_point[0]:
+        border_id_p_begin = 0
+    elif point_begin[1] == cell_min_point[1]+cell_length_y:
+        border_id_p_begin = 1
+    elif point_begin[0] == cell_min_point[0]+cell_length_x:
+        border_id_p_begin = 2
+    elif point_begin[1] == cell_min_point[1]:
+        border_id_p_begin = 3
+
+    if point_end[0] == cell_min_point[0]:
+        border_id_p_end = 0
+    elif point_end[1] == cell_min_point[1]+cell_length_y:
+        border_id_p_end = 1
+    elif point_end[0] == cell_min_point[0]+cell_length_x:
+        border_id_p_end = 2
+    elif point_end[1] == cell_min_point[1]:
+        border_id_p_end = 3
+
+    if border_id_p_begin == -1 or border_id_p_end == -1:
+        raise Exception("Error! begin/end point doesn't lie on the cell border!!!")
+
+
+    # Now, move forward from point_begin to point_end
+    segments = [point_begin]
+    involved_border_ids = [border_id_p_begin]
+    border_id_p_search = border_id_p_begin
+    if border_id_p_search == border_id_p_end:  #first check if they lie on the same border at the beginning
+        if border_id_p_search == 0:
+            if point_begin[1] < point_end[1]:
+                segments.append(point_end)
+                if result_type == "segments":
+                    return  segments
+                else:
+                    return involved_border_ids
+            else:
+                segments.append([cell_min_point[0], cell_min_point[1]+cell_length_y])
+                border_id_p_search = (border_id_p_search + 1) %4
+        if border_id_p_search == 1:
+            if point_begin[0] < point_end[0]:
+                segments.append(point_end)
+                if result_type == "segments":
+                    return  segments
+                else:
+                    return involved_border_ids
+            else:
+                segments.append([cell_min_point[0]+cell_length_x, cell_min_point[1]+cell_length_y])
+                border_id_p_search = (border_id_p_search + 1) % 4
+        if border_id_p_search == 2:
+            if point_begin[1] > point_end[1]:
+                segments.append(point_end)
+                if result_type == "segments":
+                    return segments
+                else:
+                    return involved_border_ids
+            else:
+                segments.append([cell_min_point[0]+cell_length_x, cell_min_point[1]])
+                border_id_p_search = (border_id_p_search + 1) % 4
+        if border_id_p_search == 1:
+            if point_begin[0] > point_end[0]:
+                segments.append(point_end)
+                if result_type == "segments":
+                    return segments
+                else:
+                    return involved_border_ids
+            else:
+                segments.append([cell_min_point[0] + cell_length_x, cell_min_point[1]])
+                border_id_p_search = (border_id_p_search + 1) % 4
+    while True:
+        involved_border_ids.append(border_id_p_search)
+        if border_id_p_search != border_id_p_end:  # add a whole border
+            if border_id_p_search == 0:
+                segments.append([cell_min_point[0], cell_min_point[1]+cell_length_y])
+            elif border_id_p_search == 1:
+                segments.append([cell_min_point[0]+cell_length_x, cell_min_point[1]+cell_length_y])
+            elif border_id_p_search == 2:
+                segments.append([cell_min_point[0]+cell_length_x, cell_min_point[1]])
+            elif border_id_p_search == 3:
+                segments.append([cell_min_point[0], cell_min_point[1]])
+            border_id_p_search = (border_id_p_search + 1) % 4
+        else:  # add the border segment according to the enc point
+            segments.append(point_end)
+            if result_type == "segments":
+                return segments
+            else:
+                return involved_border_ids
+
+
+
+def extract_segments_from_cell_with_arcs( cell_min_point, cell_length_x, cell_length_y, arcs, result_type="segments"):
+    """
+    At the end of study area quadtree dividing, there will be some node cells intersect with arcs. The arcs are segments
+    of original study border and the begin and end points of the arcs MUST lie on node cell border. This function can
+    intersect the node cell and
+    Parameters
+    ----------
+    cell_min_point      : array
+                          the bottom-left point of the cell, like [x0, y0]
+    cell_length_x       : float
+                          width of the cell
+    cell_length_y       : float
+                          height of the cell
+    arcs                : array
+                          array of point lists
+    result_type         : str
+                          MUST be one of ["segments", "border_ids"]. Indicts which kind of result will return.
+                          "segments": return the segments list which connecting these two points
+                          "border_ids" return a list of ids of the orders of the cell connceting these two points
+
+    Returns
+    -------
+
+    """
+
+def compare_distance_to_cell_left_bottom_point(cell_min_point, cell_length_x, cell_length_y, point_a, point_b):
+    """
+    When both two points lie on the borders of a cell (rectangle), This function is used to compare the distances of
+    two points to the left_bottom
+    Parameters
+    ----------
+    cell_min_point      : list
+                          the bottom-left point of the cell, like [x0, y0]
+    cell_length_x       : float
+                          width of the cell
+    cell_length_y       : float
+                          height of the cell
+    point_a             : list
+                          the first point on the cell's border. like [xa, ya]
+    point_b             : list
+                          the second point on the cell's border. like [xb, yb]
+
+    Returns
+    -------
+    compare_result      : int
+                          if point_a = point_b, return 0;
+                          if point_a is closer, return -1
+                          if point_a is far, return 1
+    """
+    if point_a == point_b:
+        return 0
+    border_id_p_a = -1
+    border_id_p_b = -1
+    if point_a[0] == cell_min_point[0]:
+        border_id_p_a = 0
+    elif point_a[1] == cell_min_point[1] + cell_length_y:
+        border_id_p_a = 1
+    elif point_a[0] == cell_min_point[0] + cell_length_x:
+        border_id_p_a = 2
+    elif point_a[1] == cell_min_point[1]:
+        border_id_p_a = 3
+
+    if point_b[0] == cell_min_point[0]:
+        border_id_p_b = 0
+    elif point_b[1] == cell_min_point[1] + cell_length_y:
+        border_id_p_b = 1
+    elif point_b[0] == cell_min_point[0] + cell_length_x:
+        border_id_p_b = 2
+    elif point_b[1] == cell_min_point[1]:
+        border_id_p_b = 3
+
+    if border_id_p_a == -1 or border_id_p_b == -1:
+        raise Exception("One or more Points not lie on the cell's border")
+    if border_id_p_a != border_id_p_b:
+        if border_id_p_a>border_id_p_b:
+            return 1
+        else:
+            return -1
+    else:
+        if border_id_p_a == 0:
+            if point_a[1] > point_b[1]:
+                return 1;
+            else:
+                return -1
+        if border_id_p_a == 1:
+            if point_a[0] > point_b[0]:
+                return 1;
+            else:
+                return -1
+        if border_id_p_a == 2:
+            if point_a[1] < point_b[1]:
+                return 1;
+            else:
+                return -1
+        if border_id_p_a == 3:
+            if point_a[0] < point_b[0]:
+                return 1;
+            else:
+                return -1
+

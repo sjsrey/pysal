@@ -2,12 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="15c9c05a-3dd5-428e-b169-1b4a2111b173" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pysal/contrib/points/tests/img/cell_boundary_category_rule.png" afterPath="$PROJECT_DIR$/pysal/contrib/points/tests/img/cell_boundary_category_rule.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pysal/contrib/points/tests/img_making.pptx" afterPath="$PROJECT_DIR$/pysal/contrib/points/tests/img_making.pptx" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/pysal.iml" afterPath="$PROJECT_DIR$/.idea/pysal.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pysal/contrib/points/tests/Shao_Project Description.ipynb" afterPath="$PROJECT_DIR$/pysal/contrib/points/tests/Shao_Project Description.ipynb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pysal/contrib/points/tests/test_contain_point_performance.py" afterPath="$PROJECT_DIR$/pysal/contrib/points/tests/test_contain_point_performance.py" />
     </list>
     <ignored path="pysal.iws" />
@@ -32,7 +29,7 @@
       <file leaf-file-name="pointpattern.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pysal/contrib/points/pointpattern.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
+            <state relative-caret-position="1335">
               <caret line="98" column="32" selection-start-line="98" selection-start-column="32" selection-end-line="98" selection-end-column="32" />
               <folding />
             </state>
@@ -42,7 +39,7 @@
       <file leaf-file-name="window.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pysal/contrib/points/window.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
+            <state relative-caret-position="825">
               <caret line="56" column="69" selection-start-line="56" selection-start-column="69" selection-end-line="56" selection-end-column="69" />
               <folding />
             </state>
@@ -52,9 +49,15 @@
       <file leaf-file-name="distance_statistics.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pysal/contrib/points/distance_statistics.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
+            <state relative-caret-position="1230">
               <caret line="543" column="43" selection-start-line="543" selection-start-column="43" selection-end-line="543" selection-end-column="43" />
-              <folding />
+              <folding>
+                <marker date="1461342509000" expanded="true" signature="21465:21719" placeholder="import ..." />
+                <marker date="1461342509000" expanded="true" signature="24523:24777" placeholder="import ..." />
+                <marker date="1461342509000" expanded="true" signature="27632:27886" placeholder="import ..." />
+                <marker date="1461342509000" expanded="true" signature="30652:30906" placeholder="import ..." />
+                <marker date="1461342509000" expanded="true" signature="33619:33873" placeholder="import ..." />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -62,7 +65,7 @@
       <file leaf-file-name="shapes.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pysal/cg/shapes.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
+            <state relative-caret-position="25365">
               <caret line="1694" column="73" selection-start-line="1694" selection-start-column="73" selection-end-line="1694" selection-end-column="73" />
               <folding>
                 <element signature="e#210#224#0" expanded="true" />
@@ -74,11 +77,9 @@
       <file leaf-file-name="test_contain_point_performance.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/pysal/contrib/points/tests/test_contain_point_performance.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="631">
-              <caret line="429" column="25" selection-start-line="429" selection-start-column="25" selection-end-line="429" selection-end-column="25" />
-              <folding>
-                <element signature="e#0#18#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="789">
+              <caret line="439" column="35" selection-start-line="439" selection-start-column="35" selection-end-line="439" selection-end-column="35" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -108,10 +109,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
-    <option name="width" value="1936" />
-    <option name="height" value="1056" />
+    <option name="width" value="1920" />
+    <option name="height" value="1200" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -140,9 +139,10 @@
     <panes />
   </component>
   <component name="PropertiesComponent">
-    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Font" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="FullScreen" value="true" />
   </component>
   <component name="RunManager" selected="Python.test_contain_point_performance">
     <configuration default="false" name="test_contain_point_performance" type="PythonConfigurationType" factoryName="Python" temporary="true">
@@ -325,26 +325,26 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="false" />
+    <frame x="0" y="0" width="1920" height="1200" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.19852553" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32919955" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.11696523" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.11690363" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32919955" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -369,7 +369,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="8115">
           <caret line="543" column="43" selection-start-line="543" selection-start-column="43" selection-end-line="543" selection-end-column="43" />
-          <folding />
+          <folding>
+            <marker date="1461342509000" expanded="true" signature="21465:21719" placeholder="import ..." />
+            <marker date="1461342509000" expanded="true" signature="24523:24777" placeholder="import ..." />
+            <marker date="1461342509000" expanded="true" signature="27632:27886" placeholder="import ..." />
+            <marker date="1461342509000" expanded="true" signature="30652:30906" placeholder="import ..." />
+            <marker date="1461342509000" expanded="true" signature="33619:33873" placeholder="import ..." />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -387,9 +393,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -413,7 +417,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="8115">
           <caret line="543" column="43" selection-start-line="543" selection-start-column="43" selection-end-line="543" selection-end-column="43" />
-          <folding />
+          <folding>
+            <marker date="1461342509000" expanded="true" signature="21465:21719" placeholder="import ..." />
+            <marker date="1461342509000" expanded="true" signature="24523:24777" placeholder="import ..." />
+            <marker date="1461342509000" expanded="true" signature="27632:27886" placeholder="import ..." />
+            <marker date="1461342509000" expanded="true" signature="30652:30906" placeholder="import ..." />
+            <marker date="1461342509000" expanded="true" signature="33619:33873" placeholder="import ..." />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -431,9 +441,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -457,7 +465,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="8115">
           <caret line="543" column="43" selection-start-line="543" selection-start-column="43" selection-end-line="543" selection-end-column="43" />
-          <folding />
+          <folding>
+            <marker date="1461342509000" expanded="true" signature="21465:21719" placeholder="import ..." />
+            <marker date="1461342509000" expanded="true" signature="24523:24777" placeholder="import ..." />
+            <marker date="1461342509000" expanded="true" signature="27632:27886" placeholder="import ..." />
+            <marker date="1461342509000" expanded="true" signature="30652:30906" placeholder="import ..." />
+            <marker date="1461342509000" expanded="true" signature="33619:33873" placeholder="import ..." />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -475,9 +489,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -501,7 +513,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="8115">
           <caret line="543" column="43" selection-start-line="543" selection-start-column="43" selection-end-line="543" selection-end-column="43" />
-          <folding />
+          <folding>
+            <marker date="1461342509000" expanded="true" signature="21465:21719" placeholder="import ..." />
+            <marker date="1461342509000" expanded="true" signature="24523:24777" placeholder="import ..." />
+            <marker date="1461342509000" expanded="true" signature="27632:27886" placeholder="import ..." />
+            <marker date="1461342509000" expanded="true" signature="30652:30906" placeholder="import ..." />
+            <marker date="1461342509000" expanded="true" signature="33619:33873" placeholder="import ..." />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -519,9 +537,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -555,7 +571,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="8115">
           <caret line="543" column="43" selection-start-line="543" selection-start-column="43" selection-end-line="543" selection-end-column="43" />
-          <folding />
+          <folding>
+            <marker date="1461342509000" expanded="true" signature="21465:21719" placeholder="import ..." />
+            <marker date="1461342509000" expanded="true" signature="24523:24777" placeholder="import ..." />
+            <marker date="1461342509000" expanded="true" signature="27632:27886" placeholder="import ..." />
+            <marker date="1461342509000" expanded="true" signature="30652:30906" placeholder="import ..." />
+            <marker date="1461342509000" expanded="true" signature="33619:33873" placeholder="import ..." />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -589,7 +611,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="10820">
           <caret line="543" column="43" selection-start-line="543" selection-start-column="43" selection-end-line="543" selection-end-column="43" />
-          <folding />
+          <folding>
+            <marker date="1461342509000" expanded="true" signature="21465:21719" placeholder="import ..." />
+            <marker date="1461342509000" expanded="true" signature="24523:24777" placeholder="import ..." />
+            <marker date="1461342509000" expanded="true" signature="27632:27886" placeholder="import ..." />
+            <marker date="1461342509000" expanded="true" signature="30652:30906" placeholder="import ..." />
+            <marker date="1461342509000" expanded="true" signature="33619:33873" placeholder="import ..." />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -624,7 +652,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="10820">
           <caret line="543" column="43" selection-start-line="543" selection-start-column="43" selection-end-line="543" selection-end-column="43" />
-          <folding />
+          <folding>
+            <marker date="1461342509000" expanded="true" signature="21465:21719" placeholder="import ..." />
+            <marker date="1461342509000" expanded="true" signature="24523:24777" placeholder="import ..." />
+            <marker date="1461342509000" expanded="true" signature="27632:27886" placeholder="import ..." />
+            <marker date="1461342509000" expanded="true" signature="30652:30906" placeholder="import ..." />
+            <marker date="1461342509000" expanded="true" signature="33619:33873" placeholder="import ..." />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -749,31 +783,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/pysal/contrib/points/pointpattern.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
+        <state relative-caret-position="1335">
           <caret line="98" column="32" selection-start-line="98" selection-start-column="32" selection-end-line="98" selection-end-column="32" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pysal/contrib/points/window.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="56" column="69" selection-start-line="56" selection-start-column="69" selection-end-line="56" selection-end-column="69" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pysal/contrib/points/distance_statistics.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="543" column="43" selection-start-line="543" selection-start-column="43" selection-end-line="543" selection-end-column="43" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pysal/cg/shapes.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
+        <state relative-caret-position="25365">
           <caret line="1694" column="73" selection-start-line="1694" selection-start-column="73" selection-end-line="1694" selection-end-column="73" />
           <folding>
             <element signature="e#210#224#0" expanded="true" />
@@ -781,13 +799,33 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/pysal/contrib/points/window.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="825">
+          <caret line="56" column="69" selection-start-line="56" selection-start-column="69" selection-end-line="56" selection-end-column="69" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pysal/contrib/points/distance_statistics.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1230">
+          <caret line="543" column="43" selection-start-line="543" selection-start-column="43" selection-end-line="543" selection-end-column="43" />
+          <folding>
+            <marker date="1461342509000" expanded="true" signature="21465:21719" placeholder="import ..." />
+            <marker date="1461342509000" expanded="true" signature="24523:24777" placeholder="import ..." />
+            <marker date="1461342509000" expanded="true" signature="27632:27886" placeholder="import ..." />
+            <marker date="1461342509000" expanded="true" signature="30652:30906" placeholder="import ..." />
+            <marker date="1461342509000" expanded="true" signature="33619:33873" placeholder="import ..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/pysal/contrib/points/tests/test_contain_point_performance.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="631">
-          <caret line="429" column="25" selection-start-line="429" selection-start-column="25" selection-end-line="429" selection-end-column="25" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="789">
+          <caret line="439" column="35" selection-start-line="439" selection-start-column="35" selection-end-line="439" selection-end-column="35" />
+          <folding />
         </state>
       </provider>
     </entry>

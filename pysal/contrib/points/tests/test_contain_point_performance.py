@@ -428,3 +428,32 @@ class Cell(object):
 
 
         return  sub_cells
+
+    def extract_connecting_bodees_between_points(self, cell_min_point, cell_length_x, cell_length_y, point_begin, point_end, result_type = "segments"):
+        """
+        There is an rectangle and two points on the border, this function is used to extract the borders connecting
+        these two points. The segments must be clockwise
+        Parameters
+        ----------
+        cell_min_point      : array
+                              the bottom-left point of the cell, like [x0, y0]
+        cell_length_x       : float
+                              width of the cell
+        cell_length_y       : float
+                              height of the cell
+        point_begin         : array
+                              the first point on the cell's border. like [xa, ya]
+        point_end           : array
+                              the second point on the cell's border. like [xb, yb]
+        result_type         : str
+                              MUST be one of ["segments", "border_ids"]. Indicts which kind of result will return.
+                              "segments": return the segments list which connecting these two points
+                              "border_ids" return a list of ids of the orders of the cell connceting these two points
+
+        Returns
+        -------
+        segments            : array
+                              list of points
+        ids                 : array
+                              list of integers
+        """

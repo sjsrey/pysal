@@ -429,7 +429,7 @@ class Cell(object):
 
         return  sub_cells
 
-    def extract_connecting_bodees_between_points(self, cell_min_point, cell_length_x, cell_length_y, point_begin, point_end, result_type = "segments"):
+    def extract_connecting_boders_between_points(self, cell_min_point, cell_length_x, cell_length_y, point_begin, point_end, result_type = "segments"):
         """
         There is an rectangle and two points on the border, this function is used to extract the borders connecting
         these two points. The segments must be clockwise
@@ -457,3 +457,7 @@ class Cell(object):
         ids                 : array
                               list of integers
         """
+        # Determine which borders do the point_begin and point_end belong
+        border_id_p_begin = -1
+        border_id_p_end = -1
+        if point_begin[0] ==

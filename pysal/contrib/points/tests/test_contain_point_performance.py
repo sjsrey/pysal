@@ -432,7 +432,7 @@ class Cell(object):
 
 
 
-def extract_connecting_boders_between_points( cell_min_point, cell_length_x, cell_length_y, point_begin, point_end, result_type = "segments"):
+def extract_connecting_borders_between_points( cell_min_point, cell_length_x, cell_length_y, point_begin, point_end):
     """
     There is an rectangle and two points on the border, this function is used to extract the borders connecting
     these two points. The segments must be clockwise
@@ -455,13 +455,13 @@ def extract_connecting_boders_between_points( cell_min_point, cell_length_x, cel
 
     Returns
     -------
-    segments            : array
-                          list of points
-    ids                 : array
-                          list of integers
+    segments_and_ids    : tuple
+                          like (segments, involved_border_ids)
+                          1. list of points, including the start and end points
+                          2. list of border ids being involved in the segments, not necessary to be in the original order
     """
     if point_begin==point_end:
-        return []
+        return ([], [])
     # Determine which borders do the point_begin and point_end belong
     border_id_p_begin = -1
     border_id_p_end = -1
@@ -495,40 +495,28 @@ def extract_connecting_boders_between_points( cell_min_point, cell_length_x, cel
         if border_id_p_search == 0:
             if point_begin[1] < point_end[1]:
                 segments.append(point_end)
-                if result_type == "segments":
-                    return  segments
-                else:
-                    return involved_border_ids
+                return (segments, involved_border_ids)
             else:
                 segments.append([cell_min_point[0], cell_min_point[1]+cell_length_y])
                 border_id_p_search = (border_id_p_search + 1) %4
         if border_id_p_search == 1:
             if point_begin[0] < point_end[0]:
                 segments.append(point_end)
-                if result_type == "segments":
-                    return  segments
-                else:
-                    return involved_border_ids
+                return (segments, involved_border_ids)
             else:
                 segments.append([cell_min_point[0]+cell_length_x, cell_min_point[1]+cell_length_y])
                 border_id_p_search = (border_id_p_search + 1) % 4
         if border_id_p_search == 2:
             if point_begin[1] > point_end[1]:
                 segments.append(point_end)
-                if result_type == "segments":
-                    return segments
-                else:
-                    return involved_border_ids
+                return (segments, involved_border_ids)
             else:
                 segments.append([cell_min_point[0]+cell_length_x, cell_min_point[1]])
                 border_id_p_search = (border_id_p_search + 1) % 4
         if border_id_p_search == 1:
             if point_begin[0] > point_end[0]:
                 segments.append(point_end)
-                if result_type == "segments":
-                    return segments
-                else:
-                    return involved_border_ids
+                return (segments, involved_border_ids)
             else:
                 segments.append([cell_min_point[0] + cell_length_x, cell_min_point[1]])
                 border_id_p_search = (border_id_p_search + 1) % 4
@@ -546,14 +534,44 @@ def extract_connecting_boders_between_points( cell_min_point, cell_length_x, cel
             border_id_p_search = (border_id_p_search + 1) % 4
         else:  # add the border segment according to the enc point
             segments.append(point_end)
-            if result_type == "segments":
-                return segments
-            else:
-                return involved_border_ids
+            return (segments, list(set(involved_border_ids)))
 
+def get_relative_location_on_cell_border(cell_min_point, cell_length_x, cell_length_y, point):
+    """
+    When a point is on the border of a cell, this function can be used to calculate the relative location of the point
+    to cell's left-bottom corner.
+    Parameters
+    ----------
+    cell_min_point      : list
+                          the bottom-left point of the cell, like [x0, y0]
+    cell_length_x       : float
+                          width of the cell
+    cell_length_y       : float
+                          height of the cell
+    point               : list
+                          the point on the cell's border. like [x, y]
 
+    Returns
+    -------
+    distance            : float
+                          range from 0 to 4
+    """
+    border_id_p = -1
+    if point[0] == cell_min_point[0]:
+        border_id_p = 0
+        border_id_p += (point[1]-cell_min_point[1]) / cell_length_y
+    elif point[1] == cell_min_point[1] + cell_length_y:
+        border_id_p = 1
+        border_id_p += (point[0]-cell_min_point[0]) / cell_length_x
+    elif point[0] == cell_min_point[0] + cell_length_x:
+        border_id_p = 2
+        border_id_p += (1 - (point[1]-cell_min_point[1]) / cell_length_y)
+    elif point[1] == cell_min_point[1]:
+        border_id_p = 3
+        border_id_p += (1- (point[0]-cell_min_point[0]) / cell_length_x)
+    return  border_id_p
 
-def extract_segments_from_cell_with_arcs( cell_min_point, cell_length_x, cell_length_y, arcs, result_type="segments"):
+def extract_segments_from_cell_with_arcs(cell_min_point, cell_length_x, cell_length_y, arcs):
     """
     At the end of study area quadtree dividing, there will be some node cells intersect with arcs. The arcs are segments
     of original study border and the begin and end points of the arcs MUST lie on node cell border. This function can
@@ -568,88 +586,58 @@ def extract_segments_from_cell_with_arcs( cell_min_point, cell_length_x, cell_le
                           height of the cell
     arcs                : array
                           array of point lists
-    result_type         : str
-                          MUST be one of ["segments", "border_ids"]. Indicts which kind of result will return.
-                          "segments": return the segments list which connecting these two points
-                          "border_ids" return a list of ids of the orders of the cell connceting these two points
 
     Returns
     -------
-
+    rings_and_border_ids : tuple
+                           like (rings, involved_border_ids)
+                           1. the list of rings extracted, each ring contains a sequence of points -  the begin and end
+                              points are the same. Note that there might be multiple rings extracted in a cell.
+                           2. the ids of borders of the cell who are involved in the ring. Duplicated ids are removed
+                              and they may not be in the original order
     """
+    arc_begin_points = []
+    arc_begin_points_location = []
+    arc_end_points = []
+    arc_end_points_location = []
+    used_arc_ids = []
+    for arc in arcs:
+        arc_begin_points.append(arc[0])
+        arc_end_points.append(arc[len(arc)-1])
+        arc_begin_points_location.append(
+            get_relative_location_on_cell_border(cell_min_point, cell_length_x, cell_length_y, arc[0]))
+        arc_end_points_location.append(
+            get_relative_location_on_cell_border(cell_min_point, cell_length_x, cell_length_y, arc[len(arc)-1]))
 
-def compare_distance_to_cell_left_bottom_point(cell_min_point, cell_length_x, cell_length_y, point_a, point_b):
-    """
-    When both two points lie on the borders of a cell (rectangle), This function is used to compare the distances of
-    two points to the left_bottom
-    Parameters
-    ----------
-    cell_min_point      : list
-                          the bottom-left point of the cell, like [x0, y0]
-    cell_length_x       : float
-                          width of the cell
-    cell_length_y       : float
-                          height of the cell
-    point_a             : list
-                          the first point on the cell's border. like [xa, ya]
-    point_b             : list
-                          the second point on the cell's border. like [xb, yb]
-
-    Returns
-    -------
-    compare_result      : int
-                          if point_a = point_b, return 0;
-                          if point_a is closer, return -1
-                          if point_a is far, return 1
-    """
-    if point_a == point_b:
-        return 0
-    border_id_p_a = -1
-    border_id_p_b = -1
-    if point_a[0] == cell_min_point[0]:
-        border_id_p_a = 0
-    elif point_a[1] == cell_min_point[1] + cell_length_y:
-        border_id_p_a = 1
-    elif point_a[0] == cell_min_point[0] + cell_length_x:
-        border_id_p_a = 2
-    elif point_a[1] == cell_min_point[1]:
-        border_id_p_a = 3
-
-    if point_b[0] == cell_min_point[0]:
-        border_id_p_b = 0
-    elif point_b[1] == cell_min_point[1] + cell_length_y:
-        border_id_p_b = 1
-    elif point_b[0] == cell_min_point[0] + cell_length_x:
-        border_id_p_b = 2
-    elif point_b[1] == cell_min_point[1]:
-        border_id_p_b = 3
-
-    if border_id_p_a == -1 or border_id_p_b == -1:
-        raise Exception("One or more Points not lie on the cell's border")
-    if border_id_p_a != border_id_p_b:
-        if border_id_p_a>border_id_p_b:
-            return 1
+    # every time find an unused arc with minimum begin-point-location, and begin the track form here
+    new_ring = []  # the point list
+    new_ring_begin_point = None
+    new_ring_end_point = None
+    selected_arc_ids = []
+    while len(used_arc_ids)<len(arcs):
+        if new_ring_begin_point is None:
+            # init the process of constructing a new ring
+            # find the unused arc with min begin point location
+            arc_id_with_min_location = -1
+            for i in range(0, len(arcs)):
+                if i in used_arc_ids:
+                    continue
+                if arc_id_with_min_location == -1 or arc_begin_points_location[arc_id_with_min_location] > arc_begin_points_location[i]:
+                    arc_id_with_min_location = arc_begin_points_location[i]
+                    new_ring_begin_point = arc_begin_points[i]
+                    arc_id_with_min_location = i
+            for point in arcs[arc_id_with_min_location]:
+                new_ring.append(point)
+            selected_arc_ids.append(arc_id_with_min_location)
         else:
-            return -1
-    else:
-        if border_id_p_a == 0:
-            if point_a[1] > point_b[1]:
-                return 1;
-            else:
-                return -1
-        if border_id_p_a == 1:
-            if point_a[0] > point_b[0]:
-                return 1;
-            else:
-                return -1
-        if border_id_p_a == 2:
-            if point_a[1] < point_b[1]:
-                return 1;
-            else:
-                return -1
-        if border_id_p_a == 3:
-            if point_a[0] < point_b[0]:
-                return 1;
-            else:
-                return -1
+            # there is already a selected arc, find the next available arc(maybe itself) and add the borders between
+            # these two arcs
+
+
+
+
+
+
+
+
 

@@ -1,5 +1,5 @@
 import pysal as ps
-from pysal.cg.shapes import Polygon, Ring
+from pysal.cg.shapes import Polygon
 import time
 import codecs
 import math
@@ -294,20 +294,38 @@ class Cell(object):
                         temp_arc = []
                         temp_arc_belonging = None
                         continue
+                    # Check if end point(p2) lies on split_lies, this kind of situation is also easy to handle
+                    # split the arc here, but no need to split the segment
+                    # if compare_with_tolerance(x1, middle_x, self.zero_tolerance) == 0 or compare_with_tolerance(y1, middle_y, self.zero_tolerance) == 0:
+                    #     print("hahaha! maybe wrong!")
+                    #     if len(temp_arc) == 0:
+                    #         temp_arc.append([x0, y0])
+                    #     temp_arc.append([x1, y1])
+                    #     if temp_arc_belonging == "l_b":
+                    #         cell_arcs_l_b.append(temp_arc)
+                    #     elif temp_arc_belonging == "l_t":
+                    #         cell_arcs_l_t.append(temp_arc)
+                    #     elif temp_arc_belonging == "r_b":
+                    #         cell_arcs_r_b.append(temp_arc)
+                    #     elif temp_arc_belonging == "r_t":
+                    #         cell_arcs_r_t.append(temp_arc)
+                    #     temp_arc = []
+                    #     temp_arc_belonging = None
+                    #     continue
 
                     intersect_point_h = None
                     intersect_point_v = None
                     # Check if the segment intersects with split_line_h
-                    if (compare_with_tolerance(y0, middle_y, self.zero_tolerance) == -1 and compare_with_tolerance(middle_y, y1, self.zero_tolerance) <= 0) or ( compare_with_tolerance(y0, middle_y, self.zero_tolerance) == 1 and compare_with_tolerance(middle_y, y1, self.zero_tolerance) >= 0):
+                    if (compare_with_tolerance(y0, middle_y, self.zero_tolerance) == -1 and compare_with_tolerance(middle_y, y1, self.zero_tolerance) == -1) or ( compare_with_tolerance(y0, middle_y, self.zero_tolerance) == 1 and compare_with_tolerance(middle_y, y1, self.zero_tolerance) == 1):
                         if compare_with_tolerance(x0, x1, self.zero_tolerance) == 0:  # the segments is vertical
                             intersect_point_h = [x0, middle_y]
                         else:
-                            a = (y1 - y0) / (x1 - x0)
-                            b = y0 - a * x0
+                            a = (y1-y0) / (x1-x0)
+                            b = y0 - a*x0
                             x_new = (middle_y-b)/a
                             intersect_point_h = [x_new, middle_y]
                     # Check if the segment intersects with split_line_v
-                    if (compare_with_tolerance(x0, middle_x, self.zero_tolerance) == -1 and compare_with_tolerance(middle_x, x1, self.zero_tolerance) <= 0) or (compare_with_tolerance(x0, middle_x, self.zero_tolerance) == 1 and compare_with_tolerance(middle_x, x1, self.zero_tolerance) >= 0):
+                    if (compare_with_tolerance(x0, middle_x, self.zero_tolerance) == -1 and compare_with_tolerance(middle_x, x1, self.zero_tolerance) == -1) or (compare_with_tolerance(x0, middle_x, self.zero_tolerance) == 1 and compare_with_tolerance(middle_x, x1, self.zero_tolerance) == 1):
                         if compare_with_tolerance(y0, y1, self.zero_tolerance) == 0:  # the segments is horizontal
                             intersect_point_v = [middle_x, y0]
                         else:
@@ -353,8 +371,7 @@ class Cell(object):
                                     # under the situation that a single segment intersects with both split lines,
                                     # here need carefully process
                                     small_arc = [intersect_point_h, intersect_point_v]
-                                    if compare_with_tolerance(intersect_point_h[0], intersect_point_v[0], self.zero_tolerance) != 0:  # deal with the situation that the segment just goes through center point
-                                        cell_arcs_l_t.append(small_arc)
+                                    cell_arcs_l_t.append(small_arc)
                                     temp_arc = [intersect_point_v, [x1, y1]]
                                     temp_arc_belonging = "r_t"
                                 else:
@@ -365,8 +382,7 @@ class Cell(object):
                                     # under the situation that a single segment intersects with both split lines,
                                     # here need carefully process
                                     small_arc = [intersect_point_v, intersect_point_h]
-                                    if compare_with_tolerance(intersect_point_h[0], intersect_point_v[0], self.zero_tolerance) != 0:  # deal with the situation that the segment just goes through center point
-                                        cell_arcs_r_b.append(small_arc)
+                                    cell_arcs_r_b.append(small_arc)
                                     temp_arc = [intersect_point_h, [x1, y1]]
                                     temp_arc_belonging = "r_t"
                                 else:
@@ -379,8 +395,7 @@ class Cell(object):
                                     # under the situation that a single segment intersects with both split lines,
                                     # here need carefully process
                                     small_arc = [intersect_point_h, intersect_point_v]
-                                    if compare_with_tolerance(intersect_point_h[0], intersect_point_v[0], self.zero_tolerance) != 0:  # deal with the situation that the segment just goes through center point
-                                        cell_arcs_l_b.append(small_arc)
+                                    cell_arcs_l_b.append(small_arc)
                                     temp_arc = [intersect_point_v, [x1, y1]]
                                     temp_arc_belonging = "r_b"
                                 else:
@@ -391,8 +406,7 @@ class Cell(object):
                                     # under the situation that a single segment intersects with both split lines,
                                     # here need carefully process
                                     small_arc = [intersect_point_v, intersect_point_h]
-                                    if compare_with_tolerance(intersect_point_h[0], intersect_point_v[0], self.zero_tolerance) != 0:  # deal with the situation that the segment just goes through center point
-                                        cell_arcs_r_t.append(small_arc)
+                                    cell_arcs_r_t.append(small_arc)
                                     temp_arc = [intersect_point_h, [x1, y1]]
                                     temp_arc_belonging = "r_b"
                                 else:
@@ -405,8 +419,7 @@ class Cell(object):
                                     # under the situation that a single segment intersects with both split lines,
                                     # here need carefully process
                                     small_arc = [intersect_point_h, intersect_point_v]
-                                    if compare_with_tolerance(intersect_point_h[0], intersect_point_v[0], self.zero_tolerance) != 0:  # deal with the situation that the segment just goes through center point
-                                        cell_arcs_r_t.append(small_arc)
+                                    cell_arcs_r_t.append(small_arc)
                                     temp_arc = [intersect_point_v, [x1, y1]]
                                     temp_arc_belonging = "l_t"
                                 else:
@@ -417,8 +430,7 @@ class Cell(object):
                                     # under the situation that a single segment intersects with both split lines,
                                     # here need carefully process
                                     small_arc = [intersect_point_v, intersect_point_h]
-                                    if compare_with_tolerance(intersect_point_h[0], intersect_point_v[0], self.zero_tolerance) != 0:  # deal with the situation that the segment just goes through center point
-                                        cell_arcs_l_b.append(small_arc)
+                                    cell_arcs_l_b.append(small_arc)
                                     temp_arc = [intersect_point_h, [x1, y1]]
                                     temp_arc_belonging = "l_t"
                                 else:
@@ -431,8 +443,7 @@ class Cell(object):
                                     # under the situation that a single segment intersects with both split lines,
                                     # here need carefully process
                                     small_arc = [intersect_point_h, intersect_point_v]
-                                    if compare_with_tolerance(intersect_point_h[0], intersect_point_v[0], self.zero_tolerance) != 0:  # deal with the situation that the segment just goes through center point
-                                        cell_arcs_r_b.append(small_arc)
+                                    cell_arcs_r_b.append(small_arc)
                                     temp_arc = [intersect_point_v, [x1, y1]]
                                     temp_arc_belonging = "l_b"
                                 else:
@@ -443,17 +454,13 @@ class Cell(object):
                                     # under the situation that a single segment intersects with both split lines,
                                     # here need carefully process
                                     small_arc = [intersect_point_v, intersect_point_h]
-                                    if compare_with_tolerance(intersect_point_h[0], intersect_point_v[0], self.zero_tolerance) != 0:  # deal with the situation that the segment just goes through center point
-                                        cell_arcs_l_t.append(small_arc)
+                                    cell_arcs_l_t.append(small_arc)
                                     temp_arc = [intersect_point_h, [x1, y1]]
                                     temp_arc_belonging = "l_b"
                                 else:
                                     temp_arc = [intersect_point, [x1, y1]]
                                     temp_arc_belonging = "l_t"
-                        if compare_with_tolerance(temp_arc[0][0], temp_arc[1][0], self.zero_tolerance) == 0 and compare_with_tolerance(temp_arc[0][1], temp_arc[1][1], self.zero_tolerance) == 0:
-                            # to deal with the situation that p1 just lied on one of the split-lines
-                            temp_arc = []
-                            temp_arc_belonging = None
+
                     else:  # simply append the point to current arc
                         if len(temp_arc) == 0:
                             temp_arc.append([x0, y0])
@@ -482,118 +489,73 @@ class Cell(object):
             """
             if len(cell_arcs_l_b)*len(cell_arcs_l_t)*len(cell_arcs_r_b)*len(cell_arcs_r_t) == 0:
                 involved_line_ids = []  # refer the image in "cell_boundary_category_rule"
-                extract_result = extract_segments_from_cell_with_arcs([self.min_x, self.min_y], self.length_x, self.length_y, self.arcs, self.zero_tolerance)
-                construct_rings = []
-                for arc in extract_result[0]:
-                    construct_rings.append(Ring(arc))
+
+                # extract the involved borders of sub cells
+                if len(cell_arcs_l_b) > 0:
+                    extract_result = extract_segments_from_cell_with_arcs([self.min_x, self.min_y], length_x, length_y, cell_arcs_l_b, self.zero_tolerance)
+                    line_ids = extract_result[1]
+                    if 0 in line_ids:
+                        involved_line_ids.append("1")
+                    if 1 in line_ids:
+                        involved_line_ids.append("a")
+                    if 2 in line_ids:
+                        involved_line_ids.append("d")
+                    if 3 in line_ids:
+                        involved_line_ids.append("8")
+                if len(cell_arcs_l_t) > 0:
+                    extract_result = extract_segments_from_cell_with_arcs([self.min_x, middle_y], length_x, length_y, cell_arcs_l_t, self.zero_tolerance)
+                    line_ids = extract_result[1]
+                    if 0 in line_ids:
+                        involved_line_ids.append("2")
+                    if 1 in line_ids:
+                        involved_line_ids.append("3")
+                    if 2 in line_ids:
+                        involved_line_ids.append("c")
+                    if 3 in line_ids:
+                        involved_line_ids.append("a")
+                if len(cell_arcs_r_b) > 0:
+                    extract_result = extract_segments_from_cell_with_arcs([middle_x, self.min_y], length_x, length_y, cell_arcs_r_b, self.zero_tolerance)
+                    line_ids = extract_result[1]
+                    if 0 in line_ids:
+                        involved_line_ids.append("d")
+                    if 1 in line_ids:
+                        involved_line_ids.append("b")
+                    if 2 in line_ids:
+                        involved_line_ids.append("6")
+                    if 3 in line_ids:
+                        involved_line_ids.append("7")
+                if len(cell_arcs_r_t) > 0:
+                    extract_result = extract_segments_from_cell_with_arcs([middle_x, middle_y], length_x, length_y, cell_arcs_r_t, self.zero_tolerance)
+                    line_ids = extract_result[1]
+                    if 0 in line_ids:
+                        involved_line_ids.append("c")
+                    if 1 in line_ids:
+                        involved_line_ids.append("4")
+                    if 2 in line_ids:
+                        involved_line_ids.append("5")
+                    if 3 in line_ids:
+                        involved_line_ids.append("b")
                 # determine the totally within and out-of sub cells
                 if len(cell_arcs_l_b) == 0:
-                    center = [self.min_x+length_x/2, self.min_y+length_y/2]
-                    is_in = False
-                    for ring in construct_rings:
-                        if ring.contains_point(center):
-                            is_in = True
-                    if is_in:
+                    if "1" in involved_line_ids or "a" in involved_line_ids or "d" in involved_line_ids or "8" in involved_line_ids:
                         status_l_b = "in"
                     else:
                         status_l_b = "out"
                 if len(cell_arcs_l_t) == 0:
-                    center = [self.min_x+length_x/2, middle_y+length_y/2]
-                    is_in = False
-                    for ring in construct_rings:
-                        if ring.contains_point(center):
-                            is_in = True
-                    if is_in:
+                    if "2" in involved_line_ids or "3" in involved_line_ids or "c" in involved_line_ids or "a" in involved_line_ids:
                         status_l_t = "in"
                     else:
                         status_l_t = "out"
                 if len(cell_arcs_r_b) == 0:
-                    center = [middle_x+length_x/2, self.min_y+length_y/2]
-                    is_in = False
-                    for ring in construct_rings:
-                        if ring.contains_point(center):
-                            is_in = True
-                    if is_in:
+                    if "d" in involved_line_ids or "b" in involved_line_ids or "6" in involved_line_ids or "7" in involved_line_ids:
                         status_r_b = "in"
                     else:
                         status_r_b = "out"
                 if len(cell_arcs_r_t) == 0:
-                    center = [middle_x+length_x/2, middle_y+length_y/2]
-                    is_in = False
-                    for ring in construct_rings:
-                        if ring.contains_point(center):
-                            is_in = True
-                    if is_in:
+                    if "c" in involved_line_ids or "4" in involved_line_ids or "5" in involved_line_ids or "b" in involved_line_ids:
                         status_r_t = "in"
                     else:
                         status_r_t = "out"
-
-                # # extract the involved borders of sub cells
-                # if len(cell_arcs_l_b) > 0:
-                #     extract_result = extract_segments_from_cell_with_arcs([self.min_x, self.min_y], length_x, length_y, cell_arcs_l_b, self.zero_tolerance)
-                #     line_ids = extract_result[1]
-                #     if 0 in line_ids:
-                #         involved_line_ids.append("1")
-                #     if 1 in line_ids:
-                #         involved_line_ids.append("a")
-                #     if 2 in line_ids:
-                #         involved_line_ids.append("d")
-                #     if 3 in line_ids:
-                #         involved_line_ids.append("8")
-                # if len(cell_arcs_l_t) > 0:
-                #     extract_result = extract_segments_from_cell_with_arcs([self.min_x, middle_y], length_x, length_y, cell_arcs_l_t, self.zero_tolerance)
-                #     line_ids = extract_result[1]
-                #     if 0 in line_ids:
-                #         involved_line_ids.append("2")
-                #     if 1 in line_ids:
-                #         involved_line_ids.append("3")
-                #     if 2 in line_ids:
-                #         involved_line_ids.append("c")
-                #     if 3 in line_ids:
-                #         involved_line_ids.append("a")
-                # if len(cell_arcs_r_b) > 0:
-                #     extract_result = extract_segments_from_cell_with_arcs([middle_x, self.min_y], length_x, length_y, cell_arcs_r_b, self.zero_tolerance)
-                #     line_ids = extract_result[1]
-                #     if 0 in line_ids:
-                #         involved_line_ids.append("d")
-                #     if 1 in line_ids:
-                #         involved_line_ids.append("b")
-                #     if 2 in line_ids:
-                #         involved_line_ids.append("6")
-                #     if 3 in line_ids:
-                #         involved_line_ids.append("7")
-                # if len(cell_arcs_r_t) > 0:
-                #     extract_result = extract_segments_from_cell_with_arcs([middle_x, middle_y], length_x, length_y, cell_arcs_r_t, self.zero_tolerance)
-                #     line_ids = extract_result[1]
-                #     if 0 in line_ids:
-                #         involved_line_ids.append("c")
-                #     if 1 in line_ids:
-                #         involved_line_ids.append("4")
-                #     if 2 in line_ids:
-                #         involved_line_ids.append("5")
-                #     if 3 in line_ids:
-                #         involved_line_ids.append("b")
-                # # determine the totally within and out-of sub cells
-                # if len(cell_arcs_l_b) == 0:
-                #     if "1" in involved_line_ids or "a" in involved_line_ids or "d" in involved_line_ids or "8" in involved_line_ids:
-                #         status_l_b = "in"
-                #     else:
-                #         status_l_b = "out"
-                # if len(cell_arcs_l_t) == 0:
-                #     if "2" in involved_line_ids or "3" in involved_line_ids or "c" in involved_line_ids or "a" in involved_line_ids:
-                #         status_l_t = "in"
-                #     else:
-                #         status_l_t = "out"
-                # if len(cell_arcs_r_b) == 0:
-                #     if "d" in involved_line_ids or "b" in involved_line_ids or "6" in involved_line_ids or "7" in involved_line_ids:
-                #         status_r_b = "in"
-                #     else:
-                #         status_r_b = "out"
-                # if len(cell_arcs_r_t) == 0:
-                #     if "c" in involved_line_ids or "4" in involved_line_ids or "5" in involved_line_ids or "b" in involved_line_ids:
-                #         status_r_t = "in"
-                #     else:
-                #         status_r_t = "out"
 
             cells_l_b = Cell(level, index_h, index_v, self.min_x, self.min_y, length_x, length_y, cell_arcs_l_b, status_l_b)
             cells_l_t = Cell(level, index_h, index_v + 1, self.min_x, middle_y, length_x, length_y, cell_arcs_l_t, status_l_t)
@@ -901,7 +863,7 @@ print(len(research_region.vertices))  # pring the points count of research regio
 # print(count_points_in, count_points_out)
 # print(time_begin, time_end, time_end - time_begin)
 vertices = research_region.vertices
-vertices = [[0.0, 0.0], [3.0, 2.0], [5.0, 1.0]]
+# vertices = [[0.0, 0.0], [3.0, 2.0], [5.0, 1.0]]
 
 min_x = 0;
 min_y = 0;
@@ -939,7 +901,7 @@ print(len(result_cell_list))
 for cell in result_cell_list:
     middle_x = cell.min_x+cell.length_x/2
     middle_y = cell.min_y+cell.length_y/2
-    print(",".join(map(str, [middle_x, middle_y, cell.status])))
-# print("finish============")
+    # print(",".join(map(str, [middle_x, middle_y, cell.status])))
+print("finish============")
 
 

@@ -99,6 +99,26 @@ class Cell(object):
         self.arcs = arcs
         self.status = status
         self.zero_tolerance = 0.000000001
+        self._rings = None
+
+    @property
+    def rings(self):
+        """
+        the list of ring which are formed by the interesction of this cell and the arcs pass it
+        Returns
+        -------
+
+        """
+        if self._rings is None:
+            if self.status =="in" or self.status == "out":
+                self._rings = []
+            else:
+                self._rings = []
+                extract_result = extract_segments_from_cell_with_arcs([self.min_x, self.min_y], self.length_x, self.length_y, self.arcs, self.zero_tolerance)
+                for point_list in extract_result[0]:
+                    self._rings.append(Ring(point_list))
+
+        return self._rings
 
     def split(self):
         """
@@ -481,7 +501,6 @@ class Cell(object):
             cell(s) who don't have arcs allocated, we need to begin the check
             """
             if len(cell_arcs_l_b)*len(cell_arcs_l_t)*len(cell_arcs_r_b)*len(cell_arcs_r_t) == 0:
-                involved_line_ids = []  # refer the image in "cell_boundary_category_rule"
                 extract_result = extract_segments_from_cell_with_arcs([self.min_x, self.min_y], self.length_x, self.length_y, self.arcs, self.zero_tolerance)
                 construct_rings = []
                 for arc in extract_result[0]:
@@ -529,6 +548,7 @@ class Cell(object):
                         status_r_t = "out"
 
                 # # extract the involved borders of sub cells
+                # involved_line_ids = []  # refer the image in "cell_boundary_category_rule"
                 # if len(cell_arcs_l_b) > 0:
                 #     extract_result = extract_segments_from_cell_with_arcs([self.min_x, self.min_y], length_x, length_y, cell_arcs_l_b, self.zero_tolerance)
                 #     line_ids = extract_result[1]
@@ -603,8 +623,29 @@ class Cell(object):
 
         return sub_cells
 
-
-
+    def contains_point(self ,point):
+        """
+        Decide if this cell (rectangle) contains a given point
+        Parameters
+        ----------
+        point       : list
+                      the point structure, like [x, y]
+        Returns
+        -------
+        if_contains : bool
+        """
+        if self.status == "out":
+            return  False
+        if point[0] < self.min_x or point[0] > self.min_x + self.length_x or point[1] < self.min_y or point[1] > self.min_y + self.length_y:
+            return False
+        if self.status == "in":
+            return True
+        else:
+            is_in = False
+            for ring in self.rings:
+                if ring.contains_point(point):
+                    is_in = True
+            return is_in
 
 def extract_connecting_borders_between_points(cell_min_point, cell_length_x, cell_length_y, point_begin, point_end, zero_tolerance):
 
@@ -664,7 +705,6 @@ def extract_connecting_borders_between_points(cell_min_point, cell_length_x, cel
         print(cell_min_point, cell_min_point[0]+cell_length_x, cell_min_point[1]+cell_length_y, point_begin, point_end, cell_length_x, cell_length_y)
         raise Exception("Error! begin/end point doesn't lie on the cell border!!!")
 
-
     # Now, move forward from point_begin to point_end
     segments = [point_begin]
     involved_border_ids = [border_id_p_begin]
@@ -676,27 +716,27 @@ def extract_connecting_borders_between_points(cell_min_point, cell_length_x, cel
                 return (segments, involved_border_ids)
             else:
                 segments.append([cell_min_point[0], cell_min_point[1]+cell_length_y])
-                border_id_p_search = (border_id_p_search + 1) %4
-        if border_id_p_search == 1:
+                border_id_p_search = (border_id_p_search + 1) % 4
+        elif border_id_p_search == 1:
             if compare_with_tolerance(point_begin[0], point_end[0], zero_tolerance) == -1:
                 segments.append(point_end)
                 return (segments, involved_border_ids)
             else:
                 segments.append([cell_min_point[0]+cell_length_x, cell_min_point[1]+cell_length_y])
                 border_id_p_search = (border_id_p_search + 1) % 4
-        if border_id_p_search == 2:
+        elif border_id_p_search == 2:
             if compare_with_tolerance(point_begin[1], point_end[1], zero_tolerance) == 1:
                 segments.append(point_end)
                 return (segments, involved_border_ids)
             else:
                 segments.append([cell_min_point[0]+cell_length_x, cell_min_point[1]])
                 border_id_p_search = (border_id_p_search + 1) % 4
-        if border_id_p_search == 1:
+        elif border_id_p_search == 3:
             if compare_with_tolerance(point_begin[0], point_end[0], zero_tolerance) == 1:
                 segments.append(point_end)
                 return (segments, involved_border_ids)
             else:
-                segments.append([cell_min_point[0] + cell_length_x, cell_min_point[1]])
+                segments.append([cell_min_point[0], cell_min_point[1]])
                 border_id_p_search = (border_id_p_search + 1) % 4
     while True:
         involved_border_ids.append(border_id_p_search)
@@ -865,7 +905,83 @@ def extract_segments_from_cell_with_arcs(cell_min_point, cell_length_x, cell_len
     return (rings, involved_border_ids)
 
 
+class ZonalStructure(object):
+    """
+    This class is the main manager of cells. By giving a study area. This class can construct a cell list depicting
+    the study area. When given a new point. This class could rapidly determine whether the point lies in the study area
+    """
+    def __init__(self, ring, quad_tree_level = 7):
+        """
+        Constructing function
+        Parameters
+        ----------
+        ring            : Ring
+                          the point list of study area. But in the class of Ring in PySAL
+                          Example: Ring([[0.0, 0.0], [3.0, 2.0], [5.0, 1.0]])
+        quad_tree_level : int
+                          the level for quad dividing the study area. Result tree node size equals quad_tree_level**4
+                          e.g. for the default value 7,  result tree node size = 16384
+                          The value should no larger than 10
+        """
+        if quad_tree_level > 10:
+            raise Exception("quad_tree_level exceed the max value 10!")
+        self.ring = ring
+        self.cell_list = []
+        self.column_size = 2**quad_tree_level  # also equals row_size
+        self.cell_width = ring.bounding_box.width / (self.column_size)
+        self.cell_height = ring.bounding_box.height / (self.column_size)
+        top_cell = Cell(0, 0, 0, ring.bounding_box.left, ring.bounding_box.lower, ring.bounding_box.width, ring.bounding_box.height, [ring.vertices], "maybe")
+        result_cell_list = [top_cell]
+        for i in range(0, quad_tree_level):
+            temp_cell_list = []
+            while len(result_cell_list) > 0:
+                cell = result_cell_list.pop()
+                sub_cell_list = cell.split()
+                for sub_cell in sub_cell_list:
+                    temp_cell_list.append(sub_cell)
+            result_cell_list = temp_cell_list
+        for i in range(0, 4**quad_tree_level):
+            self.cell_list.append(None)
+        for cell in result_cell_list:
+            index = cell.index_v * self.column_size + cell.index_h
+            self.cell_list[index] = cell
 
+    def contains_point(self, point):
+        """
+        Quickly determin if the study area contains a point
+        Parameters
+        ----------
+        point       : list
+                      the point structure, like [x, y]
+
+        Returns
+        -------
+        if_contains : bool
+
+        """
+        if point[0] < self.min_x or point[0] > self.min_x + self.region_width or point[1] < self.min_y or point[1] > self.min_y + self.region_height:
+            return False
+        row = int((point[1] - self.min_y)/self.cell_height)
+        column = int((point[0] - self.min_x)/self.cell_width)
+        index = row * self.column_size + column
+        cell = self.cell_list[index]
+        return cell.contains_point(point)
+
+    @property
+    def region_width(self):
+        return self.ring.bounding_box.width
+
+    @property
+    def region_height(self):
+        return self.ring.bounding_box.height
+
+    @property
+    def min_x(self):
+        return self.ring.bounding_box.left
+
+    @property
+    def min_y(self):
+        return self.ring.bounding_box.lower
 
 
 
@@ -875,71 +991,86 @@ pols = ps.open("data/Huangshan_region.shp")  # read the research region shape fi
 research_region = pols[0]  # set the first polygon as research polygon
 print(len(research_region.vertices))  # pring the points count of research region polygon
 
+zonal_structure = ZonalStructure(Ring(research_region.vertices))
 
-# poi_file = codecs.open("data/poi_info_huangshan.txt", "r", encoding="UTF-8")
-# print(poi_file.readline())
-# line_stampe = 0
-# count_points_in = 0
-# count_points_out = 0
-# for line in poi_file:
-#     line_stampe += 1
-#     if(len(line)<5):
-#         continue
-#     fields = line.split("\t")
-#     if(len(fields)!=6):
-#         continue
-#     x = float(line.split("\t")[4])
-#     y = float(line.split("\t")[5])
-#     if research_region.contains_point((x, y)):
-#         count_points_in += 1
-#     else:
-#         count_points_out += 1
+
+poi_file = codecs.open("data/poi_info_huangshan.txt", "r", encoding="UTF-8")
+print(poi_file.readline())
+line_stampe = 0
+count_points_in = 0
+count_points_out = 0
+for line in poi_file:
+    line_stampe += 1
+    if(len(line)<5):
+        continue
+    fields = line.split("\t")
+    if(len(fields)!=6):
+        continue
+    x = float(line.split("\t")[4])
+    y = float(line.split("\t")[5])
+
+    # if research_region.contains_point((x, y)):
+    #     count_points_in += 1
+    # else:
+    #     count_points_out += 1
+
+    if zonal_structure.contains_point((x, y)):
+        count_points_in += 1
+    else:
+        count_points_out += 1
+
+
+time_end = int(round(time.time() * 1000))
+
+print("finished")
+print(count_points_in, count_points_out)
+print(time_begin, time_end, time_end - time_begin)
+
+
+# vertices = research_region.vertices
+# # vertices = [[0.0, 0.0], [3.0, 2.0], [5.0, 1.0]]
 #
-# time_end = int(round(time.time() * 1000))
+# min_x = 0;
+# min_y = 0;
+# max_x = 0;
+# max_y = 0;
+# for i in range(0, len(vertices)):
+#     x = vertices[i][0]
+#     y = vertices[i][1]
+#     if i == 0:
+#         min_x = x
+#         min_y = y
+#         max_x = x
+#         max_y = y
+#     if min_x > x:
+#         min_x = x
+#     if max_x < x:
+#         max_x = x
+#     if min_y > y:
+#         min_y = y
+#     if max_y < y:
+#         max_y = y
+# top_cell = Cell(0, 0, 0, min_x, min_y, max_x-min_x, max_y-min_y, [vertices], "maybe")
+# result_cell_list = [top_cell]
 #
-# print("finished")
-# print(count_points_in, count_points_out)
-# print(time_begin, time_end, time_end - time_begin)
-vertices = research_region.vertices
-vertices = [[0.0, 0.0], [3.0, 2.0], [5.0, 1.0]]
-
-min_x = 0;
-min_y = 0;
-max_x = 0;
-max_y = 0;
-for i in range(0, len(vertices)):
-    x = vertices[i][0]
-    y = vertices[i][1]
-    if i == 0:
-        min_x = x
-        min_y = y
-        max_x = x
-        max_y = y
-    if min_x > x:
-        min_x = x
-    if max_x < x:
-        max_x = x
-    if min_y > y:
-        min_y = y
-    if max_y < y:
-        max_y = y
-top_cell = Cell(0, 0, 0, min_x, min_y, max_x-min_x, max_y-min_y, [vertices], "maybe")
-result_cell_list = [top_cell]
-
-for i in range(0, 7):
-    temp_cell_list = []
-    while len(result_cell_list) > 0:
-        cell = result_cell_list.pop()
-        sub_cell_list = cell.split()
-        for sub_cell in sub_cell_list:
-            temp_cell_list.append(sub_cell)
-    result_cell_list = temp_cell_list
-
-print(len(result_cell_list))
-for cell in result_cell_list:
-    middle_x = cell.min_x+cell.length_x/2
-    middle_y = cell.min_y+cell.length_y/2
-    print(",".join(map(str, [middle_x, middle_y, cell.status])))
-# print("finish============")
+# for i in range(0, 7):
+#     temp_cell_list = []
+#     while len(result_cell_list) > 0:
+#         cell = result_cell_list.pop()
+#         sub_cell_list = cell.split()
+#         for sub_cell in sub_cell_list:
+#             temp_cell_list.append(sub_cell)
+#     result_cell_list = temp_cell_list
+#
+# print(len(result_cell_list))
+# for cell in result_cell_list:
+#     middle_x = cell.min_x+cell.length_x/2
+#     middle_y = cell.min_y+cell.length_y/2
+#     print(",".join(map(str, [middle_x, middle_y, cell.status])))
+#     # if cell.index_h == 3 and cell.index_v == 5:
+#     #     ext_result = extract_segments_from_cell_with_arcs([cell.min_x, cell.min_y], cell.length_x, cell.length_y, cell.arcs, cell.zero_tolerance)
+#     #     for point in ext_result[0][0]:
+#     #         print (",".join(map(str, point)))
+# # print("finish============")
 
 

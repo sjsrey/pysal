@@ -177,93 +177,93 @@ class Cell(object):
                         See the image cell_boundary_category_rule to better understand the process
                         """
                         if compare_with_tolerance(x0, self.min_x, self.zero_tolerance) == 0:  # left border
-                            if y0 < middle_y:  # position 1
+                            if compare_with_tolerance(y0, middle_y, self.zero_tolerance) == -1:  # position 1
                                 temp_arc_belonging = "l_b"
-                            elif y0 > middle_y:  # position 2
+                            elif compare_with_tolerance(y0, middle_y, self.zero_tolerance) == 1:  # position 2
                                 temp_arc_belonging = "l_t"
                             else:  # just by chance at the middle point
-                                if y1 < y0:  # going down
+                                if compare_with_tolerance(y1, y0, self.zero_tolerance) == -1:  # going down
                                     temp_arc_belonging = "l_b"
-                                elif y1 > y0:  # going up
+                                elif compare_with_tolerance(y1, y0, self.zero_tolerance) == 1:  # going up
                                     temp_arc_belonging = "l_t"
                                 else: # just by chance this segment lies on split_line_h, throw it
                                     continue
                         elif compare_with_tolerance(x0, self.min_x+self.length_x, self.zero_tolerance) == 0:  # right border
-                            if y0 < middle_y:  # position 6
+                            if compare_with_tolerance(y0, middle_y, self.zero_tolerance) == -1:  # position 6
                                 temp_arc_belonging = "r_b"
-                            elif y0 > middle_y:  # position 5
+                            elif compare_with_tolerance(y0, middle_y, self.zero_tolerance) == 1:  # position 5
                                 temp_arc_belonging = "r_t"
                             else:  # just by chance at the middle point
-                                if y1 < y0:  # going down
+                                if compare_with_tolerance(y1, y0, self.zero_tolerance) == -1:  # going down
                                     temp_arc_belonging = "r_b"
-                                elif y1 > y0:  # going up
+                                elif compare_with_tolerance(y1, y0, self.zero_tolerance) == 1:  # going up
                                     temp_arc_belonging = "r_t"
                                 else:  # just by chance this segment lies on split_line_h, throw it
                                     continue
                         elif compare_with_tolerance(y0, self.min_y, self.zero_tolerance) == 0:  # bottom border
-                            if x0 < middle_x: # position 8
+                            if compare_with_tolerance(x0, middle_x, self.zero_tolerance) == -1: # position 8
                                 temp_arc_belonging = "l_b"
-                            elif x0 > middle_x: # position 7
+                            elif compare_with_tolerance(x0, middle_x, self.zero_tolerance) == 1: # position 7
                                 temp_arc_belonging = "r_b"
                             else:  # just by chance at the middle point
-                                if x1 < x0:  # going left
+                                if compare_with_tolerance(x1, x0, self.zero_tolerance) == -1:  # going left
                                     temp_arc_belonging = "l_b"
-                                elif x1 > x0:  #going right
+                                elif compare_with_tolerance(x1, x0, self.zero_tolerance) == 1:  #going right
                                     temp_arc_belonging = "r_b"
                                 else:   # just by chance this segment lies on split_line_v, throw it
                                     continue
                         elif compare_with_tolerance(y0, self.min_y+self.length_y, self.zero_tolerance) == 0:  # top border
-                            if x0 < middle_x:  # position 3
+                            if compare_with_tolerance(x0, middle_x, self.zero_tolerance) == -1:  # position 3
                                 temp_arc_belonging = "l_t"
-                            elif x0 > middle_x:  # position 4
+                            elif compare_with_tolerance(x0, middle_x, self.zero_tolerance) == 1:  # position 4
                                 temp_arc_belonging = "r_t"
                             else:  # just by chance at the middle point
-                                if x1 < x0:  # going left
+                                if compare_with_tolerance(x1, x0, self.zero_tolerance) == -1:  # going left
                                     temp_arc_belonging = "l_t"
-                                elif x1 > x0:  # going right
+                                elif compare_with_tolerance(x1, x0, self.zero_tolerance) == 1:  # going right
                                     temp_arc_belonging = "r_t"
                                 else:  # just by chance this segment lies on split_line_v, throw it
                                     continue
                         elif compare_with_tolerance(x0, middle_x, self.zero_tolerance) == 0:  # split_line_v
-                            if y0 > middle_y: # position c
-                                if x1 > x0:
+                            if compare_with_tolerance(y0, middle_y, self.zero_tolerance) == 1: # position c
+                                if compare_with_tolerance(x1, x0, self.zero_tolerance) == 1:
                                     temp_arc_belonging = "r_t"
-                                elif x1 < x0:
+                                elif compare_with_tolerance(x1, x0, self.zero_tolerance) == -1:
                                     temp_arc_belonging = "l_t"
                                 else:  # x1==x0, just by chance on the split_line_v
                                     continue
-                            elif y0 < middle_y: # position d
-                                if x1 > x0:
+                            elif compare_with_tolerance(y0, middle_y, self.zero_tolerance) == -1: # position d
+                                if compare_with_tolerance(x1, x0, self.zero_tolerance) == 1:
                                     temp_arc_belonging = "r_b"
-                                elif x1 < x0:
+                                elif compare_with_tolerance(x1, x0, self.zero_tolerance) == -1:
                                     temp_arc_belonging = "l_b"
                                 else:  # x1==x0, just by chance on the split_line_v
                                     continue
                             else:  # in condition that p0 lies at the cross point of two split lines
                                 if compare_with_tolerance(x1, x0, self.zero_tolerance) == 0 or compare_with_tolerance(y1, y0, self.zero_tolerance) == 0:  # on one of the split_line
                                     continue
-                                elif x1 > x0:
-                                    if y1 > y0:
+                                elif compare_with_tolerance(x1, x0, self.zero_tolerance) == 1:
+                                    if compare_with_tolerance(y1, y0, self.zero_tolerance) == 1:
                                         temp_arc_belonging = "r_t"
                                     else:
                                         temp_arc_belonging = "r_b"
                                 else:  # on condition that x1 < x0
-                                    if y1 > y0:
+                                    if compare_with_tolerance(y1, y0, self.zero_tolerance) == 1:
                                         temp_arc_belonging = 'l_t'
                                     else:
                                         temp_arc_belonging = "l_b"
                         elif compare_with_tolerance(y0, middle_y, self.zero_tolerance) == 0:  # split_line_h
-                            if x0 > middle_x:  #position b
-                                if y1 > y0:
+                            if compare_with_tolerance(x0, middle_x, self.zero_tolerance) == 1:  #position r
+                                if compare_with_tolerance(y1, y0, self.zero_tolerance) == 1:
                                     temp_arc_belonging = "r_t"
-                                elif y1 < y0:
+                                elif compare_with_tolerance(y1, y0, self.zero_tolerance) == -1:
                                     temp_arc_belonging = "r_b"
                                 else:  # y1==y0, just by chance on the split_line_h
                                     continue
                             else:  # on condition that x0 < middle_x, position a
-                                if y1 > y0:
+                                if compare_with_tolerance(y1, y0, self.zero_tolerance) == 1:
                                     temp_arc_belonging = "l_t"
-                                elif y1 < y0:
+                                elif compare_with_tolerance(y1, y0, self.zero_tolerance) == -1:
                                     temp_arc_belonging = "l_b"
                                 else:  # y1==y0, just by chance on the split_line_h
                                     continue
@@ -296,25 +296,27 @@ class Cell(object):
                         continue
                     # Check if end point(p2) lies on split_lies, this kind of situation is also easy to handle
                     # split the arc here, but no need to split the segment
-                    if compare_with_tolerance(x1, middle_x, self.zero_tolerance) == 0 or compare_with_tolerance(y1, middle_y, self.zero_tolerance) == 0:
-                        if len(temp_arc) == 0:
-                            temp_arc.append([x0, y0])
-                        temp_arc.append([x1, y1])
-                        if temp_arc_belonging == "l_b":
-                            cell_arcs_l_b.append(temp_arc)
-                        elif temp_arc_belonging == "l_t":
-                            cell_arcs_l_t.append(temp_arc)
-                        elif temp_arc_belonging == "r_b":
-                            cell_arcs_r_b.append(temp_arc)
-                        elif temp_arc_belonging == "r_t":
-                            cell_arcs_r_t.append(temp_arc)
-                        temp_arc = []
-                        temp_arc_belonging = None
-                        continue
+                    # if compare_with_tolerance(x1, middle_x, self.zero_tolerance) == 0 or compare_with_tolerance(y1, middle_y, self.zero_tolerance) == 0:
+                    #     print("hahaha! maybe wrong!")
+                    #     if len(temp_arc) == 0:
+                    #         temp_arc.append([x0, y0])
+                    #     temp_arc.append([x1, y1])
+                    #     if temp_arc_belonging == "l_b":
+                    #         cell_arcs_l_b.append(temp_arc)
+                    #     elif temp_arc_belonging == "l_t":
+                    #         cell_arcs_l_t.append(temp_arc)
+                    #     elif temp_arc_belonging == "r_b":
+                    #         cell_arcs_r_b.append(temp_arc)
+                    #     elif temp_arc_belonging == "r_t":
+                    #         cell_arcs_r_t.append(temp_arc)
+                    #     temp_arc = []
+                    #     temp_arc_belonging = None
+                    #     continue
+
                     intersect_point_h = None
                     intersect_point_v = None
                     # Check if the segment intersects with split_line_h
-                    if (y0 < middle_y < y1) or (y0 > middle_y > y1):
+                    if (compare_with_tolerance(y0, middle_y, self.zero_tolerance) == -1 and compare_with_tolerance(middle_y, y1, self.zero_tolerance) == -1) or ( compare_with_tolerance(y0, middle_y, self.zero_tolerance) == 1 and compare_with_tolerance(middle_y, y1, self.zero_tolerance) == 1):
                         if compare_with_tolerance(x0, x1, self.zero_tolerance) == 0:  # the segments is vertical
                             intersect_point_h = [x0, middle_y]
                         else:
@@ -323,7 +325,7 @@ class Cell(object):
                             x_new = (middle_y-b)/a
                             intersect_point_h = [x_new, middle_y]
                     # Check if the segment intersects with split_line_v
-                    if (x0 < middle_x < x1) or (x0 > middle_x > x1):
+                    if (compare_with_tolerance(x0, middle_x, self.zero_tolerance) == -1 and compare_with_tolerance(middle_x, x1, self.zero_tolerance) == -1) or (compare_with_tolerance(x0, middle_x, self.zero_tolerance) == 1 and compare_with_tolerance(middle_x, x1, self.zero_tolerance) == 1):
                         if compare_with_tolerance(y0, y1, self.zero_tolerance) == 0:  # the segments is horizontal
                             intersect_point_v = [middle_x, y0]
                         else:
@@ -362,31 +364,103 @@ class Cell(object):
                             cell_arcs_r_b.append(temp_arc)
                         elif temp_arc_belonging == "r_t":
                             cell_arcs_r_t.append(temp_arc)
-                        # since the segment is broken here, init the next temp_arc
-                        temp_arc = [intersect_point, [x1, y1]]
+
                         if temp_arc_belonging == "l_b":
                             if intersect_point_mark == "h":
-                                temp_arc_belonging = "l_t"
+                                if (intersect_point_h is not None) and (intersect_point_v is not None):
+                                    # under the situation that a single segment intersects with both split lines,
+                                    # here need carefully process
+                                    small_arc = [intersect_point_h, intersect_point_v]
+                                    cell_arcs_l_t.append(small_arc)
+                                    temp_arc = [intersect_point_v, [x1, y1]]
+                                    temp_arc_belonging = "r_t"
+                                else:
+                                    temp_arc = [intersect_point, [x1, y1]]
+                                    temp_arc_belonging = "l_t"
                             else:
-                                temp_arc_belonging = "r_b"
+                                if (intersect_point_h is not None) and (intersect_point_v is not None):
+                                    # under the situation that a single segment intersects with both split lines,
+                                    # here need carefully process
+                                    small_arc = [intersect_point_v, intersect_point_h]
+                                    cell_arcs_r_b.append(small_arc)
+                                    temp_arc = [intersect_point_h, [x1, y1]]
+                                    temp_arc_belonging = "r_t"
+                                else:
+                                    temp_arc = [intersect_point, [x1, y1]]
+                                    temp_arc_belonging = "r_b"
 
                         elif temp_arc_belonging == "l_t":
                             if intersect_point_mark == "h":
-                                temp_arc_belonging = "l_b"
+                                if (intersect_point_h is not None) and (intersect_point_v is not None):
+                                    # under the situation that a single segment intersects with both split lines,
+                                    # here need carefully process
+                                    small_arc = [intersect_point_h, intersect_point_v]
+                                    cell_arcs_l_b.append(small_arc)
+                                    temp_arc = [intersect_point_v, [x1, y1]]
+                                    temp_arc_belonging = "r_b"
+                                else:
+                                    temp_arc = [intersect_point, [x1, y1]]
+                                    temp_arc_belonging = "l_b"
                             else:
-                                temp_arc_belonging = "r_t"
+                                if (intersect_point_h is not None) and (intersect_point_v is not None):
+                                    # under the situation that a single segment intersects with both split lines,
+                                    # here need carefully process
+                                    small_arc = [intersect_point_v, intersect_point_h]
+                                    cell_arcs_r_t.append(small_arc)
+                                    temp_arc = [intersect_point_h, [x1, y1]]
+                                    temp_arc_belonging = "r_b"
+                                else:
+                                    temp_arc = [intersect_point, [x1, y1]]
+                                    temp_arc_belonging = "r_t"
 
                         elif temp_arc_belonging == "r_b":
                             if intersect_point_mark == "h":
-                                temp_arc_belonging = "r_t"
+                                if (intersect_point_h is not None) and (intersect_point_v is not None):
+                                    # under the situation that a single segment intersects with both split lines,
+                                    # here need carefully process
+                                    small_arc = [intersect_point_h, intersect_point_v]
+                                    cell_arcs_r_t.append(small_arc)
+                                    temp_arc = [intersect_point_v, [x1, y1]]
+                                    temp_arc_belonging = "l_t"
+                                else:
+                                    temp_arc = [intersect_point, [x1, y1]]
+                                    temp_arc_belonging = "r_t"
                             else:
-                                temp_arc_belonging = "l_b"
+                                if (intersect_point_h is not None) and (intersect_point_v is not None):
+                                    # under the situation that a single segment intersects with both split lines,
+                                    # here need carefully process
+                                    small_arc = [intersect_point_v, intersect_point_h]
+                                    cell_arcs_l_b.append(small_arc)
+                                    temp_arc = [intersect_point_h, [x1, y1]]
+                                    temp_arc_belonging = "l_t"
+                                else:
+                                    temp_arc = [intersect_point, [x1, y1]]
+                                    temp_arc_belonging = "l_b"
 
                         elif temp_arc_belonging == "r_t":
                             if intersect_point_mark == "h":
-                                temp_arc_belonging = "r_b"
+                                if (intersect_point_h is not None) and (intersect_point_v is not None):
+                                    # under the situation that a single segment intersects with both split lines,
+                                    # here need carefully process
+                                    small_arc = [intersect_point_h, intersect_point_v]
+                                    cell_arcs_r_b.append(small_arc)
+                                    temp_arc = [intersect_point_v, [x1, y1]]
+                                    temp_arc_belonging = "l_b"
+                                else:
+                                    temp_arc = [intersect_point, [x1, y1]]
+                                    temp_arc_belonging = "r_b"
                             else:
-                                temp_arc_belonging = "l_t"
+                                if (intersect_point_h is not None) and (intersect_point_v is not None):
+                                    # under the situation that a single segment intersects with both split lines,
+                                    # here need carefully process
+                                    small_arc = [intersect_point_v, intersect_point_h]
+                                    cell_arcs_l_t.append(small_arc)
+                                    temp_arc = [intersect_point_h, [x1, y1]]
+                                    temp_arc_belonging = "l_b"
+                                else:
+                                    temp_arc = [intersect_point, [x1, y1]]
+                                    temp_arc_belonging = "l_t"
+
                     else:  # simply append the point to current arc
                         if len(temp_arc) == 0:
                             temp_arc.append([x0, y0])
@@ -478,7 +552,7 @@ class Cell(object):
                     else:
                         status_r_b = "out"
                 if len(cell_arcs_r_t) == 0:
-                    if "c" in involved_line_ids or "4" in involved_line_ids or "5" in involved_line_ids or "6" in involved_line_ids:
+                    if "c" in involved_line_ids or "4" in involved_line_ids or "5" in involved_line_ids or "b" in involved_line_ids:
                         status_r_t = "in"
                     else:
                         status_r_t = "out"
@@ -495,7 +569,6 @@ class Cell(object):
 
 
 def extract_connecting_borders_between_points(cell_min_point, cell_length_x, cell_length_y, point_begin, point_end, zero_tolerance):
-    print(cell_min_point, cell_min_point[0]+cell_length_x, cell_min_point[1]+cell_length_y, point_begin, point_end, cell_length_x, cell_length_y)
 
     """
     There is an rectangle and two points on the border, this function is used to extract the borders connecting
@@ -550,6 +623,7 @@ def extract_connecting_borders_between_points(cell_min_point, cell_length_x, cel
         border_id_p_end = 3
 
     if border_id_p_begin == -1 or border_id_p_end == -1:
+        print(cell_min_point, cell_min_point[0]+cell_length_x, cell_min_point[1]+cell_length_y, point_begin, point_end, cell_length_x, cell_length_y)
         raise Exception("Error! begin/end point doesn't lie on the cell border!!!")
 
 
@@ -559,28 +633,28 @@ def extract_connecting_borders_between_points(cell_min_point, cell_length_x, cel
     border_id_p_search = border_id_p_begin
     if border_id_p_search == border_id_p_end:  #first check if they lie on the same border at the beginning
         if border_id_p_search == 0:
-            if point_begin[1] < point_end[1]:
+            if compare_with_tolerance(point_begin[1], point_end[1], zero_tolerance) == -1:
                 segments.append(point_end)
                 return (segments, involved_border_ids)
             else:
                 segments.append([cell_min_point[0], cell_min_point[1]+cell_length_y])
                 border_id_p_search = (border_id_p_search + 1) %4
         if border_id_p_search == 1:
-            if point_begin[0] < point_end[0]:
+            if compare_with_tolerance(point_begin[0], point_end[0], zero_tolerance) == -1:
                 segments.append(point_end)
                 return (segments, involved_border_ids)
             else:
                 segments.append([cell_min_point[0]+cell_length_x, cell_min_point[1]+cell_length_y])
                 border_id_p_search = (border_id_p_search + 1) % 4
         if border_id_p_search == 2:
-            if point_begin[1] > point_end[1]:
+            if compare_with_tolerance(point_begin[1], point_end[1], zero_tolerance) == 1:
                 segments.append(point_end)
                 return (segments, involved_border_ids)
             else:
                 segments.append([cell_min_point[0]+cell_length_x, cell_min_point[1]])
                 border_id_p_search = (border_id_p_search + 1) % 4
         if border_id_p_search == 1:
-            if point_begin[0] > point_end[0]:
+            if compare_with_tolerance(point_begin[0], point_end[0], zero_tolerance) == 1:
                 segments.append(point_end)
                 return (segments, involved_border_ids)
             else:
@@ -694,7 +768,7 @@ def extract_segments_from_cell_with_arcs(cell_min_point, cell_length_x, cell_len
             for i in range(0, len(arcs)):
                 if i in used_arc_ids:
                     continue
-                if arc_id_with_min_begin_location == -1 or arc_begin_points_location[arc_id_with_min_begin_location] > arc_begin_points_location[i]:
+                if arc_id_with_min_begin_location == -1 or compare_with_tolerance(arc_begin_points_location[arc_id_with_min_begin_location], arc_begin_points_location[i], zero_tolerance) == 1:
                     arc_id_with_min_begin_location = i
             new_ring_end_point = arc_end_points[arc_id_with_min_begin_location]
             new_ring_end_point_location = arc_end_points_location[arc_id_with_min_begin_location]
@@ -717,7 +791,7 @@ def extract_segments_from_cell_with_arcs(cell_min_point, cell_length_x, cell_len
                     distance_to_end_point_now = arc_begin_points_location[i] - new_ring_end_point_location
                     if distance_to_end_point_now < 0:
                         distance_to_end_point_now += 4
-                    if distance_to_end_point_min > distance_to_end_point_now:
+                    if compare_with_tolerance(distance_to_end_point_min, distance_to_end_point_now, zero_tolerance) == 1:
                         arc_id_with_relatively_min_begin_location = i
             extract_result = extract_connecting_borders_between_points(cell_min_point, cell_length_x, cell_length_y, new_ring_end_point, arc_begin_points[arc_id_with_relatively_min_begin_location], zero_tolerance)
             point_list = extract_result[0]
@@ -788,14 +862,16 @@ print(len(research_region.vertices))  # pring the points count of research regio
 # print("finished")
 # print(count_points_in, count_points_out)
 # print(time_begin, time_end, time_end - time_begin)
+vertices = research_region.vertices
+# vertices = [[0.0, 0.0], [3.0, 2.0], [5.0, 1.0]]
 
 min_x = 0;
 min_y = 0;
 max_x = 0;
 max_y = 0;
-for i in range(0, len(research_region.vertices)):
-    x = research_region.vertices[i][0]
-    y = research_region.vertices[i][1]
+for i in range(0, len(vertices)):
+    x = vertices[i][0]
+    y = vertices[i][1]
     if i == 0:
         min_x = x
         min_y = y
@@ -809,7 +885,7 @@ for i in range(0, len(research_region.vertices)):
         min_y = y
     if max_y < y:
         max_y = y
-top_cell = Cell(0, 0, 0, min_x, min_y, max_x-min_x, max_y-min_y, [research_region.vertices], "maybe")
+top_cell = Cell(0, 0, 0, min_x, min_y, max_x-min_x, max_y-min_y, [vertices], "maybe")
 result_cell_list = [top_cell]
 
 for i in range(0, 7):
@@ -825,7 +901,7 @@ print(len(result_cell_list))
 for cell in result_cell_list:
     middle_x = cell.min_x+cell.length_x/2
     middle_y = cell.min_y+cell.length_y/2
-    print(middle_x, middle_y, cell.status)
-
+    # print(",".join(map(str, [middle_x, middle_y, cell.status])))
+print("finish============")
 
 

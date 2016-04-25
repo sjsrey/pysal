@@ -983,68 +983,68 @@ class ZonalStructure(object):
 
 
 
-time_begin = int(round(time.time() * 1000))
-
-pols = ps.open("data/Huangshan_region.shp")  # read the research region shape file
-research_region = pols[0]  # set the first polygon as research polygon
-print(len(research_region.vertices))  # pring the points count of research region polygon
-
-
-
-# zonal_structure = ZonalStructure(Ring(research_region.vertices))
-
-
-poi_file = codecs.open("data/poi_info_huangshan.txt", "r", encoding="UTF-8")
-# poi_file = codecs.open("data/geoweibo_huangshan_only.txt", "r", encoding="UTF-8")
-
-# output_file = open("data/geoweibo_huangshan_only_determine.txt", "w")
-# output_file.write("x, y, type\n")
-poly = Polygon(research_region.vertices)
-
-
-print(poi_file.readline())
-line_stampe = 0
-count_points_in = 0
-count_points_out = 0
-for line in poi_file:
-    line_stampe += 1
-    if(len(line)<5):
-        continue
-    fields = line.split("\t")
-    if(len(fields)!=6):
-        continue
-    x = float(line.split("\t")[4])
-    y = float(line.split("\t")[5])
-    # if(len(fields)!=5):
-    #     continue
-    # x = float(line.split("\t")[2])
-    # y = float(line.split("\t")[3])
-
-    # if research_region.contains_point((x, y)):
-    #     count_points_in += 1
-    # else:
-    #     count_points_out += 1
-
-    xy_point = Point(x, y)
-    if poly.contains(xy_point):
-        count_points_in += 1
-    else:
-        count_points_out += 1
-
-
-#     if zonal_structure.contains_point((x, y)):
+# time_begin = int(round(time.time() * 1000))
+#
+# pols = ps.open("data/Huangshan_region.shp")  # read the research region shape file
+# research_region = pols[0]  # set the first polygon as research polygon
+# print(len(research_region.vertices))  # pring the points count of research region polygon
+#
+#
+#
+# # zonal_structure = ZonalStructure(Ring(research_region.vertices))
+#
+#
+# poi_file = codecs.open("data/poi_info_huangshan.txt", "r", encoding="UTF-8")
+# # poi_file = codecs.open("data/geoweibo_huangshan_only.txt", "r", encoding="UTF-8")
+#
+# # output_file = open("data/geoweibo_huangshan_only_determine.txt", "w")
+# # output_file.write("x, y, type\n")
+# poly = Polygon(research_region.vertices)
+#
+#
+# print(poi_file.readline())
+# line_stampe = 0
+# count_points_in = 0
+# count_points_out = 0
+# for line in poi_file:
+#     line_stampe += 1
+#     if(len(line)<5):
+#         continue
+#     fields = line.split("\t")
+#     if(len(fields)!=6):
+#         continue
+#     x = float(line.split("\t")[4])
+#     y = float(line.split("\t")[5])
+#     # if(len(fields)!=5):
+#     #     continue
+#     # x = float(line.split("\t")[2])
+#     # y = float(line.split("\t")[3])
+#
+#     # if research_region.contains_point((x, y)):
+#     #     count_points_in += 1
+#     # else:
+#     #     count_points_out += 1
+#
+#     xy_point = Point(x, y)
+#     if poly.contains(xy_point):
 #         count_points_in += 1
-#         output_file.write(",".join(map(str, [x, y, "in\n"])))
 #     else:
 #         count_points_out += 1
-#         output_file.write(",".join(map(str, [x, y, "out\n"])))
-# output_file.close();
-
-time_end = int(round(time.time() * 1000))
-
-print("finished")
-print(count_points_in, count_points_out)
-print(time_begin, time_end, time_end - time_begin)
+#
+#
+# #     if zonal_structure.contains_point((x, y)):
+# #         count_points_in += 1
+# #         output_file.write(",".join(map(str, [x, y, "in\n"])))
+# #     else:
+# #         count_points_out += 1
+# #         output_file.write(",".join(map(str, [x, y, "out\n"])))
+# # output_file.close();
+#
+# time_end = int(round(time.time() * 1000))
+#
+# print("finished")
+# print(count_points_in, count_points_out)
+# print(time_begin, time_end, time_end - time_begin)
 
 
 # vertices = research_region.vertices

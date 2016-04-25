@@ -94,3 +94,50 @@ finished, points in = 361823; points out = 46896
 
 
 ======================================================================================================================
+
+poi - pysal >>>>>>>>>>>>>>>>>>>>>>>>>>>
+Polygon read, vertices number = 3891
+id	name	category	checkin_count	x	y
+
+finished, points in = 18459; points out = 2205
+-------------------------time used: 55782-------------------------
+
+
+poi - shapely >>>>>>>>>>>>>>>>>>>>>>>>>>>
+Polygon read, vertices number = 3891
+id	name	category	checkin_count	x	y
+
+finished, points in = 18459; points out = 2205
+-------------------------time used: 19332-------------------------
+
+
+poi - zonal >>>>>>>>>>>>>>>>>>>>>>>>>>>
+Polygon read, vertices number = 3891
+id	name	category	checkin_count	x	y
+
+finished, points in = 18459; points out = 2205
+-------------------------time used: 853-------------------------
+
+
+weibo - pysal >>>>>>>>>>>>>>>>>>>>>>>>>>>
+Polygon read, vertices number = 3891
+﻿id	uid	X	Y	location
+
+finished, points in = 361823; points out = 46896
+-------------------------time used: 1065937-------------------------
+
+
+weibo - shapely >>>>>>>>>>>>>>>>>>>>>>>>>>>
+Polygon read, vertices number = 3891
+﻿id	uid	X	Y	location
+
+finished, points in = 361823; points out = 46896
+-------------------------time used: 360283-------------------------
+
+
+weibo - zonal >>>>>>>>>>>>>>>>>>>>>>>>>>>
+Polygon read, vertices number = 3891
+﻿id	uid	X	Y	location
+
+finished, points in = 361823; points out = 46896
+-------------------------time used: 7162-------------------------

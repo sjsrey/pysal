@@ -985,9 +985,9 @@ class ZonalStructure(object):
 
 # time_begin = int(round(time.time() * 1000))
 #
-# pols = ps.open("data/Huangshan_region.shp")  # read the research region shape file
-# research_region = pols[0]  # set the first polygon as research polygon
-# print(len(research_region.vertices))  # pring the points count of research region polygon
+pols = ps.open("data/Huangshan_region.shp")  # read the research region shape file
+research_region = pols[0]  # set the first polygon as research polygon
+print(len(research_region.vertices))  # pring the points count of research region polygon
 #
 #
 #
@@ -1047,50 +1047,50 @@ class ZonalStructure(object):
 # print(time_begin, time_end, time_end - time_begin)
 
 
-# vertices = research_region.vertices
-# # vertices = [[0.0, 0.0], [3.0, 2.0], [5.0, 1.0]]
-#
-# min_x = 0;
-# min_y = 0;
-# max_x = 0;
-# max_y = 0;
-# for i in range(0, len(vertices)):
-#     x = vertices[i][0]
-#     y = vertices[i][1]
-#     if i == 0:
-#         min_x = x
-#         min_y = y
-#         max_x = x
-#         max_y = y
-#     if min_x > x:
-#         min_x = x
-#     if max_x < x:
-#         max_x = x
-#     if min_y > y:
-#         min_y = y
-#     if max_y < y:
-#         max_y = y
-# top_cell = Cell(0, 0, 0, min_x, min_y, max_x-min_x, max_y-min_y, [vertices], "maybe")
-# result_cell_list = [top_cell]
-#
-# for i in range(0, 7):
-#     temp_cell_list = []
-#     while len(result_cell_list) > 0:
-#         cell = result_cell_list.pop()
-#         sub_cell_list = cell.split()
-#         for sub_cell in sub_cell_list:
-#             temp_cell_list.append(sub_cell)
-#     result_cell_list = temp_cell_list
-#
-# print(len(result_cell_list))
-# for cell in result_cell_list:
-#     middle_x = cell.min_x+cell.length_x/2
-#     middle_y = cell.min_y+cell.length_y/2
-#     print(",".join(map(str, [middle_x, middle_y, cell.status])))
-#     # if cell.index_h == 3 and cell.index_v == 5:
-#     #     ext_result = extract_segments_from_cell_with_arcs([cell.min_x, cell.min_y], cell.length_x, cell.length_y, cell.arcs, cell.zero_tolerance)
-#     #     for point in ext_result[0][0]:
-#     #         print (",".join(map(str, point)))
-# # print("finish============")
+vertices = research_region.vertices
+# vertices = [[0.0, 0.0], [3.0, 2.0], [5.0, 1.0]]
+
+min_x = 0;
+min_y = 0;
+max_x = 0;
+max_y = 0;
+for i in range(0, len(vertices)):
+    x = vertices[i][0]
+    y = vertices[i][1]
+    if i == 0:
+        min_x = x
+        min_y = y
+        max_x = x
+        max_y = y
+    if min_x > x:
+        min_x = x
+    if max_x < x:
+        max_x = x
+    if min_y > y:
+        min_y = y
+    if max_y < y:
+        max_y = y
+top_cell = Cell(0, 0, 0, min_x, min_y, max_x-min_x, max_y-min_y, [vertices], "maybe")
+result_cell_list = [top_cell]
+
+for i in range(0, 7):
+    temp_cell_list = []
+    while len(result_cell_list) > 0:
+        cell = result_cell_list.pop()
+        sub_cell_list = cell.split()
+        for sub_cell in sub_cell_list:
+            temp_cell_list.append(sub_cell)
+    result_cell_list = temp_cell_list
+
+print(len(result_cell_list))
+for cell in result_cell_list:
+    middle_x = cell.min_x+cell.length_x/2
+    middle_y = cell.min_y+cell.length_y/2
+    print(",".join(map(str, [middle_x, middle_y, cell.status])))
+    # if cell.index_h == 3 and cell.index_v == 5:
+    #     ext_result = extract_segments_from_cell_with_arcs([cell.min_x, cell.min_y], cell.length_x, cell.length_y, cell.arcs, cell.zero_tolerance)
+    #     for point in ext_result[0][0]:
+    #         print (",".join(map(str, point)))
+# print("finish============")
 
 

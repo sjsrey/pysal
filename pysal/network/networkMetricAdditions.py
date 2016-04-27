@@ -44,20 +44,14 @@ def buildMatrices(ntw):
     
     adjD,dstD = addDiag(adj,dst)
     
-    return adjD, dstD
+    return adjD, dstD, adj, dst
 """    
-adj, dst = buildMatrices(ntw)
+adjD, dstD, adj, dst = buildMatrices(ntw)
 
 Due to a pre-existing bug in the pysal network module
 this may throw an error if the line shapefile has closed loops
 that are unconnected to other parts of the shapefile
 """
-##testing
-adj = [[0,1,1,1,0],[1,0,1,0,0],[1,1,0,1,1],[1,0,1,0,0],[0,0,1,0,0]]
-dst = [[0,5,3,6,0],[5,0,2,0,0],[3,2,0,4,3.5],[6,0,4,0,0],[0,0,3.5,0,0]]
-
-# adj = binary adjacency matrix
-# dst = distance adj matrix
 
 def addDiag(adj, dst):
     """
@@ -71,7 +65,7 @@ def addDiag(adj, dst):
             dstD[j][i] = dst[i][j]
     return adjD,dstD
 
-def evcounts(mat):
+def evcounts(adj):
     """
     Used to generate edge and node counts
     """
@@ -127,12 +121,12 @@ def etaIndex(adj, dst):
     ei = td/ne
     return ei
 
-def piIndex(netDiam, dst):
+def piIndex(netDiam, dstD):
     """
     Pi index from the distance matrix
     """
     td = 0
-    for line in dst:
+    for line in dstD:
         td = td + sum(line)
     pInd = td/netDiam[2]
     return pInd
@@ -187,14 +181,14 @@ def closeCent(distDicts):
     return allCent
     
 
-def shortDist(adj,dst):
+def shortDist(adjD,dstD):
     """
     Implementation of Dijkstra's algorithm for shortest distance between
     all paired nodes
     """
-    nodes = range(len(adj))
+    nodes = range(len(adjD))
     dstDicts = {}
-    distances = dstToDict(dst)
+    distances = dstToDict(dstD)
     for i,n in enumerate(nodes):
         
         unvisited = {node: None for node in nodes}
@@ -214,16 +208,14 @@ def shortDist(adj,dst):
             try:
                 del unvisited[current]
             except:
-                pass
-                #print 'error:',i,n,current, unvisited
+                print 'error:',i,n,current, unvisited
             if not unvisited: break
             candidates = [node for node in unvisited.items() if node[1]]
             #print candidates
             try:
                 current, currentDistance = sorted(candidates, key = lambda x: x[1])[0]
             except:
-                pass
-                #print 'error',i,n,candidates, unvisited
+                print 'error',i,n,candidates, unvisited
         
         dstDicts[n] = visited
     

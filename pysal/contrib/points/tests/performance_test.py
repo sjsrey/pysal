@@ -12,7 +12,7 @@ from pysal.contrib.points.pointpattern import PointPattern
 from pysal.contrib.points.process import PoissonPointProcess
 from pysal.contrib.points.distance_statistics import G, F, J, K, L
 from pysal.contrib.points.distance_statistics import Genv, Fenv, Jenv, Kenv, Lenv
-from test_contain_point_performance import Cell, ZonalStructure
+from test_contain_point_performance import Cell, QuadTreeStructureSingleRing
 import matplotlib.pyplot as plt
 import time
 import codecs
@@ -98,7 +98,7 @@ def test_shapely(data):
 def test_quadtree(data):
     count_points_in = 0
     count_points_out = 0
-    zonal_structure = ZonalStructure(ps.cg.shapes.Ring(data[0]))
+    zonal_structure = QuadTreeStructureSingleRing(ps.cg.shapes.Ring(data[0]))
     for point in data[1]:
         if zonal_structure.contains_point(point):
             count_points_in += 1

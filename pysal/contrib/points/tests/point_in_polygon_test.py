@@ -1,4 +1,3 @@
-import pysal as ps
 from pysal.cg.shapes import Ring
 import math
 

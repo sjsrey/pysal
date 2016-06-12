@@ -433,14 +433,15 @@ class Tau_Local:
                     (n, ), local concordance (local version of the
                     classic tau).
     S             : array
-                    (n ,n), concordance matrix, s_{i,j}=1 if observation i and j 
-                    are concordant, s_{i,j}=-1 if observation i and j are discordant,
-                    and s_{i,j}=0 otherwise.
+                    (n ,n), concordance matrix, s_{i,j}=1 if
+                    observation i and j are concordant, s_{i,j}=-1
+                    if observation i and j are discordant, and
+                    s_{i,j}=0 otherwise.
 
     Notes
     -----
-    The equation for calcualting local concordance statistic can be found in Rey
-    (2016) [Rey2014]_ Equation (9). 
+    The equation for calculating local concordance statistic can be
+    found in Rey (2016) [Rey2014]_ Equation (9).
 
 
     Examples
@@ -490,8 +491,9 @@ class Tau_Local_Neighbor:
     """
     Neighbor set LIMA.
 
-    Local concordance relationships between a focal unit and its neighbors. A
-    decomposition of local Tau into neighbor and non-neighbor components.
+    Local concordance relationships between a focal unit and its
+    neighbors. A decomposition of local Tau into neighbor and
+    non-neighbor components.
     
     Parameters
     ----------
@@ -502,8 +504,8 @@ class Tau_Local_Neighbor:
     w              : W
                      spatial weights object.
     permutations   : int
-                     number of random spatial permutations for computationally
-                     based inference.
+                     number of random spatial permutations for
+                     computationally based inference.
 
     Attributes
     ----------
@@ -513,24 +515,26 @@ class Tau_Local_Neighbor:
                      (n, ), local concordance (local version of the
                      classic tau).
     S              : array
-                     (n ,n), concordance matrix, s_{i,j}=1 if observation i and j 
-                     are concordant, s_{i,j}=-1 if observation i and j are discordant,
+                     (n ,n), concordance matrix, s_{i,j}=1 if
+                     observation i and j are concordant, s_{i,
+                     j}=-1 if observation i and j are discordant,
                      and s_{i,j}=0 otherwise.
     tau_ln         : array
                      (n, ), observed neighbor set LIMA values.
     tau_ln_sim     : array
-                     (n, permutations), neighbor set LIMA values for permuted samples 
-                     (if permutations>0).
+                     (n, permutations), neighbor set LIMA values for
+                     permuted samples (if permutations>0).
     tau_ln_pvalues : array
-                     (n, 1), pseudo p-values for observed neighbor set LIMA values
-                     under the null that concordance relationship between the focal 
-                     state and itsn eighbors is not different from what could be 
+                     (n, 1), pseudo p-values for observed neighbor
+                     set LIMA values under the null that concordance
+                     relationship between the focal state and itsn
+                     eighbors is not different from what could be
                      expected from randomly distributed rank changes.
 
     Notes
     -----
-    The equation for calcualting neighbor set LIMA statistic can be found in Rey
-    (2016) [Rey2014]_ Equation (16). 
+    The equation for calculating neighbor set LIMA statistic can be
+    found in Rey (2016) [Rey2014]_ Equation (16).
 
 
 
@@ -548,45 +552,46 @@ class Tau_Local_Neighbor:
     >>> res = Tau_Local_Neighbor(r[:,0],r[:,1],w,permutations=1000)
     >>> res.tau_ln
     array([-0.2       ,  1.        ,  1.        ,  1.        ,  0.33333333,
-        0.6       ,  0.6       , -0.5       ,  1.        ,  1.        ,
-        0.2       ,  0.33333333,  0.33333333,  0.5       ,  1.        ,
-        1.        ,  1.        ,  0.        ,  0.6       , -0.33333333,
-       -0.33333333, -0.6       ,  1.        ,  0.2       ,  0.        ,
-        0.2       ,  1.        ,  0.6       ,  0.33333333,  0.5       ,
-        0.5       , -0.2       ])
+            0.6       ,  0.6       , -0.5       ,  1.        ,  1.        ,
+            0.2       ,  0.33333333,  0.33333333,  0.5       ,  1.        ,
+            1.        ,  1.        ,  0.        ,  0.6       , -0.33333333,
+           -0.33333333, -0.6       ,  1.        ,  0.2       ,  0.        ,
+            0.2       ,  1.        ,  0.6       ,  0.33333333,  0.5       ,
+            0.5       , -0.2       ])
     >>> res.tau_ln_pvalues
     array([[ 0.1958042 ],
-       [ 0.14885115],
-       [ 0.33266733],
-       [ 0.43056943],
-       [ 0.000999  ],
-       [ 0.12487512],
-       [ 0.17882118],
-       [ 0.002997  ],
-       [ 0.000999  ],
-       [ 0.25574426],
-       [ 0.01098901],
-       [ 0.000999  ],
-       [ 0.05894106],
-       [ 0.07692308],
-       [ 0.0959041 ],
-       [ 0.34465534],
-       [ 0.44955045],
-       [ 0.00899101],
-       [ 0.1008991 ],
-       [ 0.000999  ],
-       [ 0.00799201],
-       [ 0.05494505],
-       [ 0.13386613],
-       [ 0.03596404],
-       [ 0.01498501],
-       [ 0.0979021 ],
-       [ 0.14485514],
-       [ 0.24275724],
-       [ 0.02297702],
-       [ 0.33366633],
-       [ 0.15584416],
-       [ 0.000999  ]])
+           [ 0.14885115],
+           [ 0.33266733],
+           [ 0.43056943],
+           [ 0.000999  ],
+           [ 0.12487512],
+           [ 0.17882118],
+           [ 0.002997  ],
+           [ 0.000999  ],
+           [ 0.25574426],
+           [ 0.01098901],
+           [ 0.000999  ],
+           [ 0.05894106],
+           [ 0.07692308],
+           [ 0.0959041 ],
+           [ 0.34465534],
+           [ 0.44955045],
+           [ 0.00899101],
+           [ 0.1008991 ],
+           [ 0.000999  ],
+           [ 0.00799201],
+           [ 0.05494505],
+           [ 0.13386613],
+           [ 0.03596404],
+           [ 0.01498501],
+           [ 0.0979021 ],
+           [ 0.14485514],
+           [ 0.24275724],
+           [ 0.02297702],
+           [ 0.33366633],
+           [ 0.15584416],
+           [ 0.000999  ]])
+
 
     """
 
@@ -608,9 +613,9 @@ class Tau_Local_Neighbor:
         self.tau_ln = wsi*1./neighbor_num  #Neighbor set LIMA
 
         if permutations > 0:
-            tau_ln_sim = np.zeros((n,permutations))
-            tau_ln_pvalues = np.zeros((n,1))
-            for i in xrange(n):
+            tau_ln_sim = np.zeros((self.n,permutations))
+            tau_ln_pvalues = np.zeros((self.n,1))
+            for i in xrange(self.n):
                 yr = np.zeros_like(y)
                 xr = np.zeros_like(y)
                 rids = range(self.n)
@@ -641,8 +646,9 @@ class Tau_Local_Neighborhood:
     """
     Neighborhood set LIMA.
 
-    An extension of neighbor set LIMA. Consider local concordance relationships for 
-    a subset of states, defined as the focal state and its neighbors.
+    An extension of neighbor set LIMA. Consider local concordance
+    relationships for a subset of states, defined as the focal state
+    and its neighbors.
     
     Parameters
     ----------
@@ -653,8 +659,8 @@ class Tau_Local_Neighborhood:
     w                  : W
                          spatial weights object.
     permutations       : int
-                         number of random spatial permutations for computationally
-                         based inference.
+                         number of random spatial permutations for
+                         computationally based inference.
 
     Attributes
     ----------
@@ -664,25 +670,29 @@ class Tau_Local_Neighborhood:
                          (n, ), local concordance (local version of the
                          classic tau).
     S                  : array
-                         (n ,n), concordance matrix, s_{i,j}=1 if observation i and j 
-                         are concordant, s_{i,j}=-1 if observation i and j are discordant,
+                         (n ,n), concordance matrix, s_{i,j}=1 if
+                         observation i and j are concordant, s_{i,
+                         j}=-1 if observation i and j are discordant,
                          and s_{i,j}=0 otherwise.
     tau_lnhood         : array
                          (n, ), observed neighborhood set LIMA values.
     tau_lnhood_sim     : array
-                         (n, permutations), neighborhood set LIMA values for permuted samples 
-                         (if permutations>0).
+                         (n, permutations), neighborhood set LIMA
+                         values for permuted samples (if
+                         permutations>0).
     tau_lnhood_pvalues : array
-                         (n, 1), pseudo p-values for observed neighborhood set LIMA values
-                         under the null that the concordance relationships for a subset
-                         of states, defined as the focal state and its neighbors, is 
-                         different from what would be expected from randomly distributed 
+                         (n, 1), pseudo p-values for observed
+                         neighborhood set LIMA values under the null
+                         that the concordance relationships for a
+                         subset of states, defined as the focal state
+                         and its neighbors, is different from what
+                         would be expected from randomly distributed
                          rank changes.
 
     Notes
     -----
-    The equation for calcualting neighborhood set LIMA statistic can be found in Rey
-    (2016) [Rey2014]_ Equation (22). 
+    The equation for calculating neighborhood set LIMA statistic can
+    be found in Rey (2016) [Rey2014]_ Equation (22).
 
     Examples
     --------
@@ -695,48 +705,48 @@ class Tau_Local_Neighborhood:
     >>> r = y / y.mean(axis=0)
     >>> regime = np.array(f.by_col['esquivel99'])
     >>> w = ps.weights.block_weights(regime)
-    >>> res = Tau_Local_Neighbor(r[:,0],r[:,1],w,permutations=1000)
+    >>> res = Tau_Local_Neighborhood(r[:,0],r[:,1],w,permutations=1000)
     >>> res.tau_lnhood
     array([ 0.06666667,  0.6       ,  0.2       ,  0.8       ,  0.33333333,
-        0.6       ,  0.6       ,  0.2       ,  1.        ,  0.06666667,
-        0.06666667,  0.33333333,  0.33333333,  0.2       ,  1.        ,
-        0.33333333,  0.33333333,  0.2       ,  0.6       ,  0.33333333,
-        0.33333333,  0.06666667,  0.8       ,  0.06666667,  0.2       ,
-        0.6       ,  0.8       ,  0.6       ,  0.33333333,  0.8       ,
-        0.8       ,  0.06666667])
+            0.6       ,  0.6       ,  0.2       ,  1.        ,  0.06666667,
+            0.06666667,  0.33333333,  0.33333333,  0.2       ,  1.        ,
+            0.33333333,  0.33333333,  0.2       ,  0.6       ,  0.33333333,
+            0.33333333,  0.06666667,  0.8       ,  0.06666667,  0.2       ,
+            0.6       ,  0.8       ,  0.6       ,  0.33333333,  0.8       ,
+            0.8       ,  0.06666667])
     >>> res.tau_lnhood_pvalues
     array([[ 0.05794206],
-       [ 0.13486513],
-       [ 0.02697303],
-       [ 0.45754246],
-       [ 0.02197802],
-       [ 0.25074925],
-       [ 0.29270729],
-       [ 0.06193806],
-       [ 0.000999  ],
-       [ 0.01098901],
-       [ 0.00799201],
-       [ 0.01998002],
-       [ 0.06093906],
-       [ 0.03596404],
-       [ 0.1028971 ],
-       [ 0.05094905],
-       [ 0.11088911],
-       [ 0.04995005],
-       [ 0.23676324],
-       [ 0.02997003],
-       [ 0.12087912],
-       [ 0.06793207],
-       [ 0.32867133],
-       [ 0.01398601],
-       [ 0.03396603],
-       [ 0.35164835],
-       [ 0.33966034],
-       [ 0.28071928],
-       [ 0.03396603],
-       [ 0.37462537],
-       [ 0.4965035 ],
-       [ 0.01698302]])
+           [ 0.13486513],
+           [ 0.02697303],
+           [ 0.45754246],
+           [ 0.02197802],
+           [ 0.25074925],
+           [ 0.29270729],
+           [ 0.06193806],
+           [ 0.000999  ],
+           [ 0.01098901],
+           [ 0.00799201],
+           [ 0.01998002],
+           [ 0.06093906],
+           [ 0.03596404],
+           [ 0.1028971 ],
+           [ 0.05094905],
+           [ 0.11088911],
+           [ 0.04995005],
+           [ 0.23676324],
+           [ 0.02997003],
+           [ 0.12087912],
+           [ 0.06793207],
+           [ 0.32867133],
+           [ 0.01398601],
+           [ 0.03396603],
+           [ 0.35164835],
+           [ 0.33966034],
+           [ 0.28071928],
+           [ 0.03396603],
+           [ 0.37462537],
+           [ 0.4965035 ],
+           [ 0.01698302]])
 
     """
 
@@ -750,7 +760,7 @@ class Tau_Local_Neighborhood:
         self.tau_local = res.tau_local   
 
         w.transform = 'b'
-        tau_lnhood = np.zeros(n)
+        tau_lnhood = np.zeros(self.n)
         for i in xrange(self.n):
             neighbors_i = [i]
             neighbors_i.extend(w.neighbors[i])
@@ -760,11 +770,11 @@ class Tau_Local_Neighborhood:
         self.tau_lnhood = tau_lnhood
 
         if permutations > 0:
-            tau_lnhood_sim = np.zeros((n,permutations))
-            tau_lnhood_pvalues = np.zeros((n,1))
-            for i in xrange(n):
+            tau_lnhood_sim = np.zeros((self.n,permutations))
+            tau_lnhood_pvalues = np.zeros((self.n,1))
+            for i in xrange(self.n):
                 obs_i = self.tau_lnhood[i]
-                rids = range(n)
+                rids = range(self.n)
                 rids.remove(i)
                 larger = 0
                 for j in xrange(permutations):
@@ -797,33 +807,37 @@ class Tau_Regional:
     regimes         : array
                       (n, ), ids of which regime an observation belongs to.
     permutations    : int
-                      number of random spatial permutations for computationally
-                      based inference.
+                      number of random spatial permutations for
+                      computationally based inference.
 
     Attributes
     ----------
     n               : int
                       number of observations.
     S               : array
-                      (n ,n), concordance matrix, s_{i,j}=1 if observation i and j 
-                      are concordant, s_{i,j}=-1 if observation i and j are discordant,
+                      (n ,n), concordance matrix, s_{i,j}=1 if
+                      observation i and j are concordant, s_{i,
+                      j}=-1 if observation i and j are discordant,
                       and s_{i,j}=0 otherwise.
     tau_reg         : array
-                      (k, k), observed concordance matrix with diagonal elements measuring 
-                      concordance between units within a regime and the off-diagonal 
-                      elements denoting concordance between observations from a specific 
+                      (k, k), observed concordance matrix with
+                      diagonal elements measuring concordance
+                      between units within a regime and the
+                      off-diagonal elements denoting concordance
+                      between observations from a specific
                       pair of different regimes.
     tau_reg_sim     : array
-                      (permutations, k, k), concordance matrices for permuted samples 
-                      (if permutations>0).
+                      (permutations, k, k), concordance matrices for
+                      permuted samples (if permutations>0).
     tau_reg_pvalues : array
-                      (k, k), pseudo p-values for observed concordance matrix under the 
-                      null that income mobility were random in its spatial distribution.
+                      (k, k), pseudo p-values for observed
+                      concordance matrix under the null that income
+                      mobility were random in its spatial distribution.
 
     Notes
     -----
-    The equation for calcualting inter and intraregional Tau statistic can be 
-    found in Rey (2016) [Rey2014]_ Equation (27). 
+    The equation for calculating inter and intraregional Tau
+    statistic can be found in Rey (2016) [Rey2014]_ Equation (27).
 
     Examples
     --------
@@ -835,37 +849,37 @@ class Tau_Regional:
     >>> y = np.transpose(np.array([f.by_col[v] for v in vnames]))
     >>> r = y / y.mean(axis=0)
     >>> regime = np.array(f.by_col['esquivel99'])
-    >>> res = Tau_Regional(income[:,0],income[:,-1],regime,permutations=1000)
+    >>> res = Tau_Regional(y[:,0],y[:,-1],regime,permutations=1000)
     >>> res.tau_reg
     array([[ 1.        ,  0.25      ,  0.5       ,  0.6       ,  0.83333333,
-         0.6       ,  1.        ],
-       [ 0.25      ,  0.33333333,  0.5       ,  0.3       ,  0.91666667,
-         0.4       ,  0.75      ],
-       [ 0.5       ,  0.5       ,  0.6       ,  0.4       ,  0.38888889,
-         0.53333333,  0.83333333],
-       [ 0.6       ,  0.3       ,  0.4       ,  0.2       ,  0.4       ,
-         0.28      ,  0.8       ],
-       [ 0.83333333,  0.91666667,  0.38888889,  0.4       ,  0.6       ,
-         0.73333333,  1.        ],
-       [ 0.6       ,  0.4       ,  0.53333333,  0.28      ,  0.73333333,
-         0.8       ,  0.8       ],
-       [ 1.        ,  0.75      ,  0.83333333,  0.8       ,  1.        ,
-         0.8       ,  0.33333333]])
+             0.6       ,  1.        ],
+           [ 0.25      ,  0.33333333,  0.5       ,  0.3       ,  0.91666667,
+             0.4       ,  0.75      ],
+           [ 0.5       ,  0.5       ,  0.6       ,  0.4       ,  0.38888889,
+             0.53333333,  0.83333333],
+           [ 0.6       ,  0.3       ,  0.4       ,  0.2       ,  0.4       ,
+             0.28      ,  0.8       ],
+           [ 0.83333333,  0.91666667,  0.38888889,  0.4       ,  0.6       ,
+             0.73333333,  1.        ],
+           [ 0.6       ,  0.4       ,  0.53333333,  0.28      ,  0.73333333,
+             0.8       ,  0.8       ],
+           [ 1.        ,  0.75      ,  0.83333333,  0.8       ,  1.        ,
+             0.8       ,  0.33333333]])
     >>> res.tau_reg_pvalues
     array([[ 0.21878122,  0.06693307,  0.24975025,  0.34065934,  0.29370629,
-         0.33266733,  0.2007992 ],
-       [ 0.06693307,  0.12987013,  0.24475524,  0.06193806,  0.04795205,
-         0.11888112,  0.32667333],
-       [ 0.24975025,  0.24475524,  0.35564436,  0.0959041 ,  0.05694306,
-         0.25874126,  0.12387612],
-       [ 0.34065934,  0.06193806,  0.0959041 ,  0.05794206,  0.08791209,
-         0.03896104,  0.21778222],
-       [ 0.29370629,  0.04795205,  0.05694306,  0.08791209,  0.36363636,
-         0.24975025,  0.004995  ],
-       [ 0.33266733,  0.11888112,  0.25874126,  0.03896104,  0.24975025,
-         0.37962038,  0.22677323],
-       [ 0.2007992 ,  0.32667333,  0.12387612,  0.21778222,  0.004995  ,
-         0.22677323,  0.12287712]])
+             0.33266733,  0.2007992 ],
+           [ 0.06693307,  0.12987013,  0.24475524,  0.06193806,  0.04795205,
+             0.11888112,  0.32667333],
+           [ 0.24975025,  0.24475524,  0.35564436,  0.0959041 ,  0.05694306,
+             0.25874126,  0.12387612],
+           [ 0.34065934,  0.06193806,  0.0959041 ,  0.05794206,  0.08791209,
+             0.03896104,  0.21778222],
+           [ 0.29370629,  0.04795205,  0.05694306,  0.08791209,  0.36363636,
+             0.24975025,  0.004995  ],
+           [ 0.33266733,  0.11888112,  0.25874126,  0.03896104,  0.24975025,
+             0.37962038,  0.22677323],
+           [ 0.2007992 ,  0.32667333,  0.12387612,  0.21778222,  0.004995  ,
+             0.22677323,  0.12287712]])
 
     """
 
@@ -882,16 +896,17 @@ class Tau_Regional:
         reg = np.array(regime).flatten()
         ur = np.unique(reg).tolist()
         k = len(ur)
-        P = np.zeros((k,n))
+        P = np.zeros((k,self.n))
         for i, r in enumerate(reg):
             P[ur.index(r),i] = 1 #construct P matrix
 
         w = pysal.weights.block_weights(regime)
         w.transform = 'b'
         W = w.full()[0]
-        WH = np.ones((n,n)) - np.eye(n) - W
+        WH = np.ones((self.n,self.n)) - np.eye(self.n) - W
 
-        self.tau_reg = _calc(W, WH, P, self.S) #inter and intraregional decomposition
+        self.tau_reg = self._calc(W, WH, P, self.S) #inter and
+        # intraregional decomposition
         #of Tau for the observed value
 
         if permutations > 0:
@@ -901,14 +916,14 @@ class Tau_Regional:
             for i in xrange(permutations):
                 np.random.shuffle(rids)
                 res = Tau_Local(x[rids], y[rids])
-                tau_reg_sim[i] = _calc(W, WH, P, res.S)
+                tau_reg_sim[i] = self._calc(W, WH, P, res.S)
                 larger += np.greater_equal(tau_reg_sim[i], self.tau_reg)
             m = np.less(permutations - larger, larger)
             pvalues = (1 + m * (permutations-larger) + (1-m) * larger) / (1. + permutations)
             self.tau_reg_sim = tau_reg_sim
             self.tau_reg_pvalues = pvalues
 
-    def _calc(W, WH, P, S):
+    def _calc(self, W, WH, P, S):
 
         # WS = W * S
         # PWSPt = np.dot(P,np.dot(WS,P.T)) 

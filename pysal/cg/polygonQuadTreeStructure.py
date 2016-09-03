@@ -1,4 +1,4 @@
-from pysal.cg.shapes import Ring
+from shapes import Ring
 import math
 
 
@@ -840,12 +840,12 @@ def extract_segments_from_cell_with_arcs(cell_min_point, cell_length_x, cell_len
     return (rings, involved_border_ids)
 
 
-class _QuadTreeStructureSingleRing(object):
+class QuadTreeStructureSingleRing(object):
     """
     This class is the main manager of cells. By giving a study area. This class can construct a cell list depicting
     the study area. When given a new point. This class could rapidly determine whether the point lies in the study area
     """
-    def __init__(self, ring, quad_tree_level = 7):
+    def __init__(self, ring, quad_tree_level=7):
         """
         Constructing function
         Parameters
@@ -894,6 +894,8 @@ class _QuadTreeStructureSingleRing(object):
         if_contains : bool
 
         """
+
+        # bbox check
         if point[0] < self.min_x or point[0] > self.min_x + self.region_width or point[1] < self.min_y or point[1] > self.min_y + self.region_height:
             return False
         row = int((point[1] - self.min_y)/self.cell_height)
@@ -919,75 +921,75 @@ class _QuadTreeStructureSingleRing(object):
         return self.ring.bounding_box.lower
 
 
-class QuadTreeStructure(object):
-    """
-    This class is the main manager of quadtree cells. By giving a polygon (study area). This class can construct a cell list depicting
-    the study area. When given a new point. This class could rapidly determine whether the point lies in the study area
-    """
-
-    def __init__(self, polygon, quad_tree_level=7):
-        """
-        Constructing function
-        Parameters
-        ----------
-        polygon             : Polygon
-                              The polygon class from pysal.cg.shapes.Polygon, could include part rings and holes
-        quad_tree_level     : int
-                              the level for quad dividing the study area. Result tree node size equals quad_tree_level**4
-                              e.g. for the default value 7,  result tree node size = 16384
-                              The value should no larger than 9 (node size = 4**10 = 26,2144)
-        """
-        if quad_tree_level > 9:
-            raise Exception("quad_tree_level exceed the max value 9!")
-        if quad_tree_level < 1:
-            raise Exception("quad_tree_level exceed the min value 1!")
-        self.polygon = polygon
-        self.cell_structures_part = []
-        self.cell_structures_hole = []
-
-        for ring in self.polygon._part_rings:
-            self.cell_structures_part.append(_QuadTreeStructureSingleRing(ring, quad_tree_level))
-        for ring in self.polygon._hole_rings:
-            self.cell_structures_hole.append(_QuadTreeStructureSingleRing(ring, quad_tree_level))
-
-    @property
-    def region_width(self):
-        return self.polygon.bounding_box.width
-
-    @property
-    def region_height(self):
-        return self.polygon.bounding_box.height
-
-    @property
-    def min_x(self):
-        return self.polygon.bounding_box.left
-
-    @property
-    def min_y(self):
-        return self.polygon.bounding_box.lower
-
-    def contains_point(self, point):
-        """
-        Quickly determine if the study area contains a point
-        Parameters
-        ----------
-        point       : list
-                      the point structure, like [x, y]
-
-        Returns
-        -------
-        if_contains : bool
-
-        """
-        if point[0] < self.min_x or point[0] > self.min_x + self.region_width or point[1] < self.min_y or point[1] > self.min_y + self.region_height:
-            return False
-
-        for qts_hole in self.cell_structures_hole:
-            if qts_hole.contains_point(point):
-                return False
-
-        for qts_part in self.cell_structures_part:
-            if qts_part.contains_point(point):
-                return True
-
-        return False
+# class QuadTreeStructure(object):
+#     """
+#     This class is the main manager of quadtree cells. By giving a polygon (study area). This class can construct a cell list depicting
+#     the study area. When given a new point. This class could rapidly determine whether the point lies in the study area
+#     """
+#
+#     def __init__(self, polygon, quad_tree_level=7):
+#         """
+#         Constructing function
+#         Parameters
+#         ----------
+#         polygon             : Polygon
+#                               The polygon class from pysal.cg.shapes.Polygon, could include part rings and holes
+#         quad_tree_level     : int
+#                               the level for quad dividing the study area. Result tree node size equals quad_tree_level**4
+#                               e.g. for the default value 7,  result tree node size = 16384
+#                               The value should no larger than 9 (node size = 4**10 = 26,2144)
+#         """
+#         if quad_tree_level > 9:
+#             raise Exception("quad_tree_level exceed the max value 9!")
+#         if quad_tree_level < 1:
+#             raise Exception("quad_tree_level exceed the min value 1!")
+#         self.polygon = polygon
+#         self.cell_structures_part = []
+#         self.cell_structures_hole = []
+#
+#         for ring in self.polygon._part_rings:
+#             self.cell_structures_part.append(_QuadTreeStructureSingleRing(ring, quad_tree_level))
+#         for ring in self.polygon._hole_rings:
+#             self.cell_structures_hole.append(_QuadTreeStructureSingleRing(ring, quad_tree_level))
+#
+#     @property
+#     def region_width(self):
+#         return self.polygon.bounding_box.width
+#
+#     @property
+#     def region_height(self):
+#         return self.polygon.bounding_box.height
+#
+#     @property
+#     def min_x(self):
+#         return self.polygon.bounding_box.left
+#
+#     @property
+#     def min_y(self):
+#         return self.polygon.bounding_box.lower
+#
+#     def contains_point(self, point):
+#         """
+#         Quickly determine if the study area contains a point
+#         Parameters
+#         ----------
+#         point       : list
+#                       the point structure, like [x, y]
+#
+#         Returns
+#         -------
+#         if_contains : bool
+#
+#         """
+#         if point[0] < self.min_x or point[0] > self.min_x + self.region_width or point[1] < self.min_y or point[1] > self.min_y + self.region_height:
+#             return False
+#
+#         for qts_hole in self.cell_structures_hole:
+#             if qts_hole.contains_point(point):
+#                 return False
+#
+#         for qts_part in self.cell_structures_part:
+#             if qts_part.contains_point(point):
+#                 return True
+#
+#         return False

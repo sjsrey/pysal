@@ -3,7 +3,7 @@
 
 
 <!DOCTYPE html>
-<html lang="en" class=" is-copy-enabled is-u2f-enabled">
+<html lang="en" class=" is-copy-enabled emoji-size-boost is-u2f-enabled">
   <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# object: http://ogp.me/ns/object# article: http://ogp.me/ns/article# profile: http://ogp.me/ns/profile#">
     <meta charset='utf-8'>
     
@@ -43,10 +43,10 @@
       <meta name="browser-stats-url" content="https://api.github.com/_private/browser/stats">
     <meta name="browser-errors-url" content="https://api.github.com/_private/browser/errors">
     <link rel="assets" href="https://assets-cdn.github.com/">
-    <link rel="web-socket" href="wss://live.github.com/_sockets/MTgwODcwNjo3NDU3MzQ0NDVjYjA2YzNkMTI1NGRjMGYxOGQzMWNjMDpmNjEyMzA1ZGIyNGU2NmE4ODJmZTg1MDczMWEwZTczM2FjM2Q2ZTUxZWVhOGY1YjhlY2ZmMzJmY2EzZDQxMDZl--2393d0a87aa2023cda045955172682a0a194ed9b">
+    <link rel="web-socket" href="wss://live.github.com/_sockets/MTgwODcwNjo3YzljNjZjOGE5ZTI5YzI1OTU3YjVlYTdiYWJlMTI4ZjpmMTljYjJmNjdjOTViMTgyNzlmNmMwYzI4NWNkMGQ4MjE4NTBlNDdkZTdkOGQ4NTFkMjdiMjE1NDhiODljYTk0--ed6802df6c7932e1feb6d575fbe68e15a595d7da">
     <meta name="pjax-timeout" content="1000">
     <link rel="sudo-modal" href="/sessions/sudo_modal">
-    <meta name="request-id" content="446DA5EB:116B:178EADA:57CA8B94" data-pjax-transient>
+    <meta name="request-id" content="95A9CCBA:3650:1B673B6:57CA8DEB" data-pjax-transient>
 
     <meta name="msapplication-TileImage" content="/windows-tile.png">
     <meta name="msapplication-TileColor" content="#ffffff">
@@ -56,7 +56,7 @@
 <meta name="google-site-verification" content="ZzhVyEFwb7w3e0-uOTltm8Jsck2F5StVihD0exw2fsA">
     <meta name="google-analytics" content="UA-3769691-2">
 
-<meta content="collector.githubapp.com" name="octolytics-host" /><meta content="github" name="octolytics-app-id" /><meta content="446DA5EB:116B:178EADA:57CA8B94" name="octolytics-dimension-request_id" /><meta content="1808706" name="octolytics-actor-id" /><meta content="shaohu" name="octolytics-actor-login" /><meta content="625f381d19f00f7563fef621d297213a9e121842c254a3212ac7c8f60efbf801" name="octolytics-actor-hash" />
+<meta content="collector.githubapp.com" name="octolytics-host" /><meta content="github" name="octolytics-app-id" /><meta content="95A9CCBA:3650:1B673B6:57CA8DEB" name="octolytics-dimension-request_id" /><meta content="1808706" name="octolytics-actor-id" /><meta content="shaohu" name="octolytics-actor-login" /><meta content="625f381d19f00f7563fef621d297213a9e121842c254a3212ac7c8f60efbf801" name="octolytics-actor-hash" />
 <meta content="/&lt;user-name&gt;/&lt;repo-name&gt;/blob/show" data-pjax-transient="true" name="analytics-location" />
 
 
@@ -69,14 +69,14 @@
     <meta name="user-login" content="shaohu">
 
         <meta name="expected-hostname" content="github.com">
-      <meta name="js-proxy-site-detection-payload" content="NmJhMjlmZGE4ZDRjYzU1OGExZGVjNzQxMjMwMWY4OGVlOTQ2ZWI3ZjYxMWFmMzc5MmJkZGJiZTdmZDAxNDllMnx7InJlbW90ZV9hZGRyZXNzIjoiNjguMTA5LjE2NS4yMzUiLCJyZXF1ZXN0X2lkIjoiNDQ2REE1RUI6MTE2QjoxNzhFQURBOjU3Q0E4Qjk0IiwidGltZXN0YW1wIjoxNDcyODkxNzk2fQ==">
+      <meta name="js-proxy-site-detection-payload" content="YzQ1NTkyYWJhYjgwOWYzY2E1Y2IzMThiOTRiMjJkMmViMmUzYTJkNGQzNmE0M2IzMDFmNzI0ZTI4NzQ5YjYwNXx7InJlbW90ZV9hZGRyZXNzIjoiMTQ5LjE2OS4yMDQuMTg2IiwicmVxdWVzdF9pZCI6Ijk1QTlDQ0JBOjM2NTA6MUI2NzNCNjo1N0NBOERFQiIsInRpbWVzdGFtcCI6MTQ3Mjg5MjM5NX0=">
 
 
       <link rel="mask-icon" href="https://assets-cdn.github.com/pinned-octocat.svg" color="#4078c0">
       <link rel="icon" type="image/x-icon" href="https://assets-cdn.github.com/favicon.ico">
 
-    <meta name="html-safe-nonce" content="e1264e75110c9048a2a4ae24e0d99718d8c88d52">
-    <meta content="66aab13a5dff48a715fc4e55bda276b8cf923fb7" name="form-nonce" />
+    <meta name="html-safe-nonce" content="3a5ef77c32a430470eaf41bb4c3fc62e0e7b1d39">
+    <meta content="0fbb270dce6e34d95ca7e8c5e75f1fb3afd18e74" name="form-nonce" />
 
     <meta http-equiv="x-pjax-version" content="6c8eb8be756407faa6560ed048919620">
     
@@ -93,7 +93,7 @@
   </head>
 
 
-  <body class="logged-in  env-production windows vis-public fork page-blob">
+  <body class="logged-in  env-production macintosh vis-public fork page-blob">
     <div id="js-pjax-loader-bar" class="pjax-loader-bar"><div class="progress"></div></div>
     <a href="#start-of-content" tabindex="1" class="accessibility-aid js-skip-to-content">Skip to content</a>
 
@@ -229,7 +229,7 @@
           Settings
         </a>
 
-        <!-- </textarea> --><!-- '"` --><form accept-charset="UTF-8" action="/logout" class="logout-form" data-form-nonce="66aab13a5dff48a715fc4e55bda276b8cf923fb7" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /><input name="authenticity_token" type="hidden" value="3T3oSN9KAJyLw9RnzUopCi3xfzPY2h+wBQ8/Ob2vNGzEktbii4PY1X2ry6qskCZx+4qIqOkmSmHBMWg/2k/t9Q==" /></div>
+        <!-- </textarea> --><!-- '"` --><form accept-charset="UTF-8" action="/logout" class="logout-form" data-form-nonce="0fbb270dce6e34d95ca7e8c5e75f1fb3afd18e74" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /><input name="authenticity_token" type="hidden" value="+oxdTV72yRBrsfou2esQX9JiTbKkimbkkJujmuBlWqVjHpLSnUPIRKNLbenCJxYu9Gpc688PsiJSVywuKcLwJQ==" /></div>
           <button class="dropdown-item dropdown-signout" data-ga-click="Header, sign out, icon:logout">
             Sign out
           </button>
@@ -265,7 +265,7 @@
 <ul class="pagehead-actions">
 
   <li>
-        <!-- </textarea> --><!-- '"` --><form accept-charset="UTF-8" action="/notifications/subscribe" class="js-social-container" data-autosubmit="true" data-form-nonce="66aab13a5dff48a715fc4e55bda276b8cf923fb7" data-remote="true" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /><input name="authenticity_token" type="hidden" value="vsC4yHS+Ak6Sn86EyAeux67yAeu0faUY980mKpSGjs1dXcu+3TYUkz/3QtePns/ggHDFdsOJHGP3g+q8wVY8pQ==" /></div>      <input class="form-control" id="repository_id" name="repository_id" type="hidden" value="15616582" />
+        <!-- </textarea> --><!-- '"` --><form accept-charset="UTF-8" action="/notifications/subscribe" class="js-social-container" data-autosubmit="true" data-form-nonce="0fbb270dce6e34d95ca7e8c5e75f1fb3afd18e74" data-remote="true" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /><input name="authenticity_token" type="hidden" value="BInHJTJetAccRCnydV1pUUkLQ0lhMhaBrNnWoHDnVdoihpKwoowcO88NxTAq+nLpxJXuOkbuggS5Vfl7HM+jkw==" /></div>      <input class="form-control" id="repository_id" name="repository_id" type="hidden" value="15616582" />
 
         <div class="select-menu js-menu-container js-select-menu">
           <a href="/sjsrey/pysal/subscription"
@@ -342,7 +342,7 @@
     
   <div class="js-toggler-container js-social-container starring-container ">
 
-    <!-- </textarea> --><!-- '"` --><form accept-charset="UTF-8" action="/sjsrey/pysal/unstar" class="starred" data-form-nonce="66aab13a5dff48a715fc4e55bda276b8cf923fb7" data-remote="true" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /><input name="authenticity_token" type="hidden" value="bM30XksGRtEIXe6mG2o0d/wQiwxZbvrfBPlnlHMZwxsq7dxzlDOJbSpMzRsqgRPcKOEkPMao8YbToYloVAJeAA==" /></div>
+    <!-- </textarea> --><!-- '"` --><form accept-charset="UTF-8" action="/sjsrey/pysal/unstar" class="starred" data-form-nonce="0fbb270dce6e34d95ca7e8c5e75f1fb3afd18e74" data-remote="true" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /><input name="authenticity_token" type="hidden" value="QXuYi/lqZB+qCJl5FSz8KTn1Bj1XH/937dnZ07+7DVFv02qIik6/FQVCfpBFBv6j7mPkuTjTIX4LGD3KlE/Vcw==" /></div>
       <button
         class="btn btn-sm btn-with-count js-toggler-target"
         aria-label="Unstar this repository" title="Unstar sjsrey/pysal"
@@ -355,7 +355,7 @@
           6
         </a>
 </form>
-    <!-- </textarea> --><!-- '"` --><form accept-charset="UTF-8" action="/sjsrey/pysal/star" class="unstarred" data-form-nonce="66aab13a5dff48a715fc4e55bda276b8cf923fb7" data-remote="true" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /><input name="authenticity_token" type="hidden" value="YHfHKCX1cw1qXWGDTcwCUxVahZKocJqFpvWyd+iKGuKBQf8/VwJSYJx3+e56y+3FJTI4vLJZuT6BCCcgBvXbPA==" /></div>
+    <!-- </textarea> --><!-- '"` --><form accept-charset="UTF-8" action="/sjsrey/pysal/star" class="unstarred" data-form-nonce="0fbb270dce6e34d95ca7e8c5e75f1fb3afd18e74" data-remote="true" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /><input name="authenticity_token" type="hidden" value="0m6aBA6i2tYMfsiMJT/uXzeilWItU2sAzw5IvIlIieQ1LSz1FZp568mJHnDCXK798dzuSuTWgOG+BpA4DdzWXQ==" /></div>
       <button
         class="btn btn-sm btn-with-count js-toggler-target"
         aria-label="Star this repository" title="Star sjsrey/pysal"
@@ -926,18 +926,18 @@
     </div>
 
         <a class="btn-octicon tooltipped tooltipped-nw"
-           href="github-windows://openRepo/https://github.com/sjsrey/pysal?branch=points_contrib&amp;filepath=pysal%2Fcontrib%2Fpoints%2Fpointpattern.py"
+           href="https://mac.github.com"
            aria-label="Open this file in GitHub Desktop"
-           data-ga-click="Repository, open with desktop, type:windows">
+           data-ga-click="Repository, open with desktop, type:mac">
             <svg aria-hidden="true" class="octicon octicon-device-desktop" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path d="M15 2H1c-.55 0-1 .45-1 1v9c0 .55.45 1 1 1h5.34c-.25.61-.86 1.39-2.34 2h8c-1.48-.61-2.09-1.39-2.34-2H15c.55 0 1-.45 1-1V3c0-.55-.45-1-1-1zm0 9H1V3h14v8z"></path></svg>
         </a>
 
-        <!-- </textarea> --><!-- '"` --><form accept-charset="UTF-8" action="/sjsrey/pysal/edit/points_contrib/pysal/contrib/points/pointpattern.py" class="inline-form js-update-url-with-hash" data-form-nonce="66aab13a5dff48a715fc4e55bda276b8cf923fb7" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /><input name="authenticity_token" type="hidden" value="vgZ78U2YB8S4KiMw5VKObdYGwd/clxaoKa2JTsgFxB2ZhC6MvwPSmUCidKaozWuacPnI9HpTc5lDt+Ovejx88Q==" /></div>
+        <!-- </textarea> --><!-- '"` --><form accept-charset="UTF-8" action="/sjsrey/pysal/edit/points_contrib/pysal/contrib/points/pointpattern.py" class="inline-form js-update-url-with-hash" data-form-nonce="0fbb270dce6e34d95ca7e8c5e75f1fb3afd18e74" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /><input name="authenticity_token" type="hidden" value="BY4UaeJ8rH8khMNa3cs7lqw1b2NEjYa/f8H0NjzEjzvsH78IN5g34Zq68rE5Ml1KAf/cHD8engGtMhZM+7EFBw==" /></div>
           <button class="btn-octicon tooltipped tooltipped-nw" type="submit"
             aria-label="Edit the file in your fork of this project" data-hotkey="e" data-disable-with>
             <svg aria-hidden="true" class="octicon octicon-pencil" height="16" version="1.1" viewBox="0 0 14 16" width="14"><path d="M0 12v3h3l8-8-3-3-8 8zm3 2H1v-2h1v1h1v1zm10.3-9.3L12 6 9 3l1.3-1.3a.996.996 0 0 1 1.41 0l1.59 1.59c.39.39.39 1.02 0 1.41z"></path></svg>
           </button>
-</form>        <!-- </textarea> --><!-- '"` --><form accept-charset="UTF-8" action="/sjsrey/pysal/delete/points_contrib/pysal/contrib/points/pointpattern.py" class="inline-form" data-form-nonce="66aab13a5dff48a715fc4e55bda276b8cf923fb7" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /><input name="authenticity_token" type="hidden" value="+OLpm/HMMrp1uQCglE4aIhidVQ9mHwBP5GmBdZnti46kACkHACjNwzfeiO9Ug7rEzU+M6rGNg4BkCXnPMDmu5w==" /></div>
+</form>        <!-- </textarea> --><!-- '"` --><form accept-charset="UTF-8" action="/sjsrey/pysal/delete/points_contrib/pysal/contrib/points/pointpattern.py" class="inline-form" data-form-nonce="0fbb270dce6e34d95ca7e8c5e75f1fb3afd18e74" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /><input name="authenticity_token" type="hidden" value="mrE09LuXqjVs+CclHXuWlhQUt7bG0nETlKYTXgZjMQyyZivvru+p8iP1Srg6HAOxQI0A4yF02ITwxWkPYLS0Zg==" /></div>
           <button class="btn-octicon btn-octicon-danger tooltipped tooltipped-nw" type="submit"
             aria-label="Delete the file in your fork of this project" data-disable-with>
             <svg aria-hidden="true" class="octicon octicon-trashcan" height="16" version="1.1" viewBox="0 0 12 16" width="12"><path d="M11 2H9c0-.55-.45-1-1-1H5c-.55 0-1 .45-1 1H2c-.55 0-1 .45-1 1v1c0 .55.45 1 1 1v9c0 .55.45 1 1 1h7c.55 0 1-.45 1-1V5c.55 0 1-.45 1-1V3c0-.55-.45-1-1-1zm-1 12H3V5h1v8h1V5h1v8h1V5h1v8h1V5h1v9zm1-10H2V3h9v1z"></path></svg>
@@ -3074,7 +3074,7 @@
       <svg aria-hidden="true" class="octicon octicon-mark-github" height="24" version="1.1" viewBox="0 0 16 16" width="24"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg>
 </a>
     <ul class="site-footer-links">
-      <li>&copy; 2016 <span title="0.08741s from github-fe143-cp1-prd.iad.github.net">GitHub</span>, Inc.</li>
+      <li>&copy; 2016 <span title="0.08500s from github-fe143-cp1-prd.iad.github.net">GitHub</span>, Inc.</li>
         <li><a href="https://github.com/site/terms" data-ga-click="Footer, go to terms, text:terms">Terms</a></li>
         <li><a href="https://github.com/site/privacy" data-ga-click="Footer, go to privacy, text:privacy">Privacy</a></li>
         <li><a href="https://github.com/security" data-ga-click="Footer, go to security, text:security">Security</a></li>

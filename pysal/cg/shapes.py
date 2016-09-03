@@ -10,6 +10,7 @@ import doctest
 import math
 from warnings import warn
 from sphere import arcdist
+import numpy as np
 from polygonQuadTreeStructure import QuadTreeStructureSingleRing
 
 __all__ = ['Point', 'LineSegment', 'Line', 'Ray', 'Chain', 'Polygon',
@@ -21,6 +22,8 @@ def asShape(obj):
     Returns a pysal shape object from obj.
     obj must support the __geo_interface__.
     """
+    if isinstance(obj, (Point, LineSegment, Line, Ray, Chain, Polygon)):
+        return obj
     if hasattr(obj, '__geo_interface__'):
         geo = obj.__geo_interface__
     else:
@@ -36,8 +39,15 @@ def asShape(obj):
         raise NotImplementedError(
             "%s is not supported at this time." % geo_type)
 
+class Geometry(object):
+    """
+    A base class to help implement is_geometry and make geometric types
+    extendable.
+    """
+    def __init__(self):
+        pass
 
-class Point(object):
+class Point(Geometry):
     """
     Geometric class for point objects.
 
@@ -320,7 +330,7 @@ class Point(object):
         >>> Point((0,1))
         (0.0, 1.0)
         """
-        return self.__loc.__repr__()
+        return str(self)
 
     def __str__(self):
         """
@@ -341,9 +351,10 @@ class Point(object):
         '(1.0, 3.0)'
         """
         return str(self.__loc)
+        return "POINT ({} {})".format(*self.__loc)
 
 
-class LineSegment(object):
+class LineSegment(Geometry):
     """
     Geometric representation of line segment objects.
 
@@ -395,6 +406,8 @@ class LineSegment(object):
 
     def __str__(self):
         return "LineSegment(" + str(self._p1) + ", " + str(self._p2) + ")"
+        return "LINESTRING ({} {}, {} {})".format(self._p1[0], self._p1[1], 
+                                                  self._p2[0], self._p2[1])
 
     def __eq__(self, other):
         """
@@ -772,7 +785,7 @@ class LineSegment(object):
         return self._line
 
 
-class VerticalLine:
+class VerticalLine(Geometry):
     """
     Geometric representation of verticle line objects.
 
@@ -849,7 +862,7 @@ class VerticalLine:
         return float('nan')
 
 
-class Line:
+class Line(Geometry):
     """
     Geometric representation of line objects.
 
@@ -978,7 +991,7 @@ class Ray:
         self.p = second_p
 
 
-class Chain(object):
+class Chain(Geometry):
     """
     Geometric representation of a chain, also known as a polyline.
 
@@ -1014,15 +1027,23 @@ class Chain(object):
         else:
             self._vertices = [vertices]
         self._reset_props()
-
+    
     @classmethod
     def __from_geo_interface__(cls, geo):
-        verts = [Point(pt) for pt in geo['coordinates']]
+        if geo['type'].lower() == 'linestring':
+            verts = [Point(pt) for pt in geo['coordinates']]
+        elif geo['type'].lower() == 'multilinestring':
+            verts = [map(Point, part) for part in geo['coordinates']]
+        else:
+            raise TypeError('%r is not a Chain'%geo)
         return cls(verts)
 
     @property
     def __geo_interface__(self):
-        return {'type': 'LineString', 'coordinates': self.vertices}
+        if len(self.parts) == 1:
+            return {'type': 'LineString', 'coordinates': self.vertices}
+        else:
+            return {'type': 'MultiLineString', 'coordinates': self.parts}
 
     def _reset_props(self):
         """
@@ -1168,7 +1189,7 @@ class Chain(object):
         return [[LineSegment(a, b) for (a, b) in zip(part[:-1], part[1:])] for part in self._vertices]
 
 
-class Ring(object):
+class Ring(Geometry):
     """
     Geometric representation of a Linear Ring
 
@@ -1282,9 +1303,10 @@ class Ring(object):
 
             A = 0.0
             for i in xrange(N - 1):
-                A += (x[i] * y[i + 1] - x[i + 1] * y[i])
-            A = A / 2.0
-            self._area = A
+                A += (x[i] + x[i + 1]) * \
+                    (y[i] - y[i + 1])
+            A = A * 0.5
+            self._area = -A
         return self._area
 
     @property
@@ -1392,7 +1414,7 @@ class Ring(object):
 
 
 
-class Polygon(object):
+class Polygon(Geometry):
     """
     Geometric representation of polygon objects.
 
@@ -1784,7 +1806,7 @@ class Polygon(object):
 
 
 
-class Rectangle:
+class Rectangle(Geometry):
     """
     Geometric representation of rectangle objects.
 
@@ -1986,7 +2008,7 @@ class Rectangle:
         return self.upper - self.lower
 
 
-_geoJSON_type_to_Pysal_type = {'point': Point, 'linestring': Chain,
+_geoJSON_type_to_Pysal_type = {'point': Point, 'linestring': Chain, 'multilinestring': Chain,
                                'polygon': Polygon, 'multipolygon': Polygon}
 import standalone  # moving this to top breaks unit tests !
 

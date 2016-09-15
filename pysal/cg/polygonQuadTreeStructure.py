@@ -1,8 +1,8 @@
-from shapes import Ring
+from pysal.cg.shapes import Ring
 import math
 
 
-def cwt(a, b, tolerance = 0.000000001):
+def cwt(a, b, tolerance = 1e-9):
     """
     compare_with_tolerance
     For the float value comparing, there are some situlation that two values are actually the same but been shown
@@ -41,10 +41,6 @@ class Cell(object):
     --------------
     level       : int
                   on which quadtree level this cell belongs to. Begins with 0
-    index_h     : int
-                  the horizontal index of this cell in current level
-    index_v     : int
-                  the vertical index of this cell in current level
     min_x       : float
                   min x coordinate of this cell
     min_y       : float
@@ -60,19 +56,22 @@ class Cell(object):
                   "in"      : this cell lies totally inside of the research area
                   "out"     : this cell lies totally outside of the research area
                   "maybe"   : this cell intersects with the research area's boundary
+    children_l_b: Cell
+                  children of current cell, left-bottom
+    children_l_t: Cell
+                  children of current cell, left-top
+    children_r_b: Cell
+                  children of current cell, right-bottom
+    children_t_t: Cell
+                  children of current cell, right-top
     """
 
-    def __init__(self, level, index_h, index_v, min_x, min_y, length_x, length_y, arcs, status):
+    def __init__(self, level, min_x, min_y, length_x, length_y, arcs, status):
         """
-
         Parameters
         ----------
         level       : int
                       on which quadtree level this cell belongs to. Begins with 0
-        index_h     : int
-                      the horizontal index of this cell in current level
-        index_v     : int
-                      the vertical index of this cell in current level
         min_x       : float
                       min x coordinate of this cell
         min_y       : float
@@ -90,16 +89,18 @@ class Cell(object):
                       "maybe"   : this cell intersects with the research area's boundary
         """
         self.level = level
-        self.index_h = index_h
-        self.index_v = index_v
         self.min_x = min_x
         self.min_y = min_y
         self.length_x = length_x
         self.length_y = length_y
         self.arcs = arcs
         self.status = status
-        self.zero_tolerance = 0.000000001
+        self.zero_tolerance = 1e-9
         self._rings = None
+        self.children_l_b = None
+        self.children_l_t = None
+        self.children_r_b = None
+        self.children_r_t = None
 
     @property
     def rings(self):
@@ -123,241 +124,177 @@ class Cell(object):
     def split(self):
         """
         equally split current cell into 4 sub cells
+        if this cell in needed to be splitted into four parts, add the result cells as children to current cell
         Returns
         -------
-        the list of 4 sub cells
         """
-        sub_cells = []
+
+        if self.status == "in" or self.status == "out":
+            # no need to conduct the splitting
+            return
+
         level = self.level + 1
-        index_h = self.index_h * 2
-        index_v = self.index_v * 2
         length_x = self.length_x / 2
         length_y = self.length_y / 2
         middle_x = self.min_x + length_x
         middle_y = self.min_y + length_y
-        if self.status == "in" or self.status == "out": # no need to intersect with the arcs, the sub cells will inherit the status of this cell
-            # create the cell on left-bottom, right-bottom, left-top and right-top
-            cells_l_b = Cell(level, index_h, index_v, self.min_x, self.min_y, length_x, length_y, [], self.status)
-            cells_r_b = Cell(level, index_h+1, index_v, middle_x, self.min_y, length_x, length_y, [], self.status)
-            cells_l_t = Cell(level, index_h, index_v+1, self.min_x, middle_y, length_x, length_y, [], self.status)
-            cells_r_t = Cell(level, index_h+1, index_v+1, middle_x, middle_y, length_x, length_y, [], self.status)
-            sub_cells = [cells_l_b, cells_r_b, cells_l_t, cells_r_t]
-        else:
-            """
-            Do the split work here.
-            Some properties of the arc:
-            - Point order of the arcs MUST be clockwise
-            - The two end-points of each arc MUST lie on the borders of the cell
-            - When a arc goes in a cell, it MUST goes out from the same one
-            - The intersection points MUST be lying on the inner-boundaries which are used to divide the cell into 4 sub-cells
-            - Use the intersection points to split the arcs into small ones
-            - No need to store cell boundaries as arcs, store the intersection points, points' relative location from
-            """
-            if self.level == 0:
-                if len(self.arcs) != 1:
-                    raise LookupError(
-                        "Unexpected arc number! Holes are not supported currently"
-                    )
-                    return []
-                # Do some initialize work, find one point lies on the border of the rectangle(cell) and begin with this point
-                arc = self.arcs[0]
-                if arc[0] == arc[len(arc)-1]:  # remove the duplicated points the the end of the arc
-                    arc = arc[0: len(arc)-1]
-                min_x = arc[0][0]
-                min_x_index = 0
-                for index in range(0, len(arc)):
-                    if arc[index][0] < min_x:
-                        min_x = arc[index][0]
-                        min_x_index = index
-                arc = arc[min_x_index: len(arc)] + arc[0: min_x_index+1]
-                self.arcs[0] = arc
+        """
+        Do the splitting work here.
+        Some properties of the arc:
+        - Point order of the arcs MUST be clockwise
+        - The two end-points of each arc MUST lie on the borders of the cell
+        - When a arc goes in a cell, it MUST goes out from the same one
+        - The intersection points MUST be lying on the inner-boundaries which are used to divide the cell into 4 sub-cells
+        - Use the intersection points to split the arcs into small ones
+        - No need to store cell boundaries as arcs, store the intersection points, points' relative location from
+        """
+        if self.level == 0:
+            if len(self.arcs) != 1:
+                raise LookupError(
+                    "Unexpected arc number! Only single ring can be assigned to the root cell"
+                )
+                return
+            # Do some initialize work, find one point lies on the border of the rectangle(cell) and begin with this point
+            arc = self.arcs[0]
+            if arc[0] == arc[len(arc)-1]:  # remove the duplicated points the the end of the arc
+                arc = arc[0: len(arc)-1]
+            min_x = arc[0][0]
+            min_x_index = 0
+            for index in range(0, len(arc)):
+                if arc[index][0] < min_x:
+                    min_x = arc[index][0]
+                    min_x_index = index
+            arc = arc[min_x_index: len(arc)] + arc[0: min_x_index+1]
+            self.arcs[0] = arc
 
-            # now begin comparing each segment of the arc to the split line (horizontal and)
-            split_line_h = [[self.min_x, middle_y], [self.min_x+self.length_x, middle_y]]
-            split_line_v = [[middle_x, self.min_y], [middle_x, self.min_y+self.length_y]]
-            # l: left, r: right, b: bottom, t: top
-            cell_arcs_l_b = []
-            cell_arcs_r_b = []
-            cell_arcs_l_t = []
-            cell_arcs_r_t = []
-            for arc in self.arcs:
-                temp_arc = []
-                temp_arc_belonging = None
-                for index in range(0, len(arc)-1):
-                    x0 = arc[index][0]
-                    y0 = arc[index][1]
-                    x1 = arc[index+1][0]
-                    y1 = arc[index+1][1]
-                    if temp_arc_belonging is None:
-                        """
-                        In this section, determine which sub-cell does the current temp_arc belong to
-                        Although every single arc must begin and end on the cell's outer boundaries, when the split
-                        process begin, there might be some sub-arcs begin at the split-line. So here we should
-                        consider all possible situations
-                        See the image cell_boundary_category_rule to better understand the process
-                        """
-                        if cwt(x0, self.min_x, self.zero_tolerance) == 0:  # left border
-                            if cwt(y0, middle_y, self.zero_tolerance) == -1:  # position 1
+        # l: left, r: right, b: bottom, t: top
+        cell_arcs_l_b = []
+        cell_arcs_r_b = []
+        cell_arcs_l_t = []
+        cell_arcs_r_t = []
+        for arc in self.arcs:
+            temp_arc = []
+            temp_arc_belonging = None
+            for index in range(0, len(arc)-1):
+                x0 = arc[index][0]
+                y0 = arc[index][1]
+                x1 = arc[index+1][0]
+                y1 = arc[index+1][1]
+                if temp_arc_belonging is None:
+                    """
+                    In this section, determine which sub-cell does the current temp_arc belong to
+                    Although every single arc must begin and end on the cell's outer boundaries, when the split
+                    process begin, there might be some sub-arcs begin at the split-line. So here we should
+                    consider all possible situations
+                    See the image cell_boundary_category_rule to better understand the process
+                    """
+                    if cwt(x0, self.min_x, self.zero_tolerance) == 0:  # left border
+                        if cwt(y0, middle_y, self.zero_tolerance) == -1:  # position 1
+                            temp_arc_belonging = "l_b"
+                        elif cwt(y0, middle_y, self.zero_tolerance) == 1:  # position 2
+                            temp_arc_belonging = "l_t"
+                        else:  # just by chance at the middle point
+                            if cwt(y1, y0, self.zero_tolerance) == -1:  # going down
                                 temp_arc_belonging = "l_b"
-                            elif cwt(y0, middle_y, self.zero_tolerance) == 1:  # position 2
+                            elif cwt(y1, y0, self.zero_tolerance) == 1:  # going up
                                 temp_arc_belonging = "l_t"
-                            else:  # just by chance at the middle point
-                                if cwt(y1, y0, self.zero_tolerance) == -1:  # going down
-                                    temp_arc_belonging = "l_b"
-                                elif cwt(y1, y0, self.zero_tolerance) == 1:  # going up
-                                    temp_arc_belonging = "l_t"
-                                else: # just by chance this segment lies on split_line_h, throw it
-                                    continue
-                        elif cwt(x0, self.min_x+self.length_x, self.zero_tolerance) == 0:  # right border
-                            if cwt(y0, middle_y, self.zero_tolerance) == -1:  # position 6
+                            else: # just by chance this segment lies on split_line_h, throw it
+                                continue
+                    elif cwt(x0, self.min_x+self.length_x, self.zero_tolerance) == 0:  # right border
+                        if cwt(y0, middle_y, self.zero_tolerance) == -1:  # position 6
+                            temp_arc_belonging = "r_b"
+                        elif cwt(y0, middle_y, self.zero_tolerance) == 1:  # position 5
+                            temp_arc_belonging = "r_t"
+                        else:  # just by chance at the middle point
+                            if cwt(y1, y0, self.zero_tolerance) == -1:  # going down
                                 temp_arc_belonging = "r_b"
-                            elif cwt(y0, middle_y, self.zero_tolerance) == 1:  # position 5
+                            elif cwt(y1, y0, self.zero_tolerance) == 1:  # going up
                                 temp_arc_belonging = "r_t"
-                            else:  # just by chance at the middle point
-                                if cwt(y1, y0, self.zero_tolerance) == -1:  # going down
-                                    temp_arc_belonging = "r_b"
-                                elif cwt(y1, y0, self.zero_tolerance) == 1:  # going up
-                                    temp_arc_belonging = "r_t"
-                                else:  # just by chance this segment lies on split_line_h, throw it
-                                    continue
-                        elif cwt(y0, self.min_y, self.zero_tolerance) == 0:  # bottom border
-                            if cwt(x0, middle_x, self.zero_tolerance) == -1: # position 8
+                            else:  # just by chance this segment lies on split_line_h, throw it
+                                continue
+                    elif cwt(y0, self.min_y, self.zero_tolerance) == 0:  # bottom border
+                        if cwt(x0, middle_x, self.zero_tolerance) == -1: # position 8
+                            temp_arc_belonging = "l_b"
+                        elif cwt(x0, middle_x, self.zero_tolerance) == 1: # position 7
+                            temp_arc_belonging = "r_b"
+                        else:  # just by chance at the middle point
+                            if cwt(x1, x0, self.zero_tolerance) == -1:  # going left
                                 temp_arc_belonging = "l_b"
-                            elif cwt(x0, middle_x, self.zero_tolerance) == 1: # position 7
+                            elif cwt(x1, x0, self.zero_tolerance) == 1:  #going right
                                 temp_arc_belonging = "r_b"
-                            else:  # just by chance at the middle point
-                                if cwt(x1, x0, self.zero_tolerance) == -1:  # going left
-                                    temp_arc_belonging = "l_b"
-                                elif cwt(x1, x0, self.zero_tolerance) == 1:  #going right
-                                    temp_arc_belonging = "r_b"
-                                else:   # just by chance this segment lies on split_line_v, throw it
-                                    continue
-                        elif cwt(y0, self.min_y+self.length_y, self.zero_tolerance) == 0:  # top border
-                            if cwt(x0, middle_x, self.zero_tolerance) == -1:  # position 3
+                            else:   # just by chance this segment lies on split_line_v, throw it
+                                continue
+                    elif cwt(y0, self.min_y+self.length_y, self.zero_tolerance) == 0:  # top border
+                        if cwt(x0, middle_x, self.zero_tolerance) == -1:  # position 3
+                            temp_arc_belonging = "l_t"
+                        elif cwt(x0, middle_x, self.zero_tolerance) == 1:  # position 4
+                            temp_arc_belonging = "r_t"
+                        else:  # just by chance at the middle point
+                            if cwt(x1, x0, self.zero_tolerance) == -1:  # going left
                                 temp_arc_belonging = "l_t"
-                            elif cwt(x0, middle_x, self.zero_tolerance) == 1:  # position 4
+                            elif cwt(x1, x0, self.zero_tolerance) == 1:  # going right
                                 temp_arc_belonging = "r_t"
-                            else:  # just by chance at the middle point
-                                if cwt(x1, x0, self.zero_tolerance) == -1:  # going left
-                                    temp_arc_belonging = "l_t"
-                                elif cwt(x1, x0, self.zero_tolerance) == 1:  # going right
-                                    temp_arc_belonging = "r_t"
-                                else:  # just by chance this segment lies on split_line_v, throw it
-                                    continue
-                        elif cwt(x0, middle_x, self.zero_tolerance) == 0:  # split_line_v
-                            if cwt(y0, middle_y, self.zero_tolerance) == 1: # position c
-                                if cwt(x1, x0, self.zero_tolerance) == 1:
-                                    temp_arc_belonging = "r_t"
-                                elif cwt(x1, x0, self.zero_tolerance) == -1:
-                                    temp_arc_belonging = "l_t"
-                                else:  # x1==x0, just by chance on the split_line_v
-                                    continue
-                            elif cwt(y0, middle_y, self.zero_tolerance) == -1: # position d
-                                if cwt(x1, x0, self.zero_tolerance) == 1:
-                                    temp_arc_belonging = "r_b"
-                                elif cwt(x1, x0, self.zero_tolerance) == -1:
-                                    temp_arc_belonging = "l_b"
-                                else:  # x1==x0, just by chance on the split_line_v
-                                    continue
-                            else:  # in condition that p0 lies at the cross point of two split lines
-                                if cwt(x1, x0, self.zero_tolerance) == 0 or cwt(y1, y0, self.zero_tolerance) == 0:  # on one of the split_line
-                                    continue
-                                elif cwt(x1, x0, self.zero_tolerance) == 1:
-                                    if cwt(y1, y0, self.zero_tolerance) == 1:
-                                        temp_arc_belonging = "r_t"
-                                    else:
-                                        temp_arc_belonging = "r_b"
-                                else:  # on condition that x1 < x0
-                                    if cwt(y1, y0, self.zero_tolerance) == 1:
-                                        temp_arc_belonging = 'l_t'
-                                    else:
-                                        temp_arc_belonging = "l_b"
-                        elif cwt(y0, middle_y, self.zero_tolerance) == 0:  # split_line_h
-                            if cwt(x0, middle_x, self.zero_tolerance) == 1:  #position r
+                            else:  # just by chance this segment lies on split_line_v, throw it
+                                continue
+                    elif cwt(x0, middle_x, self.zero_tolerance) == 0:  # split_line_v
+                        if cwt(y0, middle_y, self.zero_tolerance) == 1: # position c
+                            if cwt(x1, x0, self.zero_tolerance) == 1:
+                                temp_arc_belonging = "r_t"
+                            elif cwt(x1, x0, self.zero_tolerance) == -1:
+                                temp_arc_belonging = "l_t"
+                            else:  # x1==x0, just by chance on the split_line_v
+                                continue
+                        elif cwt(y0, middle_y, self.zero_tolerance) == -1: # position d
+                            if cwt(x1, x0, self.zero_tolerance) == 1:
+                                temp_arc_belonging = "r_b"
+                            elif cwt(x1, x0, self.zero_tolerance) == -1:
+                                temp_arc_belonging = "l_b"
+                            else:  # x1==x0, just by chance on the split_line_v
+                                continue
+                        else:  # in condition that p0 lies at the cross point of two split lines
+                            if cwt(x1, x0, self.zero_tolerance) == 0 or cwt(y1, y0, self.zero_tolerance) == 0:  # on one of the split_line
+                                continue
+                            elif cwt(x1, x0, self.zero_tolerance) == 1:
                                 if cwt(y1, y0, self.zero_tolerance) == 1:
                                     temp_arc_belonging = "r_t"
-                                elif cwt(y1, y0, self.zero_tolerance) == -1:
+                                else:
                                     temp_arc_belonging = "r_b"
-                                else:  # y1==y0, just by chance on the split_line_h
-                                    continue
-                            else:  # on condition that x0 < middle_x, position a
+                            else:  # on condition that x1 < x0
                                 if cwt(y1, y0, self.zero_tolerance) == 1:
-                                    temp_arc_belonging = "l_t"
-                                elif cwt(y1, y0, self.zero_tolerance) == -1:
+                                    temp_arc_belonging = 'l_t'
+                                else:
                                     temp_arc_belonging = "l_b"
-                                else:  # y1==y0, just by chance on the split_line_h
-                                    continue
-                    if temp_arc_belonging is None:
-                        raise Exception("Error on cell split!!!")
+                    elif cwt(y0, middle_y, self.zero_tolerance) == 0:  # split_line_h
+                        if cwt(x0, middle_x, self.zero_tolerance) == 1:  #position r
+                            if cwt(y1, y0, self.zero_tolerance) == 1:
+                                temp_arc_belonging = "r_t"
+                            elif cwt(y1, y0, self.zero_tolerance) == -1:
+                                temp_arc_belonging = "r_b"
+                            else:  # y1==y0, just by chance on the split_line_h
+                                continue
+                        else:  # on condition that x0 < middle_x, position a
+                            if cwt(y1, y0, self.zero_tolerance) == 1:
+                                temp_arc_belonging = "l_t"
+                            elif cwt(y1, y0, self.zero_tolerance) == -1:
+                                temp_arc_belonging = "l_b"
+                            else:  # y1==y0, just by chance on the split_line_h
+                                continue
+                if temp_arc_belonging is None:
+                    raise Exception("Error on cell split!!!")
 
-                    # At this point, the belonging sub-cell of current segment is already known.
-                    # Let's begin the splitting!
-                    """
-                    Firstly determine if the segment totally lies on the split_lines.
-                    p1 (x1, y1) could lie on the split_lines
-                    This situation is not the same with previous ones which "both points lie on the same split_line"
-                    In previous situation, the p1 is the begin point of a sub arc, we can just throw that segment if
-                    it totally lie on split_line. However, in current situation, the segment is in the middle of the
-                    sub-arc. So if the segment is detected totally lie on the split_line, we should split the sub_arc
-                    here.
-                    """
-                    if cwt(x0, x1, self.zero_tolerance) == cwt(x0, middle_x, self.zero_tolerance) == 0 or cwt(y0, y1, self.zero_tolerance) == cwt(y0, middle_y, self.zero_tolerance) == 0:  # split the arc here, throw current segment
-                        if len(temp_arc)!=0:
-                            if temp_arc_belonging == "l_b":
-                                cell_arcs_l_b.append(temp_arc)
-                            elif temp_arc_belonging == "l_t":
-                                cell_arcs_l_t.append(temp_arc)
-                            elif temp_arc_belonging == "r_b":
-                                cell_arcs_r_b.append(temp_arc)
-                            elif temp_arc_belonging == "r_t":
-                                cell_arcs_r_t.append(temp_arc)
-                        temp_arc = []
-                        temp_arc_belonging = None
-                        continue
-
-                    intersect_point_h = None
-                    intersect_point_v = None
-                    # Check if the segment intersects with split_line_h
-                    if (cwt(y0, middle_y, self.zero_tolerance) == -1 and cwt(middle_y, y1, self.zero_tolerance) <= 0) or (cwt(y0, middle_y, self.zero_tolerance) == 1 and cwt(middle_y, y1, self.zero_tolerance) >= 0):
-                        if cwt(x0, x1, self.zero_tolerance) == 0:  # the segments is vertical
-                            intersect_point_h = [x0, middle_y]
-                        else:
-                            a = (y1 - y0) / (x1 - x0)
-                            b = y0 - a * x0
-                            x_new = (middle_y-b)/a
-                            intersect_point_h = [x_new, middle_y]
-                    # Check if the segment intersects with split_line_v
-                    if (cwt(x0, middle_x, self.zero_tolerance) == -1 and cwt(middle_x, x1, self.zero_tolerance) <= 0) or (cwt(x0, middle_x, self.zero_tolerance) == 1 and cwt(middle_x, x1, self.zero_tolerance) >= 0):
-                        if cwt(y0, y1, self.zero_tolerance) == 0:  # the segments is horizontal
-                            intersect_point_v = [middle_x, y0]
-                        else:
-                            a = (y1 - y0) / (x1 - x0)
-                            b = y0 - a * x0
-                            y_new = a*middle_x + b
-                            intersect_point_v = [middle_x, y_new]
-                    # check if the intersect point(s) exist
-                    intersect_point = None
-                    intersect_point_mark = None
-                    if(intersect_point_h is not None) and (intersect_point_v is not None):
-                        # In this situation, the current segment cannot be vertical nor horizontal.
-                        # Find the closer intersection point to p0
-                        if math.fabs(intersect_point_h[0]-x0)<math.fabs(intersect_point_v[0]-x0):
-                            intersect_point = intersect_point_h
-                            intersect_point_mark = "h"
-                        else:
-                            intersect_point = intersect_point_v
-                            intersect_point_mark = "v"
-                    elif intersect_point_h is not None:
-                        intersect_point = intersect_point_h
-                        intersect_point_mark = "h"
-                    elif intersect_point_v is not None:
-                        intersect_point = intersect_point_v
-                        intersect_point_mark = "v"
-
-                    if intersect_point is not None:  # split the arc here
-                        if len(temp_arc) == 0:
-                            temp_arc.append([x0, y0])
-                        temp_arc.append(intersect_point)
+                # At this point, the belonging sub-cell of current segment is already known.
+                # Let's begin the splitting!
+                """
+                Firstly determine if the segment totally lies on the split_lines.
+                p1 (x1, y1) could lie on the split_lines
+                This situation is not the same with previous ones which "both points lie on the same split_line"
+                In previous situation, the p1 is the begin point of a sub arc, we can just throw that segment if
+                it totally lie on split_line. However, in current situation, the segment is in the middle of the
+                sub-arc. So if the segment is detected totally lie on the split_line, we should split the sub_arc
+                here.
+                """
+                if cwt(x0, x1, self.zero_tolerance) == cwt(x0, middle_x, self.zero_tolerance) == 0 or cwt(y0, y1, self.zero_tolerance) == cwt(y0, middle_y, self.zero_tolerance) == 0:  # split the arc here, throw current segment
+                    if len(temp_arc)!=0:
                         if temp_arc_belonging == "l_b":
                             cell_arcs_l_b.append(temp_arc)
                         elif temp_arc_belonging == "l_t":
@@ -366,120 +303,53 @@ class Cell(object):
                             cell_arcs_r_b.append(temp_arc)
                         elif temp_arc_belonging == "r_t":
                             cell_arcs_r_t.append(temp_arc)
+                    temp_arc = []
+                    temp_arc_belonging = None
+                    continue
 
-                        if temp_arc_belonging == "l_b":
-                            if intersect_point_mark == "h":
-                                if (intersect_point_h is not None) and (intersect_point_v is not None):
-                                    # under the situation that a single segment intersects with both split lines,
-                                    # here need carefully process
-                                    small_arc = [intersect_point_h, intersect_point_v]
-                                    if cwt(intersect_point_h[0], intersect_point_v[0], self.zero_tolerance) != 0:  # deal with the situation that the segment just goes through center point
-                                        cell_arcs_l_t.append(small_arc)
-                                    temp_arc = [intersect_point_v, [x1, y1]]
-                                    temp_arc_belonging = "r_t"
-                                else:
-                                    temp_arc = [intersect_point, [x1, y1]]
-                                    temp_arc_belonging = "l_t"
-                            else:
-                                if (intersect_point_h is not None) and (intersect_point_v is not None):
-                                    # under the situation that a single segment intersects with both split lines,
-                                    # here need carefully process
-                                    small_arc = [intersect_point_v, intersect_point_h]
-                                    if cwt(intersect_point_h[0], intersect_point_v[0], self.zero_tolerance) != 0:  # deal with the situation that the segment just goes through center point
-                                        cell_arcs_r_b.append(small_arc)
-                                    temp_arc = [intersect_point_h, [x1, y1]]
-                                    temp_arc_belonging = "r_t"
-                                else:
-                                    temp_arc = [intersect_point, [x1, y1]]
-                                    temp_arc_belonging = "r_b"
+                intersect_point_h = None
+                intersect_point_v = None
+                # Check if the segment intersects with split_line_h
+                if (cwt(y0, middle_y, self.zero_tolerance) == -1 and cwt(middle_y, y1, self.zero_tolerance) <= 0) or (cwt(y0, middle_y, self.zero_tolerance) == 1 and cwt(middle_y, y1, self.zero_tolerance) >= 0):
+                    if cwt(x0, x1, self.zero_tolerance) == 0:  # the segments is vertical
+                        intersect_point_h = [x0, middle_y]
+                    else:
+                        a = (y1 - y0) / (x1 - x0)
+                        b = y0 - a * x0
+                        x_new = (middle_y-b)/a
+                        intersect_point_h = [x_new, middle_y]
+                # Check if the segment intersects with split_line_v
+                if (cwt(x0, middle_x, self.zero_tolerance) == -1 and cwt(middle_x, x1, self.zero_tolerance) <= 0) or (cwt(x0, middle_x, self.zero_tolerance) == 1 and cwt(middle_x, x1, self.zero_tolerance) >= 0):
+                    if cwt(y0, y1, self.zero_tolerance) == 0:  # the segments is horizontal
+                        intersect_point_v = [middle_x, y0]
+                    else:
+                        a = (y1 - y0) / (x1 - x0)
+                        b = y0 - a * x0
+                        y_new = a*middle_x + b
+                        intersect_point_v = [middle_x, y_new]
+                # check if the intersect point(s) exist
+                intersect_point = None
+                intersect_point_mark = None
+                if(intersect_point_h is not None) and (intersect_point_v is not None):
+                    # In this situation, the current segment cannot be vertical nor horizontal.
+                    # Find the closer intersection point to p0
+                    if math.fabs(intersect_point_h[0]-x0)<math.fabs(intersect_point_v[0]-x0):
+                        intersect_point = intersect_point_h
+                        intersect_point_mark = "h"
+                    else:
+                        intersect_point = intersect_point_v
+                        intersect_point_mark = "v"
+                elif intersect_point_h is not None:
+                    intersect_point = intersect_point_h
+                    intersect_point_mark = "h"
+                elif intersect_point_v is not None:
+                    intersect_point = intersect_point_v
+                    intersect_point_mark = "v"
 
-                        elif temp_arc_belonging == "l_t":
-                            if intersect_point_mark == "h":
-                                if (intersect_point_h is not None) and (intersect_point_v is not None):
-                                    # under the situation that a single segment intersects with both split lines,
-                                    # here need carefully process
-                                    small_arc = [intersect_point_h, intersect_point_v]
-                                    if cwt(intersect_point_h[0], intersect_point_v[0], self.zero_tolerance) != 0:  # deal with the situation that the segment just goes through center point
-                                        cell_arcs_l_b.append(small_arc)
-                                    temp_arc = [intersect_point_v, [x1, y1]]
-                                    temp_arc_belonging = "r_b"
-                                else:
-                                    temp_arc = [intersect_point, [x1, y1]]
-                                    temp_arc_belonging = "l_b"
-                            else:
-                                if (intersect_point_h is not None) and (intersect_point_v is not None):
-                                    # under the situation that a single segment intersects with both split lines,
-                                    # here need carefully process
-                                    small_arc = [intersect_point_v, intersect_point_h]
-                                    if cwt(intersect_point_h[0], intersect_point_v[0], self.zero_tolerance) != 0:  # deal with the situation that the segment just goes through center point
-                                        cell_arcs_r_t.append(small_arc)
-                                    temp_arc = [intersect_point_h, [x1, y1]]
-                                    temp_arc_belonging = "r_b"
-                                else:
-                                    temp_arc = [intersect_point, [x1, y1]]
-                                    temp_arc_belonging = "r_t"
-
-                        elif temp_arc_belonging == "r_b":
-                            if intersect_point_mark == "h":
-                                if (intersect_point_h is not None) and (intersect_point_v is not None):
-                                    # under the situation that a single segment intersects with both split lines,
-                                    # here need carefully process
-                                    small_arc = [intersect_point_h, intersect_point_v]
-                                    if cwt(intersect_point_h[0], intersect_point_v[0], self.zero_tolerance) != 0:  # deal with the situation that the segment just goes through center point
-                                        cell_arcs_r_t.append(small_arc)
-                                    temp_arc = [intersect_point_v, [x1, y1]]
-                                    temp_arc_belonging = "l_t"
-                                else:
-                                    temp_arc = [intersect_point, [x1, y1]]
-                                    temp_arc_belonging = "r_t"
-                            else:
-                                if (intersect_point_h is not None) and (intersect_point_v is not None):
-                                    # under the situation that a single segment intersects with both split lines,
-                                    # here need carefully process
-                                    small_arc = [intersect_point_v, intersect_point_h]
-                                    if cwt(intersect_point_h[0], intersect_point_v[0], self.zero_tolerance) != 0:  # deal with the situation that the segment just goes through center point
-                                        cell_arcs_l_b.append(small_arc)
-                                    temp_arc = [intersect_point_h, [x1, y1]]
-                                    temp_arc_belonging = "l_t"
-                                else:
-                                    temp_arc = [intersect_point, [x1, y1]]
-                                    temp_arc_belonging = "l_b"
-
-                        elif temp_arc_belonging == "r_t":
-                            if intersect_point_mark == "h":
-                                if (intersect_point_h is not None) and (intersect_point_v is not None):
-                                    # under the situation that a single segment intersects with both split lines,
-                                    # here need carefully process
-                                    small_arc = [intersect_point_h, intersect_point_v]
-                                    if cwt(intersect_point_h[0], intersect_point_v[0], self.zero_tolerance) != 0:  # deal with the situation that the segment just goes through center point
-                                        cell_arcs_r_b.append(small_arc)
-                                    temp_arc = [intersect_point_v, [x1, y1]]
-                                    temp_arc_belonging = "l_b"
-                                else:
-                                    temp_arc = [intersect_point, [x1, y1]]
-                                    temp_arc_belonging = "r_b"
-                            else:
-                                if (intersect_point_h is not None) and (intersect_point_v is not None):
-                                    # under the situation that a single segment intersects with both split lines,
-                                    # here need carefully process
-                                    small_arc = [intersect_point_v, intersect_point_h]
-                                    if cwt(intersect_point_h[0], intersect_point_v[0], self.zero_tolerance) != 0:  # deal with the situation that the segment just goes through center point
-                                        cell_arcs_l_t.append(small_arc)
-                                    temp_arc = [intersect_point_h, [x1, y1]]
-                                    temp_arc_belonging = "l_b"
-                                else:
-                                    temp_arc = [intersect_point, [x1, y1]]
-                                    temp_arc_belonging = "l_t"
-                        if cwt(temp_arc[0][0], temp_arc[1][0], self.zero_tolerance) == 0 and cwt(temp_arc[0][1], temp_arc[1][1], self.zero_tolerance) == 0:
-                            # to deal with the situation that p1 just lied on one of the split-lines
-                            temp_arc = []
-                            temp_arc_belonging = None
-                    else:  # simply append the point to current arc
-                        if len(temp_arc) == 0:
-                            temp_arc.append([x0, y0])
-                        temp_arc.append([x1, y1])
-                # Allocate the last left arc to a sub-cell
-                if len(temp_arc) > 0:
+                if intersect_point is not None:  # split the arc here
+                    if len(temp_arc) == 0:
+                        temp_arc.append([x0, y0])
+                    temp_arc.append(intersect_point)
                     if temp_arc_belonging == "l_b":
                         cell_arcs_l_b.append(temp_arc)
                     elif temp_arc_belonging == "l_t":
@@ -488,74 +358,199 @@ class Cell(object):
                         cell_arcs_r_b.append(temp_arc)
                     elif temp_arc_belonging == "r_t":
                         cell_arcs_r_t.append(temp_arc)
-            status_l_b = "maybe"
-            status_l_t = "maybe"
-            status_r_b = "maybe"
-            status_r_t = "maybe"
-            """
-            At this point, all the arcs in this cell have been split into sub-arcs and allocated to 4 sub-cells.
-            So, we can try to create the cells on left-bottom, right-bottom, left-top and right-top.
-            Before doing that, we need to determine the status of each sub-cell, especially those who are totally
-            within or out of the study area.
-            These two kind of sub-cell have the same property: they don't have arc allocated. So, If here exists
-            cell(s) who don't have arcs allocated, we need to begin the check
-            """
-            if len(cell_arcs_l_b)*len(cell_arcs_l_t)*len(cell_arcs_r_b)*len(cell_arcs_r_t) == 0:
-                extract_result = extract_segments_from_cell_with_arcs([self.min_x, self.min_y], self.length_x, self.length_y, self.arcs, self.zero_tolerance)
-                construct_rings = []
-                for arc in extract_result[0]:
-                    construct_rings.append(Ring(arc))
-                # determine the totally within and out-of sub cells
-                if len(cell_arcs_l_b) == 0:
-                    center = [self.min_x+length_x/2, self.min_y+length_y/2]
-                    is_in = False
-                    for ring in construct_rings:
-                        if ring.contains_point(center):
-                            is_in = True
-                    if is_in:
-                        status_l_b = "in"
-                    else:
-                        status_l_b = "out"
-                if len(cell_arcs_l_t) == 0:
-                    center = [self.min_x+length_x/2, middle_y+length_y/2]
-                    is_in = False
-                    for ring in construct_rings:
-                        if ring.contains_point(center):
-                            is_in = True
-                    if is_in:
-                        status_l_t = "in"
-                    else:
-                        status_l_t = "out"
-                if len(cell_arcs_r_b) == 0:
-                    center = [middle_x+length_x/2, self.min_y+length_y/2]
-                    is_in = False
-                    for ring in construct_rings:
-                        if ring.contains_point(center):
-                            is_in = True
-                    if is_in:
-                        status_r_b = "in"
-                    else:
-                        status_r_b = "out"
-                if len(cell_arcs_r_t) == 0:
-                    center = [middle_x+length_x/2, middle_y+length_y/2]
-                    is_in = False
-                    for ring in construct_rings:
-                        if ring.contains_point(center):
-                            is_in = True
-                    if is_in:
-                        status_r_t = "in"
-                    else:
-                        status_r_t = "out"
 
-            cells_l_b = Cell(level, index_h, index_v, self.min_x, self.min_y, length_x, length_y, cell_arcs_l_b, status_l_b)
-            cells_l_t = Cell(level, index_h, index_v + 1, self.min_x, middle_y, length_x, length_y, cell_arcs_l_t, status_l_t)
-            cells_r_b = Cell(level, index_h + 1, index_v, middle_x, self.min_y, length_x, length_y, cell_arcs_r_b, status_r_b)
-            cells_r_t = Cell(level, index_h + 1, index_v + 1, middle_x, middle_y, length_x, length_y, cell_arcs_r_t, status_r_t)
-            sub_cells = [cells_l_b, cells_l_t, cells_r_b, cells_r_t]
+                    if temp_arc_belonging == "l_b":
+                        if intersect_point_mark == "h":
+                            if (intersect_point_h is not None) and (intersect_point_v is not None):
+                                # under the situation that a single segment intersects with both split lines,
+                                # here need carefully process
+                                small_arc = [intersect_point_h, intersect_point_v]
+                                if cwt(intersect_point_h[0], intersect_point_v[0], self.zero_tolerance) != 0:  # deal with the situation that the segment just goes through center point
+                                    cell_arcs_l_t.append(small_arc)
+                                temp_arc = [intersect_point_v, [x1, y1]]
+                                temp_arc_belonging = "r_t"
+                            else:
+                                temp_arc = [intersect_point, [x1, y1]]
+                                temp_arc_belonging = "l_t"
+                        else:
+                            if (intersect_point_h is not None) and (intersect_point_v is not None):
+                                # under the situation that a single segment intersects with both split lines,
+                                # here need carefully process
+                                small_arc = [intersect_point_v, intersect_point_h]
+                                if cwt(intersect_point_h[0], intersect_point_v[0], self.zero_tolerance) != 0:  # deal with the situation that the segment just goes through center point
+                                    cell_arcs_r_b.append(small_arc)
+                                temp_arc = [intersect_point_h, [x1, y1]]
+                                temp_arc_belonging = "r_t"
+                            else:
+                                temp_arc = [intersect_point, [x1, y1]]
+                                temp_arc_belonging = "r_b"
 
-        return sub_cells
+                    elif temp_arc_belonging == "l_t":
+                        if intersect_point_mark == "h":
+                            if (intersect_point_h is not None) and (intersect_point_v is not None):
+                                # under the situation that a single segment intersects with both split lines,
+                                # here need carefully process
+                                small_arc = [intersect_point_h, intersect_point_v]
+                                if cwt(intersect_point_h[0], intersect_point_v[0], self.zero_tolerance) != 0:  # deal with the situation that the segment just goes through center point
+                                    cell_arcs_l_b.append(small_arc)
+                                temp_arc = [intersect_point_v, [x1, y1]]
+                                temp_arc_belonging = "r_b"
+                            else:
+                                temp_arc = [intersect_point, [x1, y1]]
+                                temp_arc_belonging = "l_b"
+                        else:
+                            if (intersect_point_h is not None) and (intersect_point_v is not None):
+                                # under the situation that a single segment intersects with both split lines,
+                                # here need carefully process
+                                small_arc = [intersect_point_v, intersect_point_h]
+                                if cwt(intersect_point_h[0], intersect_point_v[0], self.zero_tolerance) != 0:  # deal with the situation that the segment just goes through center point
+                                    cell_arcs_r_t.append(small_arc)
+                                temp_arc = [intersect_point_h, [x1, y1]]
+                                temp_arc_belonging = "r_b"
+                            else:
+                                temp_arc = [intersect_point, [x1, y1]]
+                                temp_arc_belonging = "r_t"
 
-    def contains_point(self ,point):
+                    elif temp_arc_belonging == "r_b":
+                        if intersect_point_mark == "h":
+                            if (intersect_point_h is not None) and (intersect_point_v is not None):
+                                # under the situation that a single segment intersects with both split lines,
+                                # here need carefully process
+                                small_arc = [intersect_point_h, intersect_point_v]
+                                if cwt(intersect_point_h[0], intersect_point_v[0], self.zero_tolerance) != 0:  # deal with the situation that the segment just goes through center point
+                                    cell_arcs_r_t.append(small_arc)
+                                temp_arc = [intersect_point_v, [x1, y1]]
+                                temp_arc_belonging = "l_t"
+                            else:
+                                temp_arc = [intersect_point, [x1, y1]]
+                                temp_arc_belonging = "r_t"
+                        else:
+                            if (intersect_point_h is not None) and (intersect_point_v is not None):
+                                # under the situation that a single segment intersects with both split lines,
+                                # here need carefully process
+                                small_arc = [intersect_point_v, intersect_point_h]
+                                if cwt(intersect_point_h[0], intersect_point_v[0], self.zero_tolerance) != 0:  # deal with the situation that the segment just goes through center point
+                                    cell_arcs_l_b.append(small_arc)
+                                temp_arc = [intersect_point_h, [x1, y1]]
+                                temp_arc_belonging = "l_t"
+                            else:
+                                temp_arc = [intersect_point, [x1, y1]]
+                                temp_arc_belonging = "l_b"
+
+                    elif temp_arc_belonging == "r_t":
+                        if intersect_point_mark == "h":
+                            if (intersect_point_h is not None) and (intersect_point_v is not None):
+                                # under the situation that a single segment intersects with both split lines,
+                                # here need carefully process
+                                small_arc = [intersect_point_h, intersect_point_v]
+                                if cwt(intersect_point_h[0], intersect_point_v[0], self.zero_tolerance) != 0:  # deal with the situation that the segment just goes through center point
+                                    cell_arcs_r_b.append(small_arc)
+                                temp_arc = [intersect_point_v, [x1, y1]]
+                                temp_arc_belonging = "l_b"
+                            else:
+                                temp_arc = [intersect_point, [x1, y1]]
+                                temp_arc_belonging = "r_b"
+                        else:
+                            if (intersect_point_h is not None) and (intersect_point_v is not None):
+                                # under the situation that a single segment intersects with both split lines,
+                                # here need carefully process
+                                small_arc = [intersect_point_v, intersect_point_h]
+                                if cwt(intersect_point_h[0], intersect_point_v[0], self.zero_tolerance) != 0:  # deal with the situation that the segment just goes through center point
+                                    cell_arcs_l_t.append(small_arc)
+                                temp_arc = [intersect_point_h, [x1, y1]]
+                                temp_arc_belonging = "l_b"
+                            else:
+                                temp_arc = [intersect_point, [x1, y1]]
+                                temp_arc_belonging = "l_t"
+                    if cwt(temp_arc[0][0], temp_arc[1][0], self.zero_tolerance) == 0 and cwt(temp_arc[0][1], temp_arc[1][1], self.zero_tolerance) == 0:
+                        # to deal with the situation that p1 just lied on one of the split-lines
+                        temp_arc = []
+                        temp_arc_belonging = None
+                else:  # simply append the point to current arc
+                    if len(temp_arc) == 0:
+                        temp_arc.append([x0, y0])
+                    temp_arc.append([x1, y1])
+            # Allocate the last left arc to a sub-cell
+            if len(temp_arc) > 0:
+                if temp_arc_belonging == "l_b":
+                    cell_arcs_l_b.append(temp_arc)
+                elif temp_arc_belonging == "l_t":
+                    cell_arcs_l_t.append(temp_arc)
+                elif temp_arc_belonging == "r_b":
+                    cell_arcs_r_b.append(temp_arc)
+                elif temp_arc_belonging == "r_t":
+                    cell_arcs_r_t.append(temp_arc)
+        status_l_b = "maybe"
+        status_l_t = "maybe"
+        status_r_b = "maybe"
+        status_r_t = "maybe"
+        """
+        At this point, all the arcs in this cell have been split into sub-arcs and allocated to 4 sub-cells.
+        So, we can try to create the cells on left-bottom, right-bottom, left-top and right-top.
+        Before doing that, we need to determine the status of each sub-cell, especially those who are totally
+        within or out of the study area.
+        These two kind of sub-cell have the same property: they don't have arc allocated. So, If here exists
+        cell(s) who don't have arcs allocated, we need to begin the check
+        """
+        if len(cell_arcs_l_b)*len(cell_arcs_l_t)*len(cell_arcs_r_b)*len(cell_arcs_r_t) == 0:
+            extract_result = extract_segments_from_cell_with_arcs([self.min_x, self.min_y], self.length_x, self.length_y, self.arcs, self.zero_tolerance)
+            construct_rings = []
+            for arc in extract_result[0]:
+                construct_rings.append(Ring(arc))
+            # determine the totally within and out-of sub cells
+            if len(cell_arcs_l_b) == 0:
+                center = [self.min_x+length_x/2, self.min_y+length_y/2]
+                is_in = False
+                for ring in construct_rings:
+                    if ring.contains_point(center):
+                        is_in = True
+                if is_in:
+                    status_l_b = "in"
+                else:
+                    status_l_b = "out"
+            if len(cell_arcs_l_t) == 0:
+                center = [self.min_x+length_x/2, middle_y+length_y/2]
+                is_in = False
+                for ring in construct_rings:
+                    if ring.contains_point(center):
+                        is_in = True
+                if is_in:
+                    status_l_t = "in"
+                else:
+                    status_l_t = "out"
+            if len(cell_arcs_r_b) == 0:
+                center = [middle_x+length_x/2, self.min_y+length_y/2]
+                is_in = False
+                for ring in construct_rings:
+                    if ring.contains_point(center):
+                        is_in = True
+                if is_in:
+                    status_r_b = "in"
+                else:
+                    status_r_b = "out"
+            if len(cell_arcs_r_t) == 0:
+                center = [middle_x+length_x/2, middle_y+length_y/2]
+                is_in = False
+                for ring in construct_rings:
+                    if ring.contains_point(center):
+                        is_in = True
+                if is_in:
+                    status_r_t = "in"
+                else:
+                    status_r_t = "out"
+
+        cells_l_b = Cell(level, self.min_x, self.min_y, length_x, length_y, cell_arcs_l_b, status_l_b)
+        cells_l_t = Cell(level, self.min_x, middle_y, length_x, length_y, cell_arcs_l_t, status_l_t)
+        cells_r_b = Cell(level, middle_x, self.min_y, length_x, length_y, cell_arcs_r_b, status_r_b)
+        cells_r_t = Cell(level, middle_x, middle_y, length_x, length_y, cell_arcs_r_t, status_r_t)
+        self.children_l_b = cells_l_b
+        self.children_l_t = cells_l_t
+        self.children_r_b = cells_r_b
+        self.children_r_t = cells_r_t
+
+    #     ===================
+
+    def contains_point(self, point):
         """
         Decide if this cell (rectangle) contains a given point
         Parameters
@@ -844,8 +839,12 @@ class QuadTreeStructureSingleRing(object):
     """
     This class is the main manager of cells. By giving a study area. This class can construct a cell list depicting
     the study area. When given a new point. This class could rapidly determine whether the point lies in the study area
+    Attributes
+    __________
+    root_cell       : Cell
+                      The Cell structure for storing the quad-tree for this ring
     """
-    def __init__(self, ring, quad_tree_level=7):
+    def __init__(self, ring):
         """
         Constructing function
         Parameters
@@ -853,33 +852,33 @@ class QuadTreeStructureSingleRing(object):
         ring            : Ring
                           the point list of study area. But in the class of Ring in PySAL
                           Example: Ring([[0.0, 0.0], [3.0, 2.0], [5.0, 1.0]])
-        quad_tree_level : int
-                          the level for quad dividing the study area. Result tree node size equals quad_tree_level**4
-                          e.g. for the default value 7,  result tree node size = 16384
-                          The value should no larger than 10
+
         """
-        if quad_tree_level > 10:
-            raise Exception("quad_tree_level exceed the max value 10!")
         self.ring = ring
-        self.cell_list = []
-        self.column_size = 2**quad_tree_level  # also equals row_size
-        self.cell_width = ring.bounding_box.width / (self.column_size)
-        self.cell_height = ring.bounding_box.height / (self.column_size)
-        top_cell = Cell(0, 0, 0, ring.bounding_box.left, ring.bounding_box.lower, ring.bounding_box.width, ring.bounding_box.height, [ring.vertices], "maybe")
-        result_cell_list = [top_cell]
-        for i in range(0, quad_tree_level):
-            temp_cell_list = []
-            while len(result_cell_list) > 0:
-                cell = result_cell_list.pop()
-                sub_cell_list = cell.split()
-                for sub_cell in sub_cell_list:
-                    temp_cell_list.append(sub_cell)
-            result_cell_list = temp_cell_list
-        for i in range(0, 4**quad_tree_level):
-            self.cell_list.append(None)
-        for cell in result_cell_list:
-            index = cell.index_v * self.column_size + cell.index_h
-            self.cell_list[index] = cell
+        self.root_cell = Cell(0, ring.bounding_box.left, ring.bounding_box.lower, ring.bounding_box.width, ring.bounding_box.height, [ring.vertices], "maybe")
+
+        # here build the quad tree structure
+        # The criterion of stopping splitting the tree:
+        #    1. The status is "in" or "out"
+        #    2. The level >= 5 and the the number of current cell only contains one ring and all segments of the ring is no more than 4
+        #    3. The level >= 8
+        cells_for_processing = [self.root_cell]
+        total_cell_count = 1
+        for i in range(0, 8):#10
+            result_cell_list = []
+            while len(cells_for_processing) > 0:
+                cell = cells_for_processing.pop()
+                cell.split();
+                total_cell_count += 4
+                children_cells = [cell.children_l_b, cell.children_l_t, cell.children_r_b, cell.children_r_t]
+                for child in children_cells:
+                    if child.status == "out" or child.status == "in":
+                        continue
+                    if child.level >= 5: #6
+                        if len(child.rings) == 1 and child.rings[0].len <= 5:
+                            continue
+                    result_cell_list.append(child)
+            cells_for_processing = result_cell_list
 
     def contains_point(self, point):
         """
@@ -898,11 +897,23 @@ class QuadTreeStructureSingleRing(object):
         # bbox check
         if point[0] < self.min_x or point[0] > self.min_x + self.region_width or point[1] < self.min_y or point[1] > self.min_y + self.region_height:
             return False
-        row = int((point[1] - self.min_y)/self.cell_height)
-        column = int((point[0] - self.min_x)/self.cell_width)
-        index = row * self.column_size + column
-        cell = self.cell_list[index]
-        return cell.contains_point(point)
+        # find the leaf cell for checking
+        cell_to_check = self.root_cell
+        while True:
+            if cell_to_check.children_l_b is None:
+                break
+            middle_x = cell_to_check.min_x + cell_to_check.length_x/2
+            middle_y = cell_to_check.min_y + cell_to_check.length_y/2
+            if point[0] <= middle_x and point[1] <= middle_y:
+                cell_to_check = cell_to_check.children_l_b
+            elif point[0] <= middle_x and point[1] > middle_y:
+                cell_to_check = cell_to_check.children_l_t
+            elif point[0] > middle_x and point[1] <= middle_y:
+                cell_to_check = cell_to_check.children_r_b
+            else:
+                cell_to_check = cell_to_check.children_r_t
+
+        return cell_to_check.contains_point(point)
 
     @property
     def region_width(self):
@@ -993,3 +1004,5 @@ class QuadTreeStructureSingleRing(object):
 #                 return True
 #
 #         return False
+
+# Import essential libraries for following calculation

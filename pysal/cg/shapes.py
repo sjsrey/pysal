@@ -11,7 +11,6 @@ import math
 from warnings import warn
 from sphere import arcdist
 import numpy as np
-from polygonQuadTreeStructure import QuadTreeStructureSingleRing
 
 __all__ = ['Point', 'LineSegment', 'Line', 'Ray', 'Chain', 'Polygon',
            'Rectangle', 'asShape']
@@ -1345,18 +1344,12 @@ class Ring(Geometry):
             self._centroid = Point((cx, cy))
         return self._centroid
 
-    def build_quad_tree_structure(self, quad_tree_level=7):
+    def build_quad_tree_structure(self):
         """
         Build the quad tree structure for this ring. Once the structure is built, speed for testing if a point is inside the ring will be inscreased significantly.
-        :param quad_tree_level: int
-                                  the level for quad dividing the study area. Result tree node size equals quad_tree_level**4
-                                  e.g. for the default value 7,  result tree node size = 16384
-                                  The value should no larger than 10
         :return:
         """
-        if quad_tree_level > 10:
-            raise Exception("quad_tree_level exceed the max value 10!")
-        self._quad_tree_structure = QuadTreeStructureSingleRing(self, quad_tree_level=quad_tree_level)
+        self._quad_tree_structure = QuadTreeStructureSingleRing(self)
 
     def contains_point(self, point):
         """
@@ -1741,22 +1734,15 @@ class Polygon(Geometry):
         cy = sum([pt[1] * area for pt, area in zip(CP + CH, A)]) / sum(A)
         return cx, cy
 
-    def build_quad_tree_structure(self, quad_tree_level=7):
+    def build_quad_tree_structure(self):
         """
         Build the quad tree structure for this polygon. Once the structure is built, speed for testing if a point is inside the ring will be inscreased significantly.
-        :param quad_tree_level: int
-                                  the level for quad dividing the study area. Result tree node size equals quad_tree_level**4
-                                  e.g. for the default value 7,  result tree node size = 16384
-                                  The value should no larger than 10
         :return:
         """
-        if quad_tree_level > 10:
-            raise Exception("quad_tree_level exceed the max value 10!")
-
         for ring in self._part_rings:
-            ring.build_quad_tree_structure(quad_tree_level=quad_tree_level)
+            ring.build_quad_tree_structure()
         for ring in self._hole_rings:
-            ring.build_quad_tree_structure(quad_tree_level=quad_tree_level)
+            ring.build_quad_tree_structure()
         self.is_quad_tree_structure_built = True
 
     def contains_point(self, point):
@@ -2011,5 +1997,5 @@ class Rectangle(Geometry):
 _geoJSON_type_to_Pysal_type = {'point': Point, 'linestring': Chain, 'multilinestring': Chain,
                                'polygon': Polygon, 'multipolygon': Polygon}
 import standalone  # moving this to top breaks unit tests !
-
+from polygonQuadTreeStructure import QuadTreeStructureSingleRing
 

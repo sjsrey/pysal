@@ -786,10 +786,14 @@ class Tau_Local_Neighbor_DecomFromSpatialTau:
                     yr[i] = y[i]
                     yr[rids] = y[pids]
                     tau_ln_sim[i, j] = self._calc(xr, yr, w, i)
+
                 larger = (tau_ln_sim[i] >= obs_i).sum()
-                if (permutations - larger) < larger:
-                    larger = permutations - larger
-                tau_ln_pvalues[i] = (larger+1.)/(1+permutations)
+                smaller = (tau_ln_sim[i] <= obs_i).sum()
+                tau_ln_pvalues[i] = (np.min([larger,smaller])+1.)/(
+                    1+permutations)
+                # if (permutations - larger) < larger:
+                #     larger = permutations - larger
+                # tau_ln_pvalues[i] = (larger+1.)/(1+permutations)
             self.tau_ln_sim = tau_ln_sim
             self.tau_ln_pvalues = tau_ln_pvalues
 
@@ -969,9 +973,12 @@ class Tau_Local_Neighborhood:
                     tau_lnhood_sim[i,j] = sh_i.sum()*1./(n_i*(n_i-1))
 
                 larger = (tau_lnhood_sim[i] >= obs_i).sum()
-                if (permutations - larger) < larger:
-                    larger = permutations - larger
-                tau_lnhood_pvalues[i] = (larger+1.)/(1+permutations)
+                smaller = (tau_lnhood_sim[i] <= obs_i).sum()
+                tau_lnhood_pvalues[i] = (np.min([larger, smaller]) +
+                                         1.) / (1 + permutations)
+                # if (permutations - larger) < larger:
+                #     larger = permutations - larger
+                # tau_ln_pvalues[i] = (larger+1.)/(1+permutations)
 
             self.tau_lnhood_sim = tau_lnhood_sim
             self.tau_lnhood_pvalues = tau_lnhood_pvalues
@@ -1049,20 +1056,20 @@ class Tau_Regional:
            [ 1.        ,  0.75      ,  0.83333333,  0.8       ,  1.        ,
              0.8       ,  0.33333333]])
     >>> res.tau_reg_pvalues
-    array([[ 0.21878122,  0.06693307,  0.24975025,  0.34065934,  0.29370629,
-             0.33266733,  0.2007992 ],
-           [ 0.06693307,  0.12987013,  0.24475524,  0.06193806,  0.04795205,
-             0.11888112,  0.32667333],
-           [ 0.24975025,  0.24475524,  0.35564436,  0.0959041 ,  0.05694306,
-             0.25874126,  0.12387612],
-           [ 0.34065934,  0.06193806,  0.0959041 ,  0.05794206,  0.08791209,
-             0.03896104,  0.21778222],
-           [ 0.29370629,  0.04795205,  0.05694306,  0.08791209,  0.36363636,
+    array([[ 0.78221778,  0.22677323,  0.46353646,  0.63836164,  0.29370629,
+             0.62637363,  0.2007992 ],
+           [ 0.22677323,  0.35264735,  0.39060939,  0.13986014,  0.04795205,
+             0.25174825,  0.32667333],
+           [ 0.46353646,  0.39060939,  0.58641359,  0.1978022 ,  0.10789211,
+             0.42357642,  0.12387612],
+           [ 0.63836164,  0.13986014,  0.1978022 ,  0.14085914,  0.18381618,
+             0.08891109,  0.21778222],
+           [ 0.29370629,  0.04795205,  0.10789211,  0.18381618,  0.58341658,
              0.24975025,  0.004995  ],
-           [ 0.33266733,  0.11888112,  0.25874126,  0.03896104,  0.24975025,
+           [ 0.62637363,  0.25174825,  0.42357642,  0.08891109,  0.24975025,
              0.37962038,  0.22677323],
            [ 0.2007992 ,  0.32667333,  0.12387612,  0.21778222,  0.004995  ,
-             0.22677323,  0.12287712]])
+             0.22677323,  0.32167832]])
 
     """
 
@@ -1095,14 +1102,16 @@ class Tau_Regional:
         if permutations > 0:
             tau_reg_sim = np.zeros((permutations, k, k))
             larger = np.zeros((k,k))
+            smaller = np.zeros((k,k))
             rids = np.arange(len(x))
             for i in xrange(permutations):
                 np.random.shuffle(rids)
                 res = Tau_Local(x[rids], y[rids])
                 tau_reg_sim[i] = self._calc(W, WH, P, res.S)
                 larger += np.greater_equal(tau_reg_sim[i], self.tau_reg)
-            m = np.less(permutations - larger, larger)
-            pvalues = (1 + m * (permutations-larger) + (1-m) * larger) / (1. + permutations)
+                smaller += np.less_equal(tau_reg_sim[i], self.tau_reg)
+            m = np.less(smaller, larger)
+            pvalues = (1 + m * smaller + (1-m) * larger) / (1. + permutations)
             self.tau_reg_sim = tau_reg_sim
             self.tau_reg_pvalues = pvalues
 

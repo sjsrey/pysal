@@ -560,7 +560,7 @@ class Tau_Local_Neighbor:
     >>> r = y / y.mean(axis=0)
     >>> regime = np.array(f.by_col['esquivel99'])
     >>> w = ps.weights.block_weights(regime)
-    >>> res = Tau_Local_Neighbor(r[:,0],r[:,1],w,permutations=999)
+    >>> res = Tau_Local_Neighbor(r[:,0],r[:,1],w,permutations=1000)
     >>> res.tau_ln
     array([-0.2       ,  1.        ,  1.        ,  1.        ,  0.33333333,
             0.6       ,  0.6       , -0.5       ,  1.        ,  1.        ,
@@ -570,10 +570,38 @@ class Tau_Local_Neighbor:
             0.2       ,  1.        ,  0.6       ,  0.33333333,  0.5       ,
             0.5       , -0.2       ])
     >>> res.tau_ln_pvalues
-    array([ 0.196,  0.149,  0.333,  0.433,  0.001,  0.122,  0.179,  0.003,
-            0.001,  0.255,  0.011,  0.001,  0.058,  0.079,  0.093,  0.344,
-            0.447,  0.009,  0.102,  0.001,  0.008,  0.055,  0.133,  0.033,
-            0.015,  0.097,  0.142,  0.246,  0.024,  0.337,  0.154,  0.001])
+    array([[ 0.1958042 ],
+           [ 0.14885115],
+           [ 0.33266733],
+           [ 0.43056943],
+           [ 0.000999  ],
+           [ 0.12487512],
+           [ 0.17882118],
+           [ 0.002997  ],
+           [ 0.000999  ],
+           [ 0.25574426],
+           [ 0.01098901],
+           [ 0.000999  ],
+           [ 0.05894106],
+           [ 0.07692308],
+           [ 0.0959041 ],
+           [ 0.34465534],
+           [ 0.44955045],
+           [ 0.00899101],
+           [ 0.1008991 ],
+           [ 0.000999  ],
+           [ 0.00799201],
+           [ 0.05494505],
+           [ 0.13386613],
+           [ 0.03596404],
+           [ 0.01498501],
+           [ 0.0979021 ],
+           [ 0.14485514],
+           [ 0.24275724],
+           [ 0.02297702],
+           [ 0.33366633],
+           [ 0.15584416],
+           [ 0.000999  ]])
 
 
     """
@@ -597,7 +625,7 @@ class Tau_Local_Neighbor:
 
         if permutations > 0:
             tau_ln_sim = np.zeros((self.n, permutations))
-            tau_ln_pvalues = np.zeros(self.n)
+            tau_ln_pvalues = np.zeros((self.n, 1))
             for i in xrange(self.n):
                 yr = np.zeros_like(y)
                 xr = np.zeros_like(y)
@@ -642,7 +670,12 @@ class Tau_Local_Neighbor_DecomFromSpatialTau:
     permutations   : int
                      number of random spatial permutations for
                      computationally based inference.
-
+    scheme         : string
+                     indicate the permutation scheme. If scheme =
+                     "current", use the conditional permutation
+                     scheme in LIMA paper; if scheme = "adjust",
+                     use the adjusted conditional permutation scheme
+                     (double permute the ranks);
     Attributes
     ----------
     n              : int
@@ -683,7 +716,7 @@ class Tau_Local_Neighbor_DecomFromSpatialTau:
     --------
     >>> import pysal as ps
     >>> import numpy as np
-    >>> np.random.seed(4)
+    >>> np.random.seed(10)
     >>> f = ps.open(ps.examples.get_path("mexico.csv"))
     >>> vnames = ["pcgdp%d"%dec for dec in range(1940, 2010, 10)]
     >>> y = np.transpose(np.array([f.by_col[v] for v in vnames]))
@@ -707,23 +740,23 @@ class Tau_Local_Neighbor_DecomFromSpatialTau:
             0.02380952,  0.03968254,  0.03174603,  0.03968254,  0.03174603,
             0.03968254,  0.03174603,  0.03968254,  0.02380952,  0.03174603,
             0.03174603,  0.03968254])
-    >>> (res.tau_ln * res.tau_ln_weights).sum() #global spatial tau
-    0.39682539682539675
     >>> res.tau_ln_pvalues
-    array([ 0.532,  0.852,  0.656,  0.568,  0.118,  0.528,  0.624,  0.06 ,
-            1.   ,  0.25 ,  0.123,  0.09 ,  0.444,  0.446,  0.904,  0.635,
-            0.428,  0.105,  0.526,  0.039,  0.125,  0.29 ,  0.885,  0.243,
-            0.114,  0.358,  0.879,  0.687,  0.373,  0.67 ,  0.549,  0.051])
+    array([ 0.541,  0.852,  0.668,  0.568,  0.11 ,  0.539,  0.609,  0.058,
+            1.   ,  0.255,  0.125,  0.087,  0.393,  0.433,  0.908,  0.657,
+            0.447,  0.128,  0.531,  0.033,  0.12 ,  0.271,  0.868,  0.234,
+            0.124,  0.387,  0.859,  0.697,  0.349,  0.664,  0.596,  0.041])
     >>> res.sign
     array([-1,  1,  1,  1,  1,  1,  1, -1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
             1,  1, -1, -1, -1,  1,  1,  1,  1,  1,  1,  1,  1,  1, -1])
+    >>> (res.tau_ln * res.tau_ln_weights).sum() #global spatial tau
+    0.39682539682539675
     >>> res1 = SpatialTau(r[:,0],r[:,1],w,permutations=999)
     >>> res1.tau_spatial
     0.3968253968253968
 
     """
 
-    def __init__(self, x, y, w, permutations=0):
+    def __init__(self, x, y, w, permutations=0, scheme = "current"):
 
         x = np.asarray(x)
         y = np.asarray(y)
@@ -739,20 +772,46 @@ class Tau_Local_Neighbor_DecomFromSpatialTau:
         if permutations > 0:
             tau_ln_sim = np.zeros((self.n, permutations))
             tau_ln_pvalues = np.zeros(self.n)
-            for i in xrange(self.n):
-                yr = np.zeros_like(y)
-                xr = np.zeros_like(y)
-                rids = range(self.n)
-                rids.remove(i)
-                obs_i = self.tau_ln[i]  # observed value i LIMA statistic
 
-                for j in xrange(permutations):
-                    pids = np.random.permutation(rids)
-                    xr[i] = x[i]
-                    xr[rids] = x[pids]
-                    yr[i] = y[i]
-                    yr[rids] = y[pids]
-                    tau_ln_sim[i, j] = self._calc(xr, yr, w, i)
+
+            for i in xrange(self.n):
+
+                obs_i = self.tau_ln[i]  # observed value i LIMA statistic
+                if scheme == "bootstrap_focal":
+                    neighbor_i = w.neighbors[i]
+                    rids = np.arange(self.n)
+                    rids = np.delete(rids, neighbor_i)
+                    xr = np.copy(x)
+                    yr = np.copy(y)
+                    for j in xrange(permutations):
+                        xr[i] = x[np.random.choice(rids)]
+                        yr[i] = y[np.random.choice(rids)]
+                        tau_ln_sim[i,j] = self._calc(xr, yr, w, i)
+                elif scheme == "current":
+                    yr = np.zeros_like(y)
+                    xr = np.zeros_like(y)
+                    rids = np.arange(self.n)
+                    rids = np.delete(rids, i)
+                    for j in xrange(permutations):
+                        pids = np.random.permutation(rids)
+                        xr[i] = x[i]
+                        xr[rids] = x[pids]
+                        yr[i] = y[i]
+                        yr[rids] = y[pids]
+                        tau_ln_sim[i, j] = self._calc(xr, yr, w, i)
+                elif scheme == "adjust":
+                    yr = np.zeros_like(y)
+                    xr = np.zeros_like(y)
+                    rids = np.arange(self.n)
+                    rids = np.delete(rids, i)
+                    for j in xrange(permutations):
+                        pids = np.random.permutation(rids)
+                        xr[i] = x[i]
+                        xr[rids] = x[pids]
+                        yr[i] = y[i]
+                        pids = np.random.permutation(rids)
+                        yr[rids] = y[pids]
+                        tau_ln_sim[i, j] = self._calc(xr, yr, w, i)
 
                 larger = (tau_ln_sim[i] >= obs_i).sum()
                 smaller = (tau_ln_sim[i] <= obs_i).sum()
@@ -879,7 +938,7 @@ class Tau_Local_Neighborhood:
 
     """
 
-    def __init__(self, x, y, w, permutations=0):
+    def __init__(self, x, y, w, permutations=0, scheme = "current"):
 
         x = np.asarray(x)
         y = np.asarray(y)
@@ -916,7 +975,12 @@ class Tau_Local_Neighborhood:
                     neighbors_i = [i]
                     neighbors_i.extend(rids[:len(w.neighbors[i])])
                     n_i = len(neighbors_i)
-                    sh_i = self.S[neighbors_i, :][:, neighbors_i]
+                    neighbors_i_second = neighbors_i
+                    if scheme == "adjust":
+                        np.random.shuffle(rids)
+                        neighbors_i_second = [i]
+                        neighbors_i_second.extend(rids[:len(w.neighbors[i])])
+                    sh_i = self.S[neighbors_i, :][:, neighbors_i_second]
                     tau_lnhood_sim[i, j] = sh_i.sum()*1./(n_i*(n_i-1))
 
                 larger = (tau_lnhood_sim[i] >= obs_i).sum()

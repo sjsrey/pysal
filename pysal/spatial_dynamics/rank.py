@@ -675,7 +675,17 @@ class Tau_Local_Neighbor_DecomFromSpatialTau:
                      "current", use the conditional permutation
                      scheme in LIMA paper; if scheme = "adjust",
                      use the adjusted conditional permutation scheme
-                     (double permute the ranks);
+                     (double permute the ranks).
+                     Default is "current".
+    pvalue_routine : string
+                     indicate the way to calculate pseudo pvalues.
+                     If pvalue_routine = "routine1", the equality only
+                     exists in the upper tail which might lead to
+                     smaller pvalues;
+                     if pvalue_routine = "routine2", the equality exist
+                     in both the lower and upper tails which might lead to
+                     larger pvalues.
+                     Default is "routine2".
     Attributes
     ----------
     n              : int
@@ -756,7 +766,8 @@ class Tau_Local_Neighbor_DecomFromSpatialTau:
 
     """
 
-    def __init__(self, x, y, w, permutations=0, scheme = "current"):
+    def __init__(self, x, y, w, permutations=0, scheme = "current",
+                 pvalue_routine = "routine2"):
 
         x = np.asarray(x)
         y = np.asarray(y)
@@ -815,6 +826,8 @@ class Tau_Local_Neighbor_DecomFromSpatialTau:
 
                 larger = (tau_ln_sim[i] >= obs_i).sum()
                 smaller = (tau_ln_sim[i] <= obs_i).sum()
+                if pvalue_routine == "routine1":
+                    smaller = (tau_ln_sim[i] < obs_i).sum()
                 tau_ln_pvalues[i] = (np.min([larger, smaller])+1.)/(
                     1+permutations)
 
@@ -871,6 +884,22 @@ class Tau_Local_Neighborhood:
     permutations       : int
                          number of random spatial permutations for
                          computationally based inference.
+    scheme             : string
+                         indicate the permutation scheme. If scheme =
+                         "current", use the conditional permutation
+                         scheme in LIMA paper; if scheme = "adjust",
+                         use the adjusted conditional permutation scheme
+                         (double permute the ranks).
+                         Default is "current".
+    pvalue_routine     : string
+                         indicate the way to calculate pseudo pvalues.
+                         If pvalue_routine = "routine1", the equality
+                         only exists in the upper tail which might
+                         lead to  smaller pvalues;
+                         if pvalue_routine = "routine2", the equality
+                         exist in both the lower and upper tails which
+                         might lead to larger pvalues.
+                         Default is "routine2".
 
     Attributes
     ----------
@@ -938,7 +967,8 @@ class Tau_Local_Neighborhood:
 
     """
 
-    def __init__(self, x, y, w, permutations=0, scheme = "current"):
+    def __init__(self, x, y, w, permutations=0, scheme = "current",
+                 pvalue_routine = "routine2"):
 
         x = np.asarray(x)
         y = np.asarray(y)
@@ -985,6 +1015,8 @@ class Tau_Local_Neighborhood:
 
                 larger = (tau_lnhood_sim[i] >= obs_i).sum()
                 smaller = (tau_lnhood_sim[i] <= obs_i).sum()
+                if pvalue_routine == "routine1":
+                    smaller = (tau_ln_sim[i] < obs_i).sum()
                 tau_lnhood_pvalues[i] = (np.min([larger, smaller]) +
                                          1.) / (1 + permutations)
 
@@ -1007,7 +1039,15 @@ class Tau_Regional:
     permutations    : int
                       number of random spatial permutations for
                       computationally based inference.
-
+    pvalue_routine  : string
+                      indicate the way to calculate pseudo pvalues.
+                      If pvalue_routine = "routine1", the equality only
+                      exists in the upper tail which might lead to
+                      smaller pvalues;
+                      if pvalue_routine = "routine2", the equality
+                      exist in both the lower and upper tails which
+                      might lead to larger pvalues.
+                      Default is "routine2".
     Attributes
     ----------
     n               : int
@@ -1081,7 +1121,8 @@ class Tau_Regional:
 
     """
 
-    def __init__(self, x, y, regime, permutations=0):
+    def __init__(self, x, y, regime, permutations=0,
+                 pvalue_routine="routine2"):
 
         x = np.asarray(x)
         y = np.asarray(y)
@@ -1115,7 +1156,10 @@ class Tau_Regional:
                 res = Tau_Local(x[rids], y[rids])
                 tau_reg_sim[i] = self._calc(W, WH, P, res.S)
                 larger += np.greater_equal(tau_reg_sim[i], self.tau_reg)
-                smaller += np.less_equal(tau_reg_sim[i], self.tau_reg)
+                if pvalue_routine == "routine2":
+                    smaller += np.less_equal(tau_reg_sim[i], self.tau_reg)
+                elif pvalue_routine == "routine1":
+                    smaller += np.less(tau_reg_sim[i], self.tau_reg)
 
             m = np.less(smaller, larger)
             pvalues = (1 + m * smaller + (1-m) * larger) / (1. + permutations)

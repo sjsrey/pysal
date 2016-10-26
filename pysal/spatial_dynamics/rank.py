@@ -6,18 +6,22 @@ To do:
 * the direction of rank change? (decompose the disconcordance)
 
 """
+from scipy.stats.mstats import rankdata
+from scipy.special import erfc
+import pysal
+import numpy as np
+import scipy as sp
+
 __author__ = "Sergio J. Rey <srey@asu.edu>, Wei Kang <wkang12@asu.edu>"
 
 __all__ = ['SpatialTau', 'Tau', 'Theta', 'Tau_Local',
            'Tau_Local_Neighborhood', 'Tau_Regional',
            'Tau_Local_Neighbor_DecomFromSpatialTau']
 
-
-from scipy.stats.mstats import rankdata
-from scipy.special import erfc
-import pysal
-import numpy as np
-import scipy as sp
+try:
+    xrange
+except NameError:
+    xrange = range
 
 
 class Theta:
@@ -733,7 +737,8 @@ class Tau_Local_Neighbor_DecomFromSpatialTau:
     >>> r = y / y.mean(axis=0)
     >>> regime = np.array(f.by_col['esquivel99'])
     >>> w = ps.weights.block_weights(regime)
-    >>> res = Tau_Local_Neighbor_DecomFromSpatialTau(r[:,0],r[:,1],w,permutations=999)
+    >>> res = Tau_Local_Neighbor_DecomFromSpatialTau(r[:,0], r[:,1], w, \
+                                                     permutations=999)
     >>> res.tau_ln
     array([-0.2       ,  1.        ,  1.        ,  1.        ,  0.33333333,
             0.6       ,  0.6       , -0.5       ,  1.        ,  1.        ,
@@ -766,8 +771,8 @@ class Tau_Local_Neighbor_DecomFromSpatialTau:
 
     """
 
-    def __init__(self, x, y, w, permutations=0, scheme = "current",
-                 pvalue_routine = "routine2"):
+    def __init__(self, x, y, w, permutations=0, scheme="current",
+                 pvalue_routine="routine2"):
 
         x = np.asarray(x)
         y = np.asarray(y)
@@ -783,10 +788,7 @@ class Tau_Local_Neighbor_DecomFromSpatialTau:
         if permutations > 0:
             tau_ln_sim = np.zeros((self.n, permutations))
             tau_ln_pvalues = np.zeros(self.n)
-
-
             for i in xrange(self.n):
-
                 obs_i = self.tau_ln[i]  # observed value i LIMA statistic
                 if scheme == "bootstrap_focal":
                     neighbor_i = w.neighbors[i]
@@ -797,7 +799,7 @@ class Tau_Local_Neighbor_DecomFromSpatialTau:
                     for j in xrange(permutations):
                         xr[i] = x[np.random.choice(rids)]
                         yr[i] = y[np.random.choice(rids)]
-                        tau_ln_sim[i,j] = self._calc(xr, yr, w, i)
+                        tau_ln_sim[i, j] = self._calc(xr, yr, w, i)
                 elif scheme == "current":
                     yr = np.zeros_like(y)
                     xr = np.zeros_like(y)
@@ -967,8 +969,8 @@ class Tau_Local_Neighborhood:
 
     """
 
-    def __init__(self, x, y, w, permutations=0, scheme = "current",
-                 pvalue_routine = "routine2"):
+    def __init__(self, x, y, w, permutations=0, scheme="current",
+                 pvalue_routine="routine2"):
 
         x = np.asarray(x)
         y = np.asarray(y)
@@ -1016,7 +1018,7 @@ class Tau_Local_Neighborhood:
                 larger = (tau_lnhood_sim[i] >= obs_i).sum()
                 smaller = (tau_lnhood_sim[i] <= obs_i).sum()
                 if pvalue_routine == "routine1":
-                    smaller = (tau_ln_sim[i] < obs_i).sum()
+                    smaller = (tau_lnhood_sim[i] < obs_i).sum()
                 tau_lnhood_pvalues[i] = (np.min([larger, smaller]) +
                                          1.) / (1 + permutations)
 

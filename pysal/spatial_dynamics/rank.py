@@ -836,7 +836,7 @@ class Tau_Local_Neighbor_DecomFromSpatialTau:
             self.tau_ln_sim = tau_ln_sim
             self.tau_ln_pvalues = tau_ln_pvalues
 
-    def _calc_r(self, xi, yi, xj, yj, w):
+    def _calc_r(self, xi, yi, xj, yj):
         dx = xi - xj
         dy = yi - yj
         dxdy = dx * dy
@@ -850,20 +850,27 @@ class Tau_Local_Neighbor_DecomFromSpatialTau:
 
     def _calc(self, x, y, w, i=None):
         if i is not None:
-            iS_local = 0
-            for j in w.neighbors[i]:
-                iS_local += self._calc_r(x[i], y[i], x[j], y[j], w)
-            tau_ln = iS_local * 1.0 / w.cardinalities[i]
+            if w.cardinalities[i] == 0:
+                tau_ln = 0
+            else:
+                iS_local = 0
+                for j in w.neighbors[i]:
+                    iS_local += self._calc_r(x[i], y[i], x[j], y[j])
+                tau_ln = iS_local * 1.0 / w.cardinalities[i]
             return tau_ln
         else:
             tau_ln = np.zeros(self.n)
             tau_ln_weights = np.zeros(self.n)
             for i in w.id_order:
-                iS_local = 0
-                for j in w.neighbors[i]:
-                    iS_local += self._calc_r(x[i], y[i], x[j], y[j], w)
-                tau_ln[i] = iS_local * 1.0 / w.cardinalities[i]
-                tau_ln_weights[i] = w.cardinalities[i]*1.0/w.s0
+                if w.cardinalities[i] == 0:
+                    tau_ln[i] = 0
+                    tau_ln_weights[i] = 0
+                else:
+                    iS_local = 0
+                    for j in w.neighbors[i]:
+                        iS_local += self._calc_r(x[i], y[i], x[j], y[j])
+                    tau_ln[i] = iS_local * 1.0 / w.cardinalities[i]
+                    tau_ln_weights[i] = w.cardinalities[i]*1.0/w.s0
             return tau_ln, tau_ln_weights
 
 

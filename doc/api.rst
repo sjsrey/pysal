@@ -1,7 +1,7 @@
 .. _api_ref:
-=============
-API Reference
-=============
+ =============
+ API Reference
+ =============
 
 This is the class and function reference of pysal.
 
@@ -569,8 +569,8 @@ Giddy
    splot.giddy.dynamic_lisa_heatmap
    splot.giddy.dynamic_lisa_rose
    splot.giddy.dynamic_lisa_vectors
-   splot.giddy.lisa_composite
-   splot.giddy.lisa_composite_explore
+   splot.giddy.dynamic_lisa_composite
+   splot.giddy.dynamic_lisa_composite_explore
 
 
 ESDA

@@ -211,6 +211,12 @@ replace(
 )
 replace("pysal/explore/segregation/.", "w_pysal\.lib", "w_libpysal")
 
+# tobler
+replace("pysal/model/tobler/.", "import tobler", "import pysal\.model import tobler")
+replace("pysal/model/tobler/.", "from tobler", "from pysal\.model\.tobler")
+
+
+
 #####################
 # Rewrite notebooks #
 #####################

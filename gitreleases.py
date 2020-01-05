@@ -90,7 +90,7 @@ def clone_releases():
     """
     Clone the releases in tmp
     """
-    with open('tags.json', 'r') as file_name:
+    with open('newtags.json', 'r') as file_name:
         sources = json.load(file_name)
     os.system('rm -rf tmp')
     os.system('mkdir tmp')
@@ -125,6 +125,10 @@ def get_tags():
     # check if there have been updated releases and alert if so
     releases = get_release_info()
     new_tags = dict([(key,releases[key][0]) for key in releases])
+    with open('newtags.json', 'w') as fp:
+        json.dump(new_tags, fp)
+    
+
     new_releases = []
     for package in new_tags:
         new_tag = new_tags[package]
@@ -136,7 +140,7 @@ def get_tags():
         for release in new_releases:
             package, new_tag, old_tag = release
             print(package, new_tag, old_tag)
-        print("\n\n Consider updating the file subtags.")
+        print("\n\n Be sure to update the file subtags in the next release.")
 
     return tags
 

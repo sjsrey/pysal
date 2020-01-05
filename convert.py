@@ -195,6 +195,10 @@ replace("pysal/explore/spaghetti/.", "from spaghetti", "from pysal\.explore\.spa
 replace(
     "pysal/explore/spaghetti/.", "import spaghetti", "import pysal\.explore\.spaghetti"
 )
+replace("pysal/explore/spaghetti/tests/test_network_api.py",
+        "import pysal\.explore\.spaghetti",
+        "from  pysal\.explore import spaghetti")
+
 replace(
     "pysal/explore/segregation/.",
     "from segregation",

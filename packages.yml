@@ -11,8 +11,9 @@ viz:
   mapclassify
   splot
 model:
-  spreg
+  mgwr
   spglm
   spint
-  mgwr
+  spreg
   spvcm
+  tobler

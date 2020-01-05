@@ -1,6 +1,13 @@
 # developer Makefile for repeated tasks
-# 
+#
 .PHONY: clean
+
+nb:
+	docker run -it --rm  -p 8888:8888 -v ${PWD}:/home/jovyan sjsrey/pysaldev:2.3 sh -c "/home/jovyan/develop.sh && /bin/bash"
+
+term:
+	docker run -it --rm   -v ${PWD}:/home/jovyan sjsrey/pysaldev:2.3 sh -c "/home/jovyan/develop.sh && /bin/bash"
+
 
 download:
 	python gitreleases.py

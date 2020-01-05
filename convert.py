@@ -140,6 +140,29 @@ replace(
     "from splot\.pysal\.explore\.esda",
     "from pysal\.viz\.splot\.pysal\.explore\.esda",
 )
+
+
+# for giddy and splot mapclassify breakage
+
+old_new = {"Box_Plot": "BoxPlot",
+           "Equal_Interval": "EqualInterval",
+           "Fisher_Jenks": "FisherJenks",
+           "Jenks_Caspall": "JenksCaspall",
+           "JenksCaspall_Forced": "JenksCaspallForced",
+           "Max_P_Classifier": "MaxP",
+           "Maximum_Breaks": "MaximumBreaks",
+           "Natural_Breaks": "NaturalBreaks",
+           "Std_Mean": "StdMean",
+           "User_Defined": "UserDefined",
+           "HeadTail_Breaks": "HeadTailBreaks"
+}
+
+for old, new in old_new.items():
+    replace("pysal/viz/splot", old, new)
+    replace("pysal/explore/giddy", old, new)
+
+
+
 replace("pysal/viz/splot/.", "import pysal as ps", "import pysal")
 replace("pysal/viz/splot/.", "ps\.spreg", "pysal\.model\.spreg")
 replace(

@@ -293,6 +293,22 @@ path_list = ['pysal', 'explore', 'segregation', 'tests', 'test_network.py']
 test_name = 'test_calc_access'
 skip_test(path_list, test_name)
 
+path_list = ['pysal', 'model', 'tobler', 'tests', 'test_download.py']
+test_name = 'test_raster_download'
+skip_test(path_list, test_name)
+
+path_list = ['pysal', 'model', 'tobler', 'tests', 'test_interpolators.py']
+test_names = ['test_area_interpolate', 'test_masked_area_interpolate',
+              'test_glm_pixel_adjusted', 'test_glm_poisson']
+for test_name in test_names:
+    skip_test(path_list, test_name)
+
+
+path_list = ['pysal', 'model', 'spvcm', 'svc', 'tests', 'test_svc.py']
+test_name = 'test_draw'
+skip_test(path_list, test_name)
+
+
 
 #########################
 # automate version bump #

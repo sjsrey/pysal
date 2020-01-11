@@ -24,23 +24,20 @@ com = "mkdir notebooks"
 os.system(com)
 
 for package in packages:
-    com = "rm -fr pysal/{package}".format(package=package)
+    com = f"rm -fr pysal/{package}"
     os.system(com)
-    com = "mkdir pysal/{package}".format(package=package)
+    com = f"mkdir pysal/{package}"
     os.system(com)
-    com = "mkdir notebooks/{package}".format(package=package)
+    com = f"mkdir notebooks/{package}"
     os.system(com)
 
     subpackages = packages[package].split()
     for subpackage in subpackages:
         if subpackage == "libpysal":
-            com = "cp -rf tmp/{subpackage}/{subpackage}/*  pysal/{package}/".format(
-                package=package, subpackage=subpackage
-            )
+            com = f"cp -rf tmp/{subpackage}/{subpackage}/*  pysal/{package}/"
         else:
-            com = "cp -rf tmp/{subpackage}/{subpackage} pysal/{package}/{subpackage}".format(
-                package=package, subpackage=subpackage
-            )
+            com = f"cp -rf tmp/{subpackage}/{subpackage} "\
+                  f"pysal/{package}/{subpackage}"
         if subpackage in tagged:
             print(com)
             os.system(com)
@@ -50,13 +47,10 @@ for package in packages:
         #############
         # notebooks #
         #############
-        com = "mkdir notebooks/{package}/{subpackage}".format(
-            package=package, subpackage=subpackage
-        )
+        com = f"mkdir notebooks/{package}/{subpackage}"
         os.system(com)
-        com = "cp -rf tmp/{subpackage}/notebooks/* notebooks/{package}/{subpackage}/".format(
-            package=package, subpackage=subpackage
-        )
+        com = f"cp -rf tmp/{subpackage}/notebooks/* "\
+              f"notebooks/{package}/{subpackage}/"
         os.system(com)
 
 ###################
@@ -66,9 +60,9 @@ cache = {}
 
 
 def replace(targets, string, replacement, update_cache=True):
-    c = "find {} -name '*.py' -print | xargs sed -i -- 's/{}/{}/g'".format(
-        targets, string, replacement
-    )
+
+    c = f"find {targets} -name '*.py' -print | xargs sed -i -- "\
+        f"'s/{string}/{replacement}/g'"
     if update_cache:
         if targets in cache:
             cache[targets].append([string, replacement])
@@ -212,8 +206,10 @@ replace(
 replace("pysal/explore/segregation/.", "w_pysal\.lib", "w_libpysal")
 
 # tobler
-replace("pysal/model/tobler/.", "import tobler", "import pysal\.model import tobler")
-replace("pysal/model/tobler/.", "from tobler", "from pysal\.model\.tobler")
+replace("pysal/model/tobler/.", "import tobler",
+        "import pysal\.model import tobler")
+replace("pysal/model/tobler/.", "from tobler",
+        "from pysal\.model\.tobler")
 
 
 
@@ -229,15 +225,11 @@ with open("packages.yml") as package_file:
 mappings = []
 for package in ["explore", "viz", "model"]:
     for subpackage in packages[package].split():
-        left = "from {}".format(subpackage)
-        right = "from pysal\.{package}\.{subpackage}".format(
-            package=package, subpackage=subpackage
-        )
+        left = f"from {subpackage}"
+        right = f"from pysal\.{package}\.{subpackage}"
         mappings.append([left, right])
-        left = "import {}".format(subpackage)
-        right = "from pysal\.{package} import {subpackage}".format(
-            package=package, subpackage=subpackage
-        )
+        left = f"import {subpackage}"
+        right = f"from pysal\.{package} import {subpackage}"
         mappings.append([left, right])
         left = "libpysal"
         right = "pysal\.lib"
@@ -245,34 +237,32 @@ for package in ["explore", "viz", "model"]:
 
 
 def replace_nb(targets, string, replacement, update_cache=True):
-    c = "find {} -type f -print0 | xargs -0 sed -i -- 's/{}/{}/g'".format(
-        targets, string, replacement
-    )
-
+    c = f"find {targets} -type f -print0 | xargs -0 sed -i -- " \
+        f"'s/{string}/{replacement}/g'"
     os.system(c)
 
 
 for package in ["explore", "viz", "model"]:
     for subpackage in packages[package].split():
-        targets = "notebooks/{package}/{subpackage}/".format(
-            package=package, subpackage=subpackage
-        )
+        targets = f'notebooks/{package}/{subpackage}'
         for mapping in mappings:
             left, right = mapping
             replace_nb(targets, left, right)
 
+# should automate version bump
+# or take an arg
 
 init_lines = ["__version__='2.1.0rc'"]
 for package in packages:
-    os.system("touch pysal/{package}/__init__.py".format(package=package))
+    os.system(f'touch pysal/{package}/__init__.py')
     subpackages = packages[package].split()
     if package == "lib":
         pass
     else:
-        subpackage_lines = ["from . import {}".format(s) for s in subpackages]
-        with open("pysal/{package}/__init__.py".format(package=package), "w") as f:
+        subpackage_lines = [f'from . import {s}' for s in subpackages]
+        with open(f'pysal/{package}/__init__.py', 'w') as f:
             f.write("\n".join(subpackage_lines))
-    init_lines.append("from . import {}".format(package))
+    init_lines.append(f'from . import {package}')
 
 lines = "\n".join(init_lines)
 

@@ -249,10 +249,20 @@ for package in ["explore", "viz", "model"]:
             left, right = mapping
             replace_nb(targets, left, right)
 
-# should automate version bump
-# or take an arg
+# automate version bump
+url = "https://api.github.com/repos/pysal/pysal/releases/latest"
+com = f"curl --silent {url}"
+result = os.popen(com).read()
+d = json.loads(result)
+version_tag = d['tag_name']
+_, version = version_tag.split('v')
+major, minor, patch = map(int, version.split("."))
+patch += 1
+init_line = f"__version__=v{major}.{minor}.{patch}"
+init_lines = [init_line]
 
-init_lines = ["__version__='2.1.0rc'"]
+# uncomment next line and specify version if doing a major or minor release
+#init_lines = ["__version__='2.1.0rc'"]
 for package in packages:
     os.system(f'touch pysal/{package}/__init__.py')
     subpackages = packages[package].split()

@@ -249,7 +249,55 @@ for package in ["explore", "viz", "model"]:
             left, right = mapping
             replace_nb(targets, left, right)
 
-# automate version bump
+
+#######################
+# decorate slow tests #
+#######################
+
+def skip_test(path_list, test_name):
+    """
+    mark tests for skipping in meta packages
+    """
+
+    # find file
+
+    file_name = os.path.join(*path_list)
+
+    with open(file_name, 'r') as fp:
+        contents = fp.readlines()
+        # add import pytest to file
+        new_lines = ['import pytest\n']
+        new_lines.extend(contents)
+        # decorate test
+        target = f"def {test_name}"
+        for i, line in enumerate(new_lines):
+            if target in line:
+                old_string = line
+                skip = old_string.find(target)
+                spacer = " " * skip
+                new_string = f'{spacer}@pytest.mark.slow\n{old_string}'
+                new_lines[i] = new_string
+                break
+
+    with open(file_name, 'w') as fp:
+        fp.write("".join(new_lines))
+
+
+
+path_list = ['pysal', 'explore', 'segregation', 'tests', 'test_compute_all.py']
+test_name = 'test_ComputeAll'
+skip_test(path_list, test_name)
+
+
+path_list = ['pysal', 'explore', 'segregation', 'tests', 'test_network.py']
+test_name = 'test_calc_access'
+skip_test(path_list, test_name)
+
+
+#########################
+# automate version bump #
+#########################
+
 url = "https://api.github.com/repos/pysal/pysal/releases/latest"
 com = f"curl --silent {url}"
 result = os.popen(com).read()
@@ -258,7 +306,7 @@ version_tag = d['tag_name']
 _, version = version_tag.split('v')
 major, minor, patch = map(int, version.split("."))
 patch += 1
-init_line = f"__version__=v{major}.{minor}.{patch}"
+init_line = f"__version__='v{major}.{minor}.{patch}'"
 init_lines = [init_line]
 
 # uncomment next line and specify version if doing a major or minor release

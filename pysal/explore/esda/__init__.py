@@ -1,4 +1,4 @@
-__version__ = "2.1.1"
+__version__ = "2.2.0"
 """
 :mod:`pysal.explore.esda` --- Exploratory Spatial Data Analysis
 =================================================
@@ -20,3 +20,5 @@ from .gamma import Gamma
 from .util import fdr
 from .smaup import Smaup
 from .lee import Spatial_Pearson, Local_Spatial_Pearson
+from .silhouettes import (path_silhouette, boundary_silhouette,
+                          silhouette_alist, nearest_label)

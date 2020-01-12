@@ -1,4 +1,4 @@
-__version__ = "2.2.0"
+__version__ = "2.3.0"
 # __version__ has to be defined in the first line
 
 """
@@ -13,3 +13,4 @@ from . import markov
 from . import mobility
 from . import rank
 from . import util
+from . import sequence

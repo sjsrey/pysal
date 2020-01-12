@@ -1,5 +1,5 @@
-from pysal.model.tobler.data import store_rasters
 import pytest
+from pysal.model.tobler.data import store_rasters
 
 
 @pytest.mark.slow

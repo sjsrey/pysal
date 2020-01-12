@@ -1,10 +1,35 @@
-name: docs
+name: pysaldev
 channels:
   - conda-forge
 dependencies:
   - python=3.7
+  - pip
   - rtree
   - sphinxcontrib-bibtex
   - sphinx_bootstrap_theme
   - numpydoc
   - matplotlib
+  - scipy
+  - pandas
+  - seaborn
+  - matplotlib
+  - descartes
+  - palettable
+  - statsmodels
+  - scikit-learn
+  - geopandas
+  - quantecon
+  - rtree
+  - tqdm
+  - quilt3
+  - rasterio
+  - rasterstats
+  - pytest
+  - coverage
+  - coveralls
+  - ipywidgets
+  - twine
+  - wheel
+  - pip:
+      - doc2dash
+

@@ -1,4 +1,3 @@
-
 """
 Weights.
 """
@@ -17,6 +16,7 @@ from . import adjtools
 from ..io.fileio import FileIO as popen
 
 __all__ = ['W', 'WSP']
+
 
 class W(object):
     """
@@ -37,17 +37,11 @@ class W(object):
                            lexicographical ordering is used to iterate and the
                            id_order_set property will return False. This can be
                            set after creation by setting the 'id_order' property.
-    silent_island_warning: boolean
+    silence_warnings     : boolean
                            By default pysal.lib will print a warning if the
-                           dataset contains any disconnected observations or
+                           dataset contains any disconnected components or
                            islands. To silence this warning set this
                            parameter to True.
-    silent_connected_components   : boolean
-                            By default PySAL will print a warning if the
-                            dataset contains any disconnected components in the
-                            adjacency matrix. These are disconnected *groups*
-                            of islands. To silence this warning set this
-                            parameter to True.
     ids                  : list
                            Values to use for keys of the neighbors and weights dicts.
 
@@ -129,15 +123,18 @@ class W(object):
     >>> from pysal.lib.weights import W
     >>> w = W({1:[0],0:[1],2:[], 3:[]})
 
-    WARNING: there are 2 disconnected observations
-    Island ids:  [2, 3]
+    UserWarning: The weights matrix is not fully connected:
+    There are 3 disconnected components.
+    There are 2 islands with ids: 2, 3.
 
     """
-
-    def __init__(self, neighbors, weights=None, id_order=None,
-                 silence_warnings=False, ids=None):
-        self.silent_island_warning = silence_warnings
-        self.silent_connected_components = silence_warnings
+    def __init__(self,
+                 neighbors,
+                 weights=None,
+                 id_order=None,
+                 silence_warnings=False,
+                 ids=None):
+        self.silence_warnings = silence_warnings
         self.transformations = {}
         self.neighbors = neighbors
         if not weights:
@@ -156,18 +153,18 @@ class W(object):
             self._id_order_set = True
         self._reset()
         self._n = len(self.weights)
-        if self.islands and not self.silent_island_warning:
+        if not self.silence_warnings and self.n_components > 1:
+            message = "The weights matrix is not fully connected: " \
+                          "\n There are %d disconnected components." % \
+                          self.n_components
             ni = len(self.islands)
             if ni == 1:
-                warnings.warn("There is one disconnected observation"
-                              " (no neighbors).\nIsland id: {}"
-                              .format(str(self.islands[0])), 
-                              stacklevel=2)
-            else:
-                warnings.warn("There are %d disconnected observations" % ni + ' \n '
-                              " Island ids: %s" % ', '.join(str(island) for island in self.islands))
-        if self.n_components > 1 and not self.islands and not self.silent_connected_components:
-            warnings.warn("The weights matrix is not fully connected. There are %d components" % self.n_components)
+                message = message + "\n There is 1 island with id: " \
+                                    "%s."% (str(self.islands[0]))
+            elif ni > 1:
+                message = message + "\n There are %d islands with ids: %s." % (
+                    ni, ', '.join(str(island) for island in self.islands))
+            warnings.warn(message)
 
     def _reset(self):
         """Reset properties.
@@ -188,7 +185,7 @@ class W(object):
         # try and get people to use `Rook.from_shapefile(shapefile)` rather than
         # W.from_shapefile(shapefile, type=`rook`), otherwise we'd need to build
         # a type dispatch table. Generic W should be for stuff we don't know
-        # anything about. 
+        # anything about.
         raise NotImplementedError('Use type-specific constructors, like Rook,'
                                   ' Queen, DistanceBand, or Kernel')
 
@@ -197,8 +194,11 @@ class W(object):
         return WSP2W(WSP, silence_warnings=silence_warnings)
 
     @classmethod
-    def from_adjlist(cls, adjlist, focal_col='focal', 
-                     neighbor_col='neighbor', weight_col=None):
+    def from_adjlist(cls,
+                     adjlist,
+                     focal_col='focal',
+                     neighbor_col='neighbor',
+                     weight_col=None):
         """
         Return an adjacency list representation of a weights object. 
 
@@ -216,51 +216,52 @@ class W(object):
                             are assumed to be 1.
         """
         if weight_col is None:
-           weight_col = 'weight' 
-        try_weightcol = getattr(adjlist, weight_col) 
+            weight_col = 'weight'
+        try_weightcol = getattr(adjlist, weight_col)
         if try_weightcol is None:
             adjlist = adjlist.copy(deep=True)
             adjlist['weight'] = 1
-        all_ids = set(adjlist[focal_col].tolist()) 
+        all_ids = set(adjlist[focal_col].tolist())
         all_ids |= set(adjlist[neighbor_col].tolist())
         grouper = adjlist.groupby(focal_col)
         neighbors = grouper[neighbor_col].apply(list).to_dict()
         weights = grouper[weight_col].apply(list).to_dict()
-        neighbors.update({k:[] for k in 
-                          all_ids.difference(list(neighbors.keys()))})
-        weights.update({k:[] for k in 
-                        all_ids.difference(list(weights.keys()))})
+        neighbors.update(
+            {k: []
+             for k in all_ids.difference(list(neighbors.keys()))})
+        weights.update(
+            {k: []
+             for k in all_ids.difference(list(weights.keys()))})
         return cls(neighbors=neighbors, weights=weights)
 
-    def to_adjlist(self, remove_symmetric=False, 
-                   focal_col='focal', neighbor_col='neighbor', weight_col='weight'):
+    def to_adjlist(self,
+                   remove_symmetric=False,
+                   focal_col='focal',
+                   neighbor_col='neighbor',
+                   weight_col='weight'):
         """
         Compute an adjacency list representation of a weights object.
 
         Parameters
         ----------
         remove_symmetric    :   bool
-                            whether or not to remove ``symmetric'' entries. If the W is symmetric,
-                            a standard ``directed'' adjacency list will contain both the forward and
-                            backward links by default because adjacency lists are a directed
-                            graph representation. If this is True, a W created from this adjacency list
-                            **MAY NOT BE THE SAME** as the original W. If you would like to 
-                            consider (1,2) and (2,1) as distinct links, leave this as "False". 
+                            whether or not to remove symmetric entries. If the W is symmetric, a standard directed adjacency list will contain both the forward and backward links by default because adjacency lists are a directed graph representation. If this is True, a W created from this adjacency list **MAY NOT BE THE SAME** as the original W. If you would like to consider (1,2) and (2,1) as distinct links, leave this as "False".
         focal_col       :   string
                             name of the column in which to store "source" node ids.
         neighbor_col    :   string
                             name of the column in which to store "destination" node ids.
         weight_col      :   string
-                            name of the column in which to store weight information. 
+                            name of the column in which to store weight information.
         """
         try:
             import pandas as pd
         except ImportError:
             raise ImportError('pandas must be installed to use this method')
-        adjlist = pd.DataFrame(((idx, n,w) for idx, neighb in self 
-                                           for n,w in list(neighb.items())),
-                               columns = ('focal', 'neighbor', 'weight'))
-        return adjtools.filter_adjlist(adjlist) if remove_symmetric else adjlist
+        adjlist = pd.DataFrame(((idx, n, w) for idx, neighb in self
+                                for n, w in list(neighb.items())),
+                               columns=('focal', 'neighbor', 'weight'))
+        return adjtools.filter_adjlist(
+            adjlist) if remove_symmetric else adjlist
 
     def to_networkx(self):
         """
@@ -278,7 +279,7 @@ class W(object):
             import networkx as nx
         except ImportError:
             raise ImportError("NetworkX is required to use this function.")
-        G = nx.DiGraph() if len(self.asymmetries)>0 else nx.Graph()
+        G = nx.DiGraph() if len(self.asymmetries) > 0 else nx.Graph()
         return nx.from_scipy_sparse_matrix(self.sparse, create_using=G)
 
     @classmethod
@@ -309,14 +310,14 @@ class W(object):
         weights = dict()
         for focal in graph.nodes():
             links = graph[focal]
-            neighbors.update({focal:[]})
-            weights.update({focal:[]})
+            neighbors.update({focal: []})
+            weights.update({focal: []})
             for neighbor, weight in list(links.items()):
-                   neighbors[focal].append(neighbor)
-                   if weight == {}:
-                       weights[focal].append(1)
-                   else:
-                       weights[focal].append(weight[weight_col])
+                neighbors[focal].append(neighbor)
+                if weight == {}:
+                    weights[focal].append(1)
+                else:
+                    weights[focal].append(weight[weight_col])
         return cls(neighbors=neighbors, weights=weights)
 
     @property
@@ -337,7 +338,8 @@ class W(object):
         """Store whether the adjacency matrix is fully connected.
         """
         if 'n_components' not in self._cache:
-            self._n_components, self._component_labels = connected_components(self.sparse)
+            self._n_components, self._component_labels = connected_components(
+                self.sparse)
             self._cache['n_components'] = self._n_components
             self._cache['component_labels'] = self._component_labels
         return self._n_components
@@ -347,7 +349,8 @@ class W(object):
         """Store the graph component in which each observation falls.
         """
         if 'component_labels' not in self._cache:
-            self._n_components, self._component_labels = connected_components(self.sparse)
+            self._n_components, self._component_labels = connected_components(
+                self.sparse)
             self._cache['n_components'] = self._n_components
             self._cache['component_labels'] = self._component_labels
         return self._component_labels
@@ -438,7 +441,7 @@ class W(object):
         """
         if 's2array' not in self._cache:
             s = self.sparse
-            self._s2array = np.array(s.sum(1) + s.sum(0).transpose()) ** 2
+            self._s2array = np.array(s.sum(1) + s.sum(0).transpose())**2
             self._cache['s2array'] = self._s2array
         return self._s2array
 
@@ -540,7 +543,7 @@ class W(object):
 
         """
         if 'pct_nonzero' not in self._cache:
-            self._pct_nonzero = 100. * self.sparse.nnz / (1. * self._n ** 2)
+            self._pct_nonzero = 100. * self.sparse.nnz / (1. * self._n**2)
             self._cache['pct_nonzero'] = self._pct_nonzero
         return self._pct_nonzero
 
@@ -623,8 +626,9 @@ class W(object):
 
         """
         if 'islands' not in self._cache:
-            self._islands = [i for i,
-                             c in list(self.cardinalities.items()) if c == 0]
+            self._islands = [
+                i for i, c in list(self.cardinalities.items()) if c == 0
+            ]
             self._cache['islands'] = self._islands
         return self._islands
 
@@ -635,8 +639,9 @@ class W(object):
 
         """
         if 'histogram' not in self._cache:
-            ct, bin = np.histogram(list(self.cardinalities.values()),
-                                   list(range(self.min_neighbors, self.max_neighbors + 2)))
+            ct, bin = np.histogram(
+                list(self.cardinalities.values()),
+                list(range(self.min_neighbors, self.max_neighbors + 2)))
             self._histogram = list(zip(bin, ct))
             self._cache['histogram'] = self._histogram
         return self._histogram
@@ -723,10 +728,10 @@ class W(object):
             new_weights = {}
             old_transformations = self.transformations['O'].copy()
             new_transformations = {}
-            for o,n in zip(old_ids, new_ids):
+            for o, n in zip(old_ids, new_ids):
                 o_neighbors = self.neighbors[o]
                 o_weights = self.weights[o]
-                n_neighbors = [ new_ids[old_ids.index(j)] for j in o_neighbors]
+                n_neighbors = [new_ids[old_ids.index(j)] for j in o_neighbors]
                 new_neighbors[n] = n_neighbors
                 new_weights[n] = o_weights[:]
                 new_transformations[n] = old_transformations[o]
@@ -734,8 +739,8 @@ class W(object):
             self.weights = new_weights
             self.transformations["O"] = new_transformations
 
-            id_order = [ self._id_order.index(o) for o in old_ids]
-            for i,id_ in enumerate(id_order):
+            id_order = [self._id_order.index(o) for o in old_ids]
+            for i, id_ in enumerate(id_order):
                 self.id_order[id_] = new_ids[i]
 
             self._reset()
@@ -884,6 +889,12 @@ class W(object):
         >>> w.weights[0]
         [1.0, 1.0]
 
+
+        See also
+        --------
+        set_transform
+
+
         """
 
         return self._transform
@@ -947,8 +958,9 @@ class W(object):
                     wijs = self.weights[i]
                     row_sum = sum(wijs) * 1.0
                     if row_sum == 0.0:
-                        if not self.silent_island_warning:
-                            print(('WARNING: ', i, ' is an island (no neighbors)'))
+                        if not self.silence_warnings:
+                            print(('WARNING: ', i,
+                                   ' is an island (no neighbors)'))
                     weights[i] = [wij / row_sum for wij in wijs]
                 weights = weights
                 self.transformations[value] = weights
@@ -1082,7 +1094,7 @@ class W(object):
         if not inplace:
             neighbors = copy.deepcopy(self.neighbors)
             weights = copy.deepcopy(self.weights)
-            out_W = W(neighbors, weights)
+            out_W = W(neighbors, weights, id_order=self.id_order)
             out_W.symmetrize(inplace=True)
             return out_W
         else:
@@ -1136,7 +1148,6 @@ class W(object):
                 wfull[i, c] = wij
         return (wfull, keys)
 
-
     def to_WSP(self):
         '''
         Generate a WSP object.
@@ -1167,7 +1178,7 @@ class W(object):
 
         '''
         return WSP(self.sparse, self._id_order)
-    
+
     def set_shapefile(self, shapefile, idVariable=None, full=False):
         """
         Adding meta data for writing headers of gal and gwt files.
@@ -1194,15 +1205,20 @@ class W(object):
 
         self._varName = idVariable
 
-    def plot(self, gdf, indexed_on=None, ax=None, color='k',
-             node_kws=None, edge_kws=None):
+    def plot(self,
+             gdf,
+             indexed_on=None,
+             ax=None,
+             color='k',
+             node_kws=None,
+             edge_kws=None):
         """
         Plot spatial weights objects.
         NOTE: Requires matplotlib, and implicitly requires geopandas 
         dataframe as input.
 
         Parameters
-        ---------
+        ----------
         gdf         : geopandas geodataframe 
                       the original shapes whose topological relations are 
                       modelled in W. 
@@ -1245,9 +1261,10 @@ class W(object):
         try:
             import matplotlib.pyplot as plt
         except ImportError:
-            raise ImportError("W.plot depends on matplotlib.pyplot, and this was"
-                              "not able to be imported. \nInstall matplotlib to"
-                              "plot spatial weights.")
+            raise ImportError(
+                "W.plot depends on matplotlib.pyplot, and this was"
+                "not able to be imported. \nInstall matplotlib to"
+                "plot spatial weights.")
         if ax is None:
             f = plt.figure()
             ax = plt.gca()
@@ -1257,12 +1274,12 @@ class W(object):
             if 'color' not in node_kws:
                 node_kws['color'] = color
         else:
-            node_kws=dict(color=color)
+            node_kws = dict(color=color)
         if edge_kws is not None:
             if 'color' not in edge_kws:
                 edge_kws['color'] = color
         else:
-            edge_kws=dict(color=color) 
+            edge_kws = dict(color=color)
 
         for idx, neighbors in self:
             if idx in self.islands:
@@ -1275,20 +1292,17 @@ class W(object):
             focal = np.hstack(gdf.loc[idx].geometry.centroid.xy)
             seen = set()
             for nidx, neighbor in zip(neighbors, centroids):
-                if (idx,nidx) in seen:
+                if (idx, nidx) in seen:
                     continue
-                ax.plot(*list(zip(focal, neighbor)), marker=None,
-                        **edge_kws)
-                seen.update((idx,nidx))
-                seen.update((nidx,idx))
+                ax.plot(*list(zip(focal, neighbor)), marker=None, **edge_kws)
+                seen.update((idx, nidx))
+                seen.update((nidx, idx))
         ax.scatter(gdf.centroid.apply(lambda p: p.x),
-                   gdf.centroid.apply(lambda p: p.y),
-                   **node_kws)
-        return f,ax
+                   gdf.centroid.apply(lambda p: p.y), **node_kws)
+        return f, ax
 
 
 class WSP(object):
-
     """
     Thin W class for spreg.
 
@@ -1332,7 +1346,6 @@ class WSP(object):
     4
 
     """
-
     def __init__(self, sparse, id_order=None):
         if not scipy.sparse.issparse(sparse):
             raise ValueError("must pass a scipy sparse object")
@@ -1401,7 +1414,6 @@ class WSP(object):
         return cls(W.sparse, id_order=W.id_order)
 
     def to_W(self, silence_warnings=False):
-
         """
         Convert a pysal WSP object (thin weights matrix) to a pysal W object.
 
@@ -1442,9 +1454,9 @@ class WSP(object):
 
         """
 
-        indices = self.sparse.indices
-        data = self.sparse.data
-        indptr = self.sparse.indptr
+        indices = list(self.sparse.indices)
+        data = list(self.sparse.data)
+        indptr = list(self.sparse.indptr)
         id_order = self.id_order
         if id_order:
             # replace indices with user IDs
@@ -1460,8 +1472,7 @@ class WSP(object):
             weights[oid] = data[start:end]
             start = end
         ids = copy.copy(self.id_order)
-        w = W(neighbors, weights, ids,
-                    silence_warnings=silence_warnings)
+        w = W(neighbors, weights, ids, silence_warnings=silence_warnings)
         w._sparse = copy.deepcopy(self.sparse)
         w._cache['sparse'] = w._sparse
         return w

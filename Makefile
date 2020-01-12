@@ -8,6 +8,8 @@ nb:
 term:
 	docker run -it --rm   -v ${PWD}:/home/jovyan sjsrey/pysaldev:2.3 sh -c "/home/jovyan/develop.sh && /bin/bash"
 
+term_mac:
+	docker run -it --rm   -v ${PWD}:/home/jovyan:delegated sjsrey/pysaldev:2.3 sh -c "/home/jovyan/develop.sh && /bin/bash"
 
 download:
 	python gitreleases.py

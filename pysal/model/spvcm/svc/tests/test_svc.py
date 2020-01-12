@@ -1,3 +1,4 @@
+import pytest
 from ..model import SVC
 from ...abstracts import Trace
 from ..._constants import TEST_SEED, RTOL, ATOL
@@ -27,6 +28,7 @@ class Test_SVC(ut.TestCase):
         self.ignore_shape = True
         self.test_trace = no_op
 
+    @pytest.mark.slow
     def test_draw(self):
         self.inputs['n_samples'] = 0
         instance = SVC(**self.inputs)

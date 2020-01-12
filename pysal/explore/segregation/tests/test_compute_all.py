@@ -1,5 +1,5 @@
-import unittest
 import pytest
+import unittest
 import pysal.lib
 import geopandas as gpd
 import numpy as np

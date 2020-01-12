@@ -39,7 +39,6 @@ for package in packages:
             com = f"cp -rf tmp/{subpackage}/{subpackage} "\
                   f"pysal/{package}/{subpackage}"
         if subpackage in tagged:
-            print(com)
             os.system(com)
         else:
             print("skipping: ", subpackage)
@@ -63,6 +62,7 @@ def replace(targets, string, replacement, update_cache=True):
 
     c = f"find {targets} -name '*.py' -print | xargs sed -i -- "\
         f"'s/{string}/{replacement}/g'"
+    print(c)
     if update_cache:
         if targets in cache:
             cache[targets].append([string, replacement])

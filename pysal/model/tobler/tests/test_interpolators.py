@@ -1,9 +1,12 @@
+import pytest
+import pytest
+import pytest
+import pytest
 """test interpolation functions."""
 import pandas as pd
 import geopandas
 import quilt3
 import os
-import pytest
 from pysal.lib.examples import load_example
 from numpy.testing import assert_almost_equal
 from pysal.model.tobler.dasymetric import glm, glm_pixel_adjusted, masked_area_interpolate

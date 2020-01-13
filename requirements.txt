@@ -6,6 +6,14 @@ descartes
 palettable
 scikit-learn
 geopandas
-deprecated
+statsmodels
+quantecon
 rtree
 tqdm
+python-dateutil<=2.8.0
+quilt3
+rasterio
+rasterstats
+bs4
+requests
+jinja2

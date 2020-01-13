@@ -48,9 +48,14 @@ for package in packages:
         #############
         com = f"mkdir notebooks/{package}/{subpackage}"
         os.system(com)
+
         com = f"cp -rf tmp/{subpackage}/notebooks/* "\
               f"notebooks/{package}/{subpackage}/"
+        if subpackage == 'libpysal':
+            com = f"cp -rf tmp/{subpackage}/notebooks/* "\
+              f"notebooks/{package}/"
         os.system(com)
+
 
 ###################
 # Rewrite Imports #
@@ -222,8 +227,9 @@ with open("packages.yml") as package_file:
     packages = yaml.load(package_file)
 
 
+pkg_list = ["explore", "viz", "model", "lib"]
 mappings = []
-for package in ["explore", "viz", "model"]:
+for package in pkg_list:
     for subpackage in packages[package].split():
         left = f"from {subpackage}"
         right = f"from pysal\.{package}\.{subpackage}"
@@ -242,13 +248,17 @@ def replace_nb(targets, string, replacement, update_cache=True):
     os.system(c)
 
 
-for package in ["explore", "viz", "model"]:
+for package in pkg_list:
     for subpackage in packages[package].split():
         targets = f'notebooks/{package}/{subpackage}'
+        if subpackage == 'libpysal':
+            targets = f'notebooks/{package}'
         for mapping in mappings:
             left, right = mapping
             replace_nb(targets, left, right)
 
+pth = os.path.join('notebooks', 'lib', 'libpysal')
+os.rmdir(pth)
 
 #######################
 # decorate slow tests #

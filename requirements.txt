@@ -17,3 +17,6 @@ rasterstats
 bs4
 requests
 jinja2
+pandana
+urbanaccess
+dill

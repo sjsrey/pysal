@@ -1,8 +1,12 @@
+"""
+Convert.py
+
+Rewrite the import structure of the subpackages to build the metapackage
+
+"""
+import json
 import yaml
 import os
-import subprocess
-import sys
-import json
 
 # TARGETROOT ="pysal/"
 
@@ -64,6 +68,9 @@ cache = {}
 
 
 def replace(targets, string, replacement, update_cache=True):
+    """
+    Helper function to rewrite import statements
+    """
 
     c = f"find {targets} -name '*.py' -print | xargs sed -i -- "\
         f"'s/{string}/{replacement}/g'"
@@ -250,12 +257,12 @@ def replace_nb(targets, string, replacement, update_cache=True):
 
 for package in pkg_list:
     for subpackage in packages[package].split():
-        targets = f'notebooks/{package}/{subpackage}'
+        target = f'notebooks/{package}/{subpackage}'
         if subpackage == 'libpysal':
-            targets = f'notebooks/{package}'
+            target = f'notebooks/{package}'
         for mapping in mappings:
             left, right = mapping
-            replace_nb(targets, left, right)
+            replace_nb(target, left, right)
 
 pth = os.path.join('notebooks', 'lib', 'libpysal')
 os.rmdir(pth)

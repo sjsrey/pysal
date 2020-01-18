@@ -2,11 +2,16 @@
 #
 .PHONY: clean
 
+VER=2.4
+
 nb:
 	docker run -it --rm  -p 8888:8888 -v ${PWD}:/home/jovyan sjsrey/pysaldev:2.3 sh -c "/home/jovyan/develop.sh && /bin/bash"
 
+nb1:
+	docker run -it --rm  -p 8888:8888 -v ${PWD}:/home/jovyan sjsrey/pysaldev:${VER} sh -c " /bin/bash"
+
 term:
-	docker run -it --rm   -v ${PWD}:/home/jovyan sjsrey/pysaldev:2.3 sh -c "/home/jovyan/develop.sh && /bin/bash"
+	docker run -it --rm   -v ${PWD}:/home/jovyan sjsrey/pysaldev:${VER} sh -c "/home/jovyan/develop.sh && /bin/bash"
 
 term_mac:
 	docker run -it --rm   -v ${PWD}:/home/jovyan:delegated sjsrey/pysaldev:2.3 sh -c "/home/jovyan/develop.sh && /bin/bash"

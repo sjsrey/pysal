@@ -32,7 +32,7 @@ install:
 script:
   - if [[ $TRAVIS_JOB_NAME == python-* ]]; then
       python -c "from pysal.lib.examples import fetch_all; fetch_all()"; 
-      travis_wait 45 nosetests --verbose --with-coverage --cover-package=pysal;
+      travis_wait 45 pytest --cov pysal;
     fi
 
   - if [[ $TRAVIS_JOB_NAME == 'tarball' ]]; then

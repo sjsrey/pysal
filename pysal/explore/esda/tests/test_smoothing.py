@@ -62,6 +62,7 @@ class TestAgeStd(unittest.TestCase):
 
 class TestSRate(unittest.TestCase):
     def setUp(self):
+        sids = pysal.lib.examples.load_example('sids2')
         sids = pysal.lib.io.open(pysal.lib.examples.get_path('sids2.dbf'), 'r')
         self.w = pysal.lib.io.open(pysal.lib.examples.get_path('sids2.gal'), 'r').read()
         self.b, self.e = np.array(sids[:, 8]), np.array(sids[:, 9])
@@ -76,9 +77,10 @@ class TestSRate(unittest.TestCase):
                             3.69333797e-05, 5.40245456e-05, 2.99806055e-05,
                             3.73034109e-05, 3.47270722e-05]).reshape(-1,1)
 
-        self.stl = pysal.lib.io.open(pysal.lib.examples.get_path('stl_hom.csv'), 'r')
+        stl = pysal.lib.examples.load_example('stl')
+        self.stl = pysal.lib.io.open(stl.get_path('stl_hom.csv'), 'r')
         self.stl_e, self.stl_b = np.array(self.stl[:, 10]), np.array(self.stl[:, 13])
-        self.stl_w = pysal.lib.io.open(pysal.lib.examples.get_path('stl.gal'), 'r').read()
+        self.stl_w = pysal.lib.io.open(stl.get_path('stl.gal'), 'r').read()
         if not self.stl_w.id_order_set:
             self.stl_w.id_order = list(range(1, len(self.stl) + 1))
 

@@ -29,7 +29,7 @@ before_install:
     conda info --all
 
 install:
-  - pip install -e . --no-deps --force-reinstall
+  - pip install -e . --no-deps --force-reinstall;python -c "import pysal;pysal.lib.examples.fetch_all()"
 
 script:
   - if [[ $TRAVIS_JOB_NAME == python-* ]]; then

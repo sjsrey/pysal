@@ -33,7 +33,7 @@ install:
 
 script:
   - if [[ $TRAVIS_JOB_NAME == python-* ]]; then
-      travis_wait 45 pytest  --cov pysal;
+      travis_wait 45 nosetests --verbose --with-coverage --cover-package=pysal;
     fi
 
   - if [[ $TRAVIS_JOB_NAME == 'tarball' ]]; then

@@ -29,10 +29,11 @@ before_install:
     conda info --all
 
 install:
-  - pip install -e . --no-deps --force-reinstall;python -c "import pysal;pysal.lib.examples.fetch_all()"
+  - pip install -e . --no-deps --force-reinstall
 
 script:
   - if [[ $TRAVIS_JOB_NAME == python-* ]]; then
+      python -c "from pysal.lib.examples import fetch_all; fetch_all()"; 
       travis_wait 45 nosetests --verbose --with-coverage --cover-package=pysal;
     fi
 

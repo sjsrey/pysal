@@ -9,3 +9,6 @@ ipywidgets
 statsmodels
 twine
 wheel
+pytest
+pytest-mpl
+pytest-cov

@@ -25,6 +25,7 @@ before_install:
     conda config --set safety_checks disabled
     conda create --name TEST python=$PY --file requirements.txt --file requirements_dev.txt --file requirements_docs.txt --file requirements_plus.txt
     source activate TEST
+    pip install bs4
     conda info --all
 
 install:

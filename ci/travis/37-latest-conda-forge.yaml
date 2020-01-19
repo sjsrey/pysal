@@ -38,5 +38,6 @@ dependencies:
   - pytest
   - pytest-cov
   - codecov
+  - bokeh
   - pip:
       - doc2dash

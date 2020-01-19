@@ -63,7 +63,7 @@ def south(df=False):
     and the dataframe contains the raw dataset
     """
     import geopandas
-    south = pysal.lib.examples.load_example('south')
+    south = pysal.lib.examples.load_example('South')
     data = geopandas.read_file(south.get_path('south.shp'))
     data = data[data.STATE_NAME != 'District of Columbia']
     X = data[['GI89', 'BLK90', 'HR90']].values

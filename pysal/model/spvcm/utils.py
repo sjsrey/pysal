@@ -63,7 +63,8 @@ def south(df=False):
     and the dataframe contains the raw dataset
     """
     import geopandas
-    data = geopandas.read_file(pysal.lib.examples.get_path('south.shp'))
+    south = pysal.lib.examples.load_example('south')
+    data = geopandas.read_file(south.get_path('south.shp'))
     data = data[data.STATE_NAME != 'District of Columbia']
     X = data[['GI89', 'BLK90', 'HR90']].values
     N = X.shape[0]
@@ -76,7 +77,7 @@ def south(df=False):
     W2 = pysal.lib.weights.Queen.from_shapefile(pysal.lib.examples.get_path('us48.shp'),
                                                idVariable='STATE_NAME')
     W2 = pysal.lib.weights.set_operations.w_subset(W2, ids=data.STATE_NAME.unique().tolist()) #only keep what's in the data
-    W1 = pysal.lib.weights.Queen.from_shapefile(pysal.lib.examples.get_path('south.shp'),
+    W1 = pysal.lib.weights.Queen.from_shapefile(south.get_path('south.shp'),
                                             idVariable='FIPS')
     W1 = pysal.lib.weights.set_operations.w_subset(W1, ids=data.FIPS.tolist()) #again, only keep what's in the data
 

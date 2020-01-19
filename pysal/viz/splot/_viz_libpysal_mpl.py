@@ -21,8 +21,8 @@ def plot_spatial_weights(w, gdf, indexed_on=None, ax=None,
     NOTE: Additionally plots `w.non_planar_joins` if
     `pysal.lib.weights.util.nonplanar_neighbors()` was applied.
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     w : pysal.lib.W object
         Values of pysal.lib weights object.
     gdf : geopandas dataframe 

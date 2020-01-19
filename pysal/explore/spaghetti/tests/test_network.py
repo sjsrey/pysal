@@ -1,3 +1,4 @@
+import pytest
 import unittest
 import numpy
 from pysal.lib import cg, examples
@@ -343,6 +344,7 @@ class TestNetworkAnalysis(unittest.TestCase):
         )
         self.assertEqual(obtained.lowerenvelope.shape[0], self.test_steps)
 
+    @pytest.mark.slow
     def test_network_k(self):
         obtained = self.ntw.NetworkK(
             self.ntw.pointpatterns[self.pt_str],

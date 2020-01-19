@@ -6,6 +6,7 @@ from ..distance import DistanceBand, KNN
 from ..contiguity import Queen, Rook
 from ...io.fileio import FileIO as psopen
 from ... import examples
+import pytest
 import numpy as np
 import unittest
 
@@ -227,7 +228,7 @@ class Testutil(unittest.TestCase):
         self.assertEqual(w_attach.islands, [])
         self.assertEqual(w_attach[w.islands[0]], {166: 1.0})
 
-    @unittest.skipIf(not HAS_GEOPANDAS, "Missing geopandas, cannot test nonplanar neighbors")
+    @pytest.mark.slow
     def test_nonplanar_neighbors(self):
         df = gpd.read_file(examples.get_path('map_RS_BR.shp'))
         w = Queen.from_dataframe(df)
@@ -238,7 +239,7 @@ class Testutil(unittest.TestCase):
         self.assertEqual(wnp.neighbors[0], [23, 59, 152, 239])
         self.assertEqual(wnp.neighbors[23], [0, 45, 59, 107, 152, 185, 246])
 
-    @unittest.skipIf(not HAS_GEOPANDAS, "Missing geopandas, cannot test fuzzy_contiguity")
+    @pytest.mark.slow
     def test_fuzzy_contiguity(self):
         rs = examples.get_path('map_RS_BR.shp')
         rs_df = gpd.read_file(rs)

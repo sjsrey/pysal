@@ -13,6 +13,7 @@ started in spatial interaction modelling (Working Paper No. 184). UCL: Citeseer.
 """
 
 import unittest
+import pytest
 import math
 import numpy as np
 from ..gravity import BaseGravity, Gravity, Production, Attraction, Doubly
@@ -979,6 +980,7 @@ class TestGravity(unittest.TestCase):
                                                      'pseudoR2',
                                                      'param2'].sort())
 
+    @pytest.mark.slow
     def test_Doubly(self):
         model = Doubly(self.f, self.o, self.d,
                        self.dij, 'exp', constant=True)

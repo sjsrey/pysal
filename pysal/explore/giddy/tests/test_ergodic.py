@@ -1,4 +1,5 @@
 import unittest
+import pytest
 from .. import ergodic
 import numpy as np
 
@@ -43,6 +44,7 @@ class Fmpt_Tester(unittest.TestCase):
                                                  2.66666667], [3.33333333, 4., 2.5]])
         np.testing.assert_array_almost_equal(exp, obs)
 
+    @pytest.mark.slow
     def test_fmpt(self):
         obs = ergodic.fmpt(self.p)
         exp = np.array([[2.5, 4., 3.33333333], [2.66666667, 5.,

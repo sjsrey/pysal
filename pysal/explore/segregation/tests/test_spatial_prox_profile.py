@@ -1,4 +1,5 @@
 import unittest
+import pytest
 import pysal.lib
 import geopandas as gpd
 import numpy as np
@@ -6,6 +7,7 @@ from pysal.explore.segregation.spatial import SpatialProxProf
 
 
 class Spatial_Prox_Prof_Tester(unittest.TestCase):
+    @pytest.mark.slow
     def test_Spatial_Prox_Prof(self):
         s_map = gpd.read_file(pysal.lib.examples.get_path("sacramentot2.shp"))
         df = s_map[['geometry', 'HISP_', 'TOT_POP']]

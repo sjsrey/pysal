@@ -1,4 +1,5 @@
 import unittest
+import pytest
 import pysal.lib as ps
 import numpy as np
 import pysal.viz.mapclassify as mc
@@ -9,6 +10,8 @@ RTOL = 0.00001
 
 
 class test_Markov(unittest.TestCase):
+
+    @pytest.mark.slow
     def test___init__(self):
         # markov = Markov(class_ids, classes)
         f = ps.io.open(ps.examples.get_path('usjoin.csv'))

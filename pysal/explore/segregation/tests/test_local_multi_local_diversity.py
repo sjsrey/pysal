@@ -1,4 +1,5 @@
 import unittest
+import pytest
 import pysal.lib
 import geopandas as gpd
 import numpy as np
@@ -6,6 +7,7 @@ from pysal.explore.segregation.local import MultiLocalDiversity
 
 
 class Multi_Local_Diversity_Tester(unittest.TestCase):
+    @pytest.mark.slow
     def test_Multi_Local_Diversity(self):
         s_map = gpd.read_file(pysal.lib.examples.get_path("sacramentot2.shp"))
         groups_list = ['WHITE_', 'BLACK_', 'ASIAN_','HISP_']

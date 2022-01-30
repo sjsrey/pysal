@@ -1,2 +1,0 @@
-import mapclassify
-import splot

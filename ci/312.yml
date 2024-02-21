@@ -2,7 +2,7 @@ name: test
 channels:
   - conda-forge
 dependencies:
-  - python=3.6
+  - python=3.12
   - six
   - pyyaml
   - deprecated
@@ -55,5 +55,5 @@ dependencies:
   - inequality
   - access
   - splot
-  - pip:
-    - spopt
+  - spopt
+

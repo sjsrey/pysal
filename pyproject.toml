@@ -1,0 +1,113 @@
+[build-system]
+requires = ["setuptools>=61.0", "setuptools_scm[toml]>=6.2"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools_scm]
+
+[project]
+name = "pysal"
+dynamic = ["version"]
+authors = [{ name = "Serge Rey", email = "sjsrey@gmail.com" }]
+maintainers = [{ name = "pysal contributors" }]
+license = { text = "BSD 3-Clause" }
+description = "The Python Spatial Analysis Library"
+keywords = [
+    "spatial analysis, spatial econometrics, spatial statistics, data science, spatial graphs"
+]
+readme = { text = """\
+A library of spatial analysis functions. Open-Source, Cross-platform Geospatial Data Science."
+
+""", content-type = "text/x-rst" }
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: GIS",
+]
+requires-python = ">=3.9"
+dependencies = [
+    "libpysal>=4.6.2",
+    "access>=1.1.8",
+    "esda>=2.4.1",
+    "giddy>=2.3.3",
+    "inequality>=1.0.0",
+    "pointpats>=2.2.0",
+    "segregation>=2.3.1",
+    "spaghetti>=1.6.6",
+    "mgwr>=2.1.2",
+    "momepy>=0.5.3",
+    "spglm>=1.0.8",
+    "spint>=1.0.7",
+    "spreg>=1.2.4",
+    "spvcm>=0.3.0",
+    "tobler>=0.8.2",
+    "mapclassify>=2.4.3",
+    "splot>=1.1.5.post1",
+    "spopt>=0.4.1"
+]
+
+[project.urls]
+Home = "https://github.com/pysal/pysal/"
+Repository = "https://github.com/pysal/pysal"
+
+[project.optional-dependencies]
+dev = ["pre-commit"]
+docs = [
+    "sphinx>=1.4.3",
+    "sphinxcontrib-napoleon",
+    "sphinx-gallery",
+    "sphinxcontrib-bibtex<2.0.0",
+    "sphinx_bootstrap_theme",
+    "numpydoc",
+    "doc2dash",
+]
+tests = [
+    "codecov",
+    "coverage",
+    "pytest",
+    "pytest-mpl",
+    "pytest-cov",
+    "pytest-xdist",
+    "watermark",
+]
+
+[tool.setuptools.packages.find]
+include = ["pysal", "pysal.*"]
+
+[tool.black]
+line-length = 88
+
+[tool.ruff]
+line-length = 88
+select = ["E", "F", "W", "I", "UP", "N", "B", "A", "C4", "SIM", "ARG"]
+target-version = "py39"
+ignore = [
+    "B006",
+    "B008",
+    "B009",
+    "B010",
+    "C408",
+    "E731",
+    "F401",
+    "F403",
+    "N803",
+    "N806",
+    "N999",
+    "UP007"
+]
+exclude = ["pysal/tests/*", "docs/*"]
+
+[tool.coverage.run]
+source = ["./pysal"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "if self.debug:",
+    "pragma: no cover",
+    "raise NotImplementedError",
+    "except ModuleNotFoundError:",
+    "except ImportError",
+]
+ignore_errors = true
+omit = ["pysal/tests/*", "docs/conf.py"]

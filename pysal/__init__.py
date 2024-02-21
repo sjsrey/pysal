@@ -28,9 +28,11 @@ explore: exploratory spatial data analysis
   esda                -- Global and local spatial autocorrelation
   giddy               -- Spatial distribution dynamics
   inequality          -- Spatial inequality measures
+  momepy              -- Quantitative measures of urban form
   pointpats           -- Planar point pattern analysis
   segregation         -- Segregation analytics
   spaghetti           -- Spatial analysis on networks
+
 
 
 model: spatial statistical models
@@ -41,7 +43,6 @@ model: spatial statistical models
   spint               -- Spatial interaction modeling
   spglm               -- Spatial general linear modeling
   spopt               -- Spatial optimization
-  spvcm               -- Spatial variance component models
   spreg               -- Spatial econometrics
   tobler              -- Spatial areal interpolation models
 
@@ -53,7 +54,16 @@ viz: geovisualization
   splot               -- Geovisualization for pysal
 
 """
-from .base import memberships, federation_hierarchy, versions
 
-from . import _version
-__version__ = _version.get_versions()['version']
+"""
+:mod:`tobler` --- A library for spatial interpolation
+=================================================
+
+"""
+import contextlib
+from importlib.metadata import PackageNotFoundError, version
+
+from .base import federation_hierarchy, memberships, versions
+
+with contextlib.suppress(PackageNotFoundError):
+    __version__ = version("pysal")

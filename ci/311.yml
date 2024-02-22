@@ -2,45 +2,28 @@ name: test
 channels:
   - conda-forge
 dependencies:
-  - python=3.7
+  - python=3.11
   - six
   - pyyaml
   - deprecated
   # testing
+  - codecov
   - matplotlib
   - pytest
   - pytest-cov
   - coverage
-  - codecov
   # optional
   - geopandas
   - bokeh
   - scikit-learn
   - numba
   - statsmodels
-  - scikit-learn
-  - geopandas
-  - quantecon
-  - rtree
-  - tqdm
-  - quilt3
-  - rasterio
-  - rasterstats
-  - pytest
-  - coverage
-  - coveralls
   - ipywidgets
-  - twine
-  - urbanaccess
-  - urllib3>=1.26
-  - wheel
-  - dill
-  - pytest
-  - pytest-cov
-  - codecov
-  - bokeh
+  - mapclassify
+  - seaborn
+  - descartes
+  - numba
   - libpysal
-  - momepy
   - esda
   - spaghetti
   - tobler>=0.2.1
@@ -51,7 +34,7 @@ dependencies:
   - segregation
   - pointpats
   - giddy
-  - mapclassify
+  - momepy
   - seaborn
   - descartes
   - numba

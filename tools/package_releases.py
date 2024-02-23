@@ -92,7 +92,7 @@ def get_releases():
     return dfs
 
 
-def releases_since_date(date_string, df, exclude=["r", "post"]):
+def releases_since_date(date_string, df, exclude=["r"]):
     """Return releases since a specified date.
 
     Parameters

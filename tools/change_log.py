@@ -289,26 +289,3 @@ with open('changelog.md', 'w') as fout:
 
 
 df.head()
-
-
-# Update ../pyproject.toml for minimum pysal package pinning
-# get version numbers from frozen.txt
-with open('frozen.txt', 'r') as frozen:
-    packages = [line.rstrip() for line in frozen.readlines()]
-
-# search pyproject.toml for lines containing package
-with open('../pyproject.toml', 'r') as project:
-    lines = [line.rstrip() for line in project.readlines()]
-
-# split line ->"    package",  ">=",  "version",
-# replace version and rebuild line to update
-for package in packages:
-    name, version = package.split(">=")
-    i, match = [(i, line) for i, line in enumerate(lines) if name in line][0]
-    old_name, old_version = match.split(">=")
-    new_line = ">=".join([old_name, version+'",'])
-    lines[i] = new_line
-
-# write out new pyproject.toml file
-with open("../pyproject.toml", 'w') as output:
-    output.write("\n".join(lines))

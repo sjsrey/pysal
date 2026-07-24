@@ -8,7 +8,7 @@
 ## Instructions
 
 ### Updating package information
-- If any new packages have been added to the ecosystem update the `packages` list in `release_info.py` and in `../pyproject.toml` 
+- If any new packages have been added to the ecosystem, update the `packages` list in `release_info.py` and add the package name (without a version pin) to the dependencies list in `../pyproject.toml`
 - Update relevant data on `start_date` (day after last release), `release_date` (day
   of this release), `version`, and `user` in `release.yaml`
 
@@ -32,7 +32,6 @@ For debugging purposes, the individual steps can be run using:
 These require `release_info.py`
 
 ### Add and Commit
-- `git add ../pyproject.toml`
 - `git add release.yaml`
 - `git commit -m "REL: <version>"`
 

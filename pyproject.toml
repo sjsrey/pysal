@@ -23,7 +23,7 @@ classifiers = [
     "Intended Audience :: Science/Research",
     "Topic :: Scientific/Engineering :: GIS",
 ]
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 dependencies = [
     "lazy_loader>=0.3",
     "beautifulsoup4>=4.10",

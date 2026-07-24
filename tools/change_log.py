@@ -283,9 +283,7 @@ with open('changelog.md', 'w') as fout:
         "\n\nMany thanks to all of the following individuals who contributed to this release:\n\n")
 
     totals = contributor_table.sum(axis=0).T
-    contributors = totals.index.values
-    contributors.sort()
-    contributors = contributors.tolist()
+    contributors = sorted(totals.index.tolist())
     contributors = [f'\n - {contributor}' for contributor in contributors]
     fout.write("".join(contributors))
 

@@ -24,6 +24,8 @@
 - Remove the package from the `submodules` list in the corresponding layer `__init__.py`
 - Delete the proxy module directory `../pysal/<layer>/<package>/`
 - Remove the package from all CI environment files in `../ci/`
+
+### Update the release information
 - Update relevant data on `start_date` (day after last release), `release_date` (day
   of this release), `version`, and `user` in `release.yaml`
 

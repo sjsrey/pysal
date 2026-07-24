@@ -1,11 +1,5 @@
 """
 Grab most recent releases tagged on Github for PySAL subpackages
-
-
-TODO
-- [ ] update dependencies in pyproj.toml for pinning new releases of
-pysal packages
-
 """
 
 import os

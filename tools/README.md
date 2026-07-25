@@ -49,6 +49,7 @@ For debugging purposes, the individual steps can be run using:
 These require `release_info.py`
 
 ### Add and Commit
+- `git add ../pyproject.toml`
 - `git add release.yaml`
 - `git commit -m "REL: <version>"`
 

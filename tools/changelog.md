@@ -1,4 +1,4 @@
-Overall, there were 632 commits that closed 357 issues since our last release on 2026-01-31.
+Overall, there were 704 commits that closed 363 issues since our last release on 2026-01-31.
 
 
 <a name="changes-by-package"></a>
@@ -165,8 +165,14 @@ Overall, there were 632 commits that closed 357 issues since our last release on
 * [#418:](https://github.com/pysal/esda/pull/418) Fix broken citation link in documentation 
 
 
-<a name="giddy-v2.3.8"></a>
-### giddy v2.3.8
+<a name="giddy-v2.3.9"></a>
+### giddy v2.3.9
+* [#257:](https://github.com/pysal/giddy/pull/257) [pre-commit.ci] pre-commit autoupdate 
+* [#256:](https://github.com/pysal/giddy/pull/256) reup SPEC000 - [2026 05 10]  
+* [#255:](https://github.com/pysal/giddy/pull/255) DEP: remove upper pin on esda 
+* [#254:](https://github.com/pysal/giddy/pull/254) [pre-commit.ci] pre-commit autoupdate 
+* [#253:](https://github.com/pysal/giddy/pull/253) github as trusted publisher on pypi 
+* [#251:](https://github.com/pysal/giddy/pull/251) remove `CHANGELOG.md` - no longer used 
 
 
 <a name="inequality-v1.1.2"></a>
@@ -462,4 +468,5 @@ Many thanks to all of the following individuals who contributed to this release:
  - Serge Rey
  - Shubham Singh
  - Vincent Gao
+ - Wei Kang
  - Yuta Sato

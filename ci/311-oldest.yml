@@ -7,7 +7,6 @@ dependencies:
   - access
   - esda
   - giddy
-  - gwlearn
   - inequality
   - libpysal
   - mapclassify
@@ -18,6 +17,7 @@ dependencies:
   - spaghetti
   - splot
   - spint
+  - spml
   - spopt
   - spreg
   - spvcm
@@ -26,7 +26,8 @@ dependencies:
   - bokeh
   - deprecated
   - dill
-  - geopandas
+  - fiona<1.10
+  - geopandas=0.12
   - ipywidgets
   - matplotlib
   - numba
@@ -41,6 +42,7 @@ dependencies:
   - six
   - tqdm
   - twine
+  - urbanaccess
   - urllib3>=1.26
   - wheel
   # testing
